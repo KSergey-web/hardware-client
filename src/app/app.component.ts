@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AuthService } from './auth.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,14 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'hardware-client';
+  private _isloggedIn: boolean;
+  
+  constructor(private authService: AuthService){
+    this._isloggedIn = authService.isLoggedIn()
+  }
+
+  get isLoggedIn(){
+    return this._isloggedIn;
+  }
+  
 }
