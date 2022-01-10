@@ -10,13 +10,17 @@ import { HttpClientModule }   from '@angular/common/http';
 import { AuthInterceptor } from './http-interceptors.ts/auth.interceptor';
 import { environment } from 'src/environments/environment';
 import { httpInterceptorProviders } from './http-interceptors.ts';
+import { CustomHeaderComponent } from './custom-header/custom-header.component';
+import { MainPageComponent } from './main-page/main-page.component';
 
 export const API_URL = new InjectionToken<string>('api url');
 
 @NgModule({
   declarations: [
     AppComponent,
-    SignInComponent
+    SignInComponent,
+    CustomHeaderComponent,
+    MainPageComponent
   ],
   imports: [
     BrowserModule,

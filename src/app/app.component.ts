@@ -7,15 +7,5 @@ import { AuthService } from './auth.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'hardware-client';
-  private _isloggedIn: boolean;
-  
-  constructor(private authService: AuthService){
-    this._isloggedIn = authService.isLoggedIn()
-  }
-
-  get isLoggedIn(){
-    return this._isloggedIn;
-  }
   
 }
