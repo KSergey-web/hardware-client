@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
-import { map, shareReplay, tap } from 'rxjs/operators';
+import { BehaviorSubject, from, Observable, of, ReplaySubject } from 'rxjs';
+import { map, shareReplay, tap, mergeMap, switchMap, catchError } from 'rxjs/operators';
 import { API_URL } from './app.module';
+import { roleUserEnum } from './enums/role-user.enum';
 import { IUser } from './interfaces/user.interface';
 
 @Injectable({
@@ -14,7 +15,7 @@ export class AuthService {
   private _currentUser: ReplaySubject<IUser> = new ReplaySubject(1);
 
   get currentUser$(): Observable<IUser> {
-      return this._currentUser.asObservable();
+    return this._currentUser.asObservable();
   }
 
   constructor(
@@ -22,22 +23,49 @@ export class AuthService {
     @Inject(API_URL) private apiUrl: string,
     private router: Router,
   ) {
-    if (this.isLoggedIn()){
+    if (this.isLoggedIn()) {
       this.setСurrentUser$();
     }
   }
 
   login({ email: identifier, password }: any): Observable<any> {
-    return this.http.post<{user: IUser, jwt: string}>(`${this.apiUrl}/api/auth/local`, { identifier, password }).pipe(tap(res => {this.setSession(res)}))
+    return this.http.post<{ user: IUser, jwt: string }>(`${this.apiUrl}/api/auth/local`, { identifier, password }).pipe( tap(res => { this.setSession(res) }))
   }
 
-  private getCurrentUser(): Observable<IUser>{
-    return this.http.get<IUser>(`${this.apiUrl}/api/users/me`);
+  private assignStatus(user: IUser): Observable<IUser> {
+    return this.http.get<any>(`${this.apiUrl}/api/students?filters[user][id][$eq]=${user.id}`).pipe(
+      mergeMap((res: {data: any[]}) => {
+        if (res.data.length > 0) {
+          user.role = roleUserEnum.student;
+          return of(user);
+        }
+        else
+          return this.http.get<any>(`${this.apiUrl}/api/teachers?filters[user][id][$eq]=${user.id}`).pipe(
+            tap(res => {
+              if (res.data.length == 0) {
+                throw new Error('Not found role');
+              }
+            }),
+            map(() => {
+              user.role = roleUserEnum.teacher; 
+              return user}),
+            catchError((err: Error) => {
+              alert(err.message);
+              this.logout();
+              return of(user);
+            })
+          )
+      })
+    )
   }
 
-  private setСurrentUser$(user?: IUser): void{
-    if (user){
-      this._currentUser.next(user);
+  private getCurrentUser(): Observable<IUser> {
+    return this.http.get<IUser>(`${this.apiUrl}/api/users/me`).pipe(switchMap(this.assignStatus.bind(this)));
+  }
+
+  private setСurrentUser$(user?: IUser): void {
+    if (user) {
+      this.assignStatus(user).subscribe((user) => this._currentUser.next(user))
       return;
     }
     this.getCurrentUser().subscribe((user: IUser) => {
@@ -46,10 +74,10 @@ export class AuthService {
   }
 
 
-  private setSession(authResult: {user: IUser, jwt: string}) {
+  private setSession(authResult: { user: IUser, jwt: string }) {
+    localStorage.setItem('id_token', authResult.jwt);
     this.setСurrentUser$(authResult.user)
     //const expiresAt = moment().add(authResult.expiresIn, 'second');
-    localStorage.setItem('id_token', authResult.jwt);
     //localStorage.setItem("expires_at", JSON.stringify(expiresAt.valueOf()));
   }
 
@@ -69,7 +97,7 @@ export class AuthService {
   }
 
   getExpiration() {
-      return localStorage.getItem("id_token");
+    return localStorage.getItem("id_token");
   }
 
   // getExpiration() {
