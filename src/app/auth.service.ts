@@ -30,7 +30,9 @@ export class AuthService {
     if (this.isLoggedIn()) {
       this.setСurrentUser$();
     }
-    this.currentUser$.subscribe(user => this._currentUser = user);
+    this.currentUser$.subscribe(user => {
+      this._currentUser = user
+    });
   }
 
   login({ email: identifier, password }: any): Observable<any> {

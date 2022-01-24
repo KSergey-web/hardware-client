@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators';
 import { API_URL } from './app.module';
 import { AuthService } from './auth.service';
 import { roleUserEnum } from './enums/role-user.enum';
+import { AnswerArraySessionsPopulate1 } from './interfaces/answer-array-sessions-populate1.interface copy';
 import { DefaultAnswer } from './interfaces/default-answer.interface';
 import { IEquipment } from './interfaces/equipment.interface';
 import { IGroup } from './interfaces/group.interface';
@@ -23,6 +24,14 @@ export class SessionService {
     private http: HttpClient,
     private authService: AuthService
   ) { }
+
+  getSessionsByUser(id: number): Observable<ISession[]>{
+    const filter0 = `filters[$and][0][user][id][$eq]=${id}`;
+    const filter1 = `filters[$and][1][end][$gte]=${(new Date()).toJSON()}`;
+    return this.http.get<AnswerArraySessionsPopulate1>(`${this.apiUrl}/api/sessions?populate=%2A&`+ filter0 + '&' + filter1).pipe(map(res => {
+      return this.getSessionsFromResponse(res);
+    }))
+  }
 
   getEquipments(): Observable<IEquipment[]> {
     return this.http
@@ -108,37 +117,32 @@ export class SessionService {
     const filter0 = `filters[$and][0][begin][$gte]=${date.toJSON()}`;
     const filter1 = `filters[$and][1][begin][$lte]=${lastDate.toJSON()}`;
     const filter2 = `filters[$and][2][equipment][id][$eq]=${equipment.id}`;
-    return this.http.get<{
-      data: Array<{
-        id: number;
-        attributes: {
-          [key: string]: any;
-          user: DefaultAnswer;
-      }
-    }>
-    }>(`${this.apiUrl}/api/sessions?populate=%2A&sort[0]=begin%3Aasc&`+ filter0 + '&' + filter1 + '&' + filter2).pipe(
+    return this.http.get<AnswerArraySessionsPopulate1>(`${this.apiUrl}/api/sessions?populate=%2A&sort[0]=begin%3Aasc&`+ filter0 + '&' + filter1 + '&' + filter2).pipe(
       map(res => {
-        const sessions: ISession[] = [];
-        res.data.forEach(item => {
-          const session: any = {
-            id: item.id,
-            ...item.attributes 
-          }
-          session.user = {
-            id: item.attributes.user.data.id, 
-            ...item.attributes.user.data.attributes 
-          };
-          session.creator = {
-            id: item.attributes.creator.data.id, 
-            ...item.attributes.creator.data.attributes 
-          };
-          session.begin = new Date(session.begin);
-          session.end = new Date(session.end);
-          sessions.push(session as ISession);
-          })
-          console.log(sessions);
-        return sessions;
+        return this.getSessionsFromResponse(res);
       })
     );
+  }
+
+  getSessionsFromResponse(res: AnswerArraySessionsPopulate1): ISession[]{
+    const sessions: ISession[] = [];
+    res.data.forEach(item => {
+      const session: any = {
+        id: item.id,
+        ...item.attributes 
+      }
+      session.user = {
+        id: item.attributes.user.data.id, 
+        ...item.attributes.user.data.attributes 
+      };
+      session.creator = {
+        id: item.attributes.creator.data.id, 
+        ...item.attributes.creator.data.attributes 
+      };
+      session.begin = new Date(session.begin);
+      session.end = new Date(session.end);
+      sessions.push(session as ISession);
+      })
+    return sessions;
   }
 }

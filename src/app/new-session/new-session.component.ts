@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NgbDate, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbDate, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { AuthService } from '../auth.service';
 import { IEquipment } from '../interfaces/equipment.interface';
 import { IGroup } from '../interfaces/group.interface';
 import { ISession } from '../interfaces/session.interface';
@@ -16,6 +17,7 @@ import { SessionService } from '../session.service';
 })
 export class NewSessionComponent implements OnInit {
   sessionForm!: FormGroup;
+  radioGroupForm!: FormGroup;
   equipments: IEquipment[] = [];
   groups: IGroup[] = [];
   students: IStudent[] = [];
@@ -30,7 +32,9 @@ export class NewSessionComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private sessionService: SessionService
+    private sessionService: SessionService,
+    private activeModal: NgbActiveModal,
+    private authService: AuthService
   ) {
     this.sessionForm = formBuilder.group({
       equipment: [],
@@ -46,23 +50,44 @@ export class NewSessionComponent implements OnInit {
 
   submit() {
     const indEq: number = this.sessionForm.controls.equipment.value;
-    const indSt: number = this.sessionForm.controls.student.value;
+    let userId: number;
+    if (this.radioGroupForm.value['mode'] == 'student'){
+      const ind:number = this.sessionForm.controls.student.value;
+      userId = this.students[ind].id;
+    }
+    else{
+      userId = this.authService.currentUser!.id;
+    }
     const newSession = {
       begin: this.selectedBegin!,
       end: this.selectedEnd!, 
-      user: this.students[indSt].id,
+      user: userId,
       equipment: this.equipments[indEq].id
     }
-    this.sessionService.createSession(newSession).subscribe(res => {}, err => console.error(err));
+    this.sessionService.createSession(newSession).subscribe(res => { this.activeModal.close()}, err => {
+      alert('Не удалось создать сессию');
+      console.error(err)
+    });
   }
 
   ngOnInit(): void {
+    this.radioGroupForm = this.formBuilder.group({
+      'mode': []
+    });
+    this.getGroups();
+    this.getEquipments();
+  }
+
+  getEquipments(): void {
     this.sessionService
       .getEquipments()
       .subscribe((equipments: IEquipment[]) => {
         this.equipments = equipments;
         this.sessionForm.controls.equipment.setValue(0);
       });
+  }
+
+  getGroups(): void{
     this.sessionService.getGroups().subscribe((groups: IGroup[]) => {
       this.groups = groups;
     });
@@ -72,5 +97,14 @@ export class NewSessionComponent implements OnInit {
       this.selectedBegin = dates.begin;
       this.selectedEnd = dates.end;
       this.isDateCollapsed = !this.isDateCollapsed;
+    }
+
+    isNewSessionInvalid(): boolean{
+      if(this.radioGroupForm.value['mode'] == 'student'){
+      return this.sessionForm.invalid || !this.selectedBegin
+      }
+      else{
+        return !this.selectedBegin;
+      }
     }
 }

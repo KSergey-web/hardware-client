@@ -1,0 +1,25 @@
+<div>
+Сеансы на которые вы записаны
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Начало</th>
+            <th scope="col">Конец</th>
+            <th scope="col">Кому назначено</th>
+            <th scope="col">Кто создал</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor='let session of sessions; let i = index'>
+            <th scope="row">{{i}}</th>
+            <td>{{session.begin | date:'HH:mm'}}</td>
+            <td> {{session.end | date:'HH:mm'}}</td>
+                <td> {{session.user?.first_name}} {{session.user?.last_name}}
+                 {{session.user?.patronymic}}</td>
+                 <td> {{session.creator?.first_name}} {{session.creator?.last_name}}
+                    {{session.creator?.patronymic}}</td>
+          </tr>
+        </tbody>
+      </table>
+</div>

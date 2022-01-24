@@ -1,56 +1,74 @@
-<form [formGroup]=sessionForm novalidate (ngSubmit)="submit()">
-    <div class="form-group">
-        <label for="equipment">Оборудование</label>
-        <select class="form-control" name='equipment' formControlName="equipment">
-            <option *ngFor="let equipment of equipments; let i = index" [selected]='i == 0' [value]='i'>
-                {{equipment.name}}
-            </option>
-        </select>
-    </div>
-    <div class="form-group">
-        <label for="group">Группа</label>
-        <select class="form-control" name='group' formControlName="group">
-            <option [value]="-1" selected>
-                Выберите группу
-            </option>
-            <option *ngFor="let group of groups; let i = index" [value]='i'>
-                {{group.name}}
-            </option>
-        </select>
-    </div>
-    <div class="form-group">
-        <label for="student">Студент</label>
-        <select class="form-control" name='student' formControlName="student">
-            <option [value]="-1" selected>
-                Выберите студента
-            </option>
-            <option *ngFor="let student of students; let i = index" [value]='i'>
-                {{student.first_name}}
-            </option>
-        </select>
-    </div>
-    <div *ngIf='selectedBegin'>
-    Начало сеанса: {{selectedBegin | date:'d.MM.YYYY HH:mm'}} <hr>
-    Конец сеанса: {{selectedEnd | date:'d.MM.YYYY HH:mm'}}
-    </div>
-    <div *ngIf='!selectedBegin' class="alert alert-danger" role="alert">
-        Время начала и длительность сеанса не выбраны
-    </div>
-    <div class='mt-2'>
-        <button type="button" class="btn btn-outline-primary" (click)="collapse_date.toggle()"
-            [attr.aria-expanded]="!isDateCollapsed" aria-controls="collapseExample">
-            <span *ngIf='isDateCollapsed'>Выбрать дату и время</span>
-            <span *ngIf='!isDateCollapsed'>Скрыть выбор даты и времени</span>
-        </button>
-    </div>
-    <div #collapse_date="ngbCollapse" [(ngbCollapse)]="isDateCollapsed">
-        <div class="card">
-            <div class="card-body">
-                <app-session-date-form [equipmentChanged$]='equipmentChanged$' (onSelectedDates)="onSelectedDates($event)"></app-session-date-form>
+<div class="container">
+    <form [formGroup]=sessionForm novalidate (ngSubmit)="submit()">
+        <div class="form-group">
+            <label for="equipment">Оборудование</label>
+            <select class="form-control" name='equipment' formControlName="equipment">
+                <option *ngFor="let equipment of equipments; let i = index" [selected]='i == 0' [value]='i'>
+                    {{equipment.name}}
+                </option>
+            </select>
+        </div>
+        <form [formGroup]="radioGroupForm">
+            <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" formControlName="mode">
+                <label ngbButtonLabel class="btn-primary mr-1">
+                    <input ngbButton type="radio" value="student"> Записать студента
+                </label>
+                <label ngbButtonLabel class="btn-primary">
+                    <input ngbButton type="radio" value="myself"> Записать себя
+                </label>
+            </div>
+        </form>
+        <hr>
+        <div *ngIf="radioGroupForm.value['mode']=='student'">
+            <div class="form-group">
+                <label for="group">Группа</label>
+                <select class="form-control" name='group' formControlName="group">
+                    <option [value]="-1" selected>
+                        Выберите группу
+                    </option>
+                    <option *ngFor="let group of groups; let i = index" [value]='i'>
+                        {{group.name}}
+                    </option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="student">Студент</label>
+                <select class="form-control" name='student' formControlName="student">
+                    <option [value]="-1" selected>
+                        Выберите студента
+                    </option>
+                    <option *ngFor="let student of students; let i = index" [value]='i'>
+                        {{student.first_name}}
+                    </option>
+                </select>
             </div>
         </div>
-    </div>
-    <div class="text-center">
-    <button class="btn btn-primary" type='submit' [disabled]="sessionForm.invalid || !selectedBegin">Создать сессию</button>
+        <div *ngIf='selectedBegin'>
+            Начало сеанса: {{selectedBegin | date:'d.MM.YYYY HH:mm'}}
+            <hr>
+            Конец сеанса: {{selectedEnd | date:'d.MM.YYYY HH:mm'}}
+        </div>
+        <div *ngIf='!selectedBegin' class="alert alert-danger" role="alert">
+            Время начала и длительность сеанса не выбраны
+        </div>
+        <div class='mt-2'>
+            <button type="button" class="btn btn-outline-primary" (click)="collapse_date.toggle()"
+                [attr.aria-expanded]="!isDateCollapsed" aria-controls="collapseExample">
+                <span *ngIf='isDateCollapsed'>Выбрать дату и время</span>
+                <span *ngIf='!isDateCollapsed'>Скрыть выбор даты и времени</span>
+            </button>
+        </div>
+        <div #collapse_date="ngbCollapse" [(ngbCollapse)]="isDateCollapsed">
+            <div class="card">
+                <div class="card-body">
+                    <app-session-date-form [equipmentChanged$]='equipmentChanged$'
+                        (onSelectedDates)="onSelectedDates($event)"></app-session-date-form>
+                </div>
+            </div>
+        </div>
+        <div class="text-center">
+            <button class="btn btn-primary" type='submit' [disabled]="isNewSessionInvalid()">Создать
+                сессию</button>
+        </div>
+    </form>
 </div>
-</form>

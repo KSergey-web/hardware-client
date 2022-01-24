@@ -14,6 +14,7 @@ import { CustomHeaderComponent } from './custom-header/custom-header.component';
 import { MainPageComponent } from './main-page/main-page.component';
 import { NewSessionComponent } from './new-session/new-session.component';
 import { SessionDateFormComponent } from './new-session/session-date-form/session-date-form.component';
+import { SessionsOfCurrentUserComponent } from './sessions-of-current-user/sessions-of-current-user.component';
 
 export const API_URL = new InjectionToken<string>('api url');
 
@@ -25,6 +26,7 @@ export const API_URL = new InjectionToken<string>('api url');
     MainPageComponent,
     NewSessionComponent,
     SessionDateFormComponent,
+    SessionsOfCurrentUserComponent,
   ],
   imports: [
     BrowserModule,

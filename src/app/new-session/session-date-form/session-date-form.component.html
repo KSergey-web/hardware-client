@@ -5,9 +5,9 @@
             <label for="time">Время начала сеанса</label> 
             <ngb-timepicker name="time" formControlName="time"></ngb-timepicker>
         </div>
-    <div class="form-group col-4">
+    <div class="form-group">
         <label for="duration">Длительность сеанса (в минутах)</label>
-        <input class="form-control mr-sm-2" name="duration" formControlName="duration" type="number" />
+        <input class="form-control w-25" name="duration" formControlName="duration" type="number" />
     </div>
     <div class="text-center">
         <div *ngIf='isBusy' class="alert alert-danger" role="alert">
