@@ -1,3 +1,17 @@
 header{
     background-color: #05a8c8;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+
+.header__section{
+    display: flex;
+    align-items: center;
+}
+
+.header__item{
+    padding: 10px 15px;
+    margin-left: 5px;
 }

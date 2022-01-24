@@ -6,21 +6,14 @@ import { IUser } from '../interfaces/user.interface';
 @Component({
   selector: 'app-main-page',
   templateUrl: './main-page.component.html',
-  styleUrls: ['./main-page.component.scss']
+  styleUrls: ['./main-page.component.scss'],
 })
 export class MainPageComponent implements OnInit {
-
-  
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-    ){
+  constructor(private authService: AuthService, private router: Router) {
     if (this.authService.isLoggedOut()) {
-      this.router.navigate((['signin']));
+      this.router.navigate(['signin']);
     }
   }
 
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }

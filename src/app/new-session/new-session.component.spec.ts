@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CustomHeaderComponent } from './custom-header.component';
+import { NewSessionComponent } from './new-session.component';
 
-describe('CustomHeaderComponent', () => {
-  let component: CustomHeaderComponent;
-  let fixture: ComponentFixture<CustomHeaderComponent>;
+describe('NewSessionComponent', () => {
+  let component: NewSessionComponent;
+  let fixture: ComponentFixture<NewSessionComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [CustomHeaderComponent],
+      declarations: [NewSessionComponent],
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CustomHeaderComponent);
+    fixture = TestBed.createComponent(NewSessionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

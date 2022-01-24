@@ -1,8 +1,13 @@
 <header>
-    <div *ngIf='currentUser'>
-    {{currentUser.first_name}}
-    {{currentUser.last_name}}
-    {{currentUser.role}}
-</div>
-    <button type="button" class="btn btn-primary" (click)="logout()"> logout</button>
+    <div class="header__section">
+        SFU
+    </div>
+    <div *ngIf='currentUser' class="header__section">
+        <div class="header__item">    
+        {{currentUser.first_name}}
+        {{currentUser.last_name}}
+        {{currentUser.role}}
+        </div>
+        <button type="button" class="btn btn-primary" (click)="logout()"> logout</button>
+    </div>
 </header>

@@ -6,12 +6,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SignInComponent } from './sign-in/sign-in.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { HttpClientModule }   from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { AuthInterceptor } from './http-interceptors.ts/auth.interceptor';
 import { environment } from 'src/environments/environment';
 import { httpInterceptorProviders } from './http-interceptors.ts';
 import { CustomHeaderComponent } from './custom-header/custom-header.component';
 import { MainPageComponent } from './main-page/main-page.component';
+import { NewSessionComponent } from './new-session/new-session.component';
+import { SessionDateFormComponent } from './new-session/session-date-form/session-date-form.component';
 
 export const API_URL = new InjectionToken<string>('api url');
 
@@ -20,23 +22,25 @@ export const API_URL = new InjectionToken<string>('api url');
     AppComponent,
     SignInComponent,
     CustomHeaderComponent,
-    MainPageComponent
+    MainPageComponent,
+    NewSessionComponent,
+    SessionDateFormComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule, 
-    ReactiveFormsModule, 
+    FormsModule,
+    ReactiveFormsModule,
     NgbModule,
-    HttpClientModule
+    HttpClientModule,
   ],
   providers: [
     httpInterceptorProviders,
     {
       provide: API_URL,
-      useValue: environment.serverAddres
+      useValue: environment.serverAddres,
     },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

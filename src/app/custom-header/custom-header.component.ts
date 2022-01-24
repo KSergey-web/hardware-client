@@ -6,35 +6,30 @@ import { IUser } from '../interfaces/user.interface';
 @Component({
   selector: 'app-custom-header',
   templateUrl: './custom-header.component.html',
-  styleUrls: ['./custom-header.component.scss']
+  styleUrls: ['./custom-header.component.scss'],
 })
 export class CustomHeaderComponent implements OnInit {
-
   currentUser?: IUser;
-  
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-    ) {
-    
-  }
+
+  constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
-    if (this.authService.isLoggedOut()){
-      this.router.navigate((['']));
+    if (this.authService.isLoggedOut()) {
+      this.router.navigate(['']);
       return;
     }
     this.authService.currentUser$.subscribe(
-      user => this.currentUser = user, 
+      (user) => (this.currentUser = user),
       (err: Error) => {
         alert("Сouldn't get your data");
         console.error(err);
         this.logout();
-        this.router.navigate((['signin']));
-      })
+        this.router.navigate(['signin']);
+      }
+    );
   }
 
-  logout(): void{
+  logout(): void {
     this.authService.logout();
   }
 }
