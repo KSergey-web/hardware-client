@@ -30,8 +30,8 @@ export class AuthService {
     if (this.isLoggedIn()) {
       this.setСurrentUser$();
     }
-    this.currentUser$.subscribe(user => {
-      this._currentUser = user
+    this.currentUser$.subscribe((user) => {
+      this._currentUser = user;
     });
   }
 
@@ -90,7 +90,9 @@ export class AuthService {
 
   private setСurrentUser$(user?: IUser): void {
     if (user) {
-      this.assignStatus(user).subscribe((user) => this._currentUser$.next(user));
+      this.assignStatus(user).subscribe((user) =>
+        this._currentUser$.next(user)
+      );
       return;
     }
     this.getCurrentUser().subscribe((user: IUser) => {

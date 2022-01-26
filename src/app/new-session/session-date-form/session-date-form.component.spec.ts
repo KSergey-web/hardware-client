@@ -8,9 +8,8 @@ describe('SessionDateFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SessionDateFormComponent ]
-    })
-    .compileComponents();
+      declarations: [SessionDateFormComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

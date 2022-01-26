@@ -23,14 +23,20 @@ export class SessionService {
     private router: Router,
     private http: HttpClient,
     private authService: AuthService
-  ) { }
+  ) {}
 
-  getSessionsByUser(id: number): Observable<ISession[]>{
+  getSessionsByUser(id: number): Observable<ISession[]> {
     const filter0 = `filters[$and][0][user][id][$eq]=${id}`;
-    const filter1 = `filters[$and][1][end][$gte]=${(new Date()).toJSON()}`;
-    return this.http.get<AnswerArraySessionsPopulate1>(`${this.apiUrl}/api/sessions?populate=%2A&`+ filter0 + '&' + filter1).pipe(map(res => {
-      return this.getSessionsFromResponse(res);
-    }))
+    const filter1 = `filters[$and][1][end][$gte]=${new Date().toJSON()}`;
+    return this.http
+      .get<AnswerArraySessionsPopulate1>(
+        `${this.apiUrl}/api/sessions?populate=%2A&` + filter0 + '&' + filter1
+      )
+      .pipe(
+        map((res) => {
+          return this.getSessionsFromResponse(res);
+        })
+      );
   }
 
   getEquipments(): Observable<IEquipment[]> {
@@ -91,7 +97,7 @@ export class SessionService {
           res.data.attributes.students.data.forEach((item) => {
             const userAttributs: any = {
               id: item.attributes.user.data.id,
-              ...item.attributes.user.data.attributes
+              ...item.attributes.user.data.attributes,
             };
             students.push(userAttributs as IStudent);
           });
@@ -103,46 +109,60 @@ export class SessionService {
   createSession(newSession: {
     begin: Date;
     end: Date;
-    user: number,
-    equipment: number,
-  }){
-    const body = {data: {...newSession, creator: this.authService.currentUser!.id}};
+    user: number;
+    equipment: number;
+  }) {
+    const body = {
+      data: { ...newSession, creator: this.authService.currentUser!.id },
+    };
     console.log(body);
-    return this.http.post(`${this.apiUrl}/api/sessions`,body);
+    return this.http.post(`${this.apiUrl}/api/sessions`, body);
   }
 
-  getSessionsInDateByEquipment(equipment: IEquipment, date: Date ): Observable<ISession[]>{
+  getSessionsInDateByEquipment(
+    equipment: IEquipment,
+    date: Date
+  ): Observable<ISession[]> {
     const lastDate = new Date(date);
-    lastDate.setDate(date.getDate()+1);
+    lastDate.setDate(date.getDate() + 1);
     const filter0 = `filters[$and][0][begin][$gte]=${date.toJSON()}`;
     const filter1 = `filters[$and][1][begin][$lte]=${lastDate.toJSON()}`;
     const filter2 = `filters[$and][2][equipment][id][$eq]=${equipment.id}`;
-    return this.http.get<AnswerArraySessionsPopulate1>(`${this.apiUrl}/api/sessions?populate=%2A&sort[0]=begin%3Aasc&`+ filter0 + '&' + filter1 + '&' + filter2).pipe(
-      map(res => {
-        return this.getSessionsFromResponse(res);
-      })
-    );
+    return this.http
+      .get<AnswerArraySessionsPopulate1>(
+        `${this.apiUrl}/api/sessions?populate=%2A&sort[0]=begin%3Aasc&` +
+          filter0 +
+          '&' +
+          filter1 +
+          '&' +
+          filter2
+      )
+      .pipe(
+        map((res) => {
+          return this.getSessionsFromResponse(res);
+        })
+      );
   }
 
-  getSessionsFromResponse(res: AnswerArraySessionsPopulate1): ISession[]{
+  getSessionsFromResponse(res: AnswerArraySessionsPopulate1): ISession[] {
     const sessions: ISession[] = [];
-    res.data.forEach(item => {
+    res.data.forEach((item) => {
       const session: any = {
         id: item.id,
-        ...item.attributes 
-      }
+        ...item.attributes,
+      };
       session.user = {
-        id: item.attributes.user.data.id, 
-        ...item.attributes.user.data.attributes 
+        id: item.attributes.user.data.id,
+        ...item.attributes.user.data.attributes,
       };
       session.creator = {
-        id: item.attributes.creator.data.id, 
-        ...item.attributes.creator.data.attributes 
+        id: item.attributes.creator.data.id,
+        ...item.attributes.creator.data.attributes,
       };
       session.begin = new Date(session.begin);
       session.end = new Date(session.end);
       sessions.push(session as ISession);
-      })
+    });
     return sessions;
   }
 }

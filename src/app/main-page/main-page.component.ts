@@ -13,15 +13,15 @@ import { NewSessionComponent } from '../new-session/new-session.component';
 export class MainPageComponent implements OnInit {
   constructor(
     private authService: AuthService,
-     private router: Router,
-     private modalService: NgbModal
-     ) {
+    private router: Router,
+    private modalService: NgbModal
+  ) {
     if (this.authService.isLoggedOut()) {
       this.router.navigate(['signin']);
     }
   }
 
-  createNewSession(){
+  createNewSession() {
     const modalRef = this.modalService.open(NewSessionComponent);
   }
 

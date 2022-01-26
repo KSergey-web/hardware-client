@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NgbActiveModal, NgbDate, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbActiveModal,
+  NgbDate,
+  NgbDateStruct,
+} from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AuthService } from '../auth.service';
@@ -21,7 +25,7 @@ export class NewSessionComponent implements OnInit {
   equipments: IEquipment[] = [];
   groups: IGroup[] = [];
   students: IStudent[] = [];
-  
+
   selectedEquipment?: IEquipment;
   selectedBegin?: Date;
   selectedEnd?: Date;
@@ -39,40 +43,49 @@ export class NewSessionComponent implements OnInit {
     this.sessionForm = formBuilder.group({
       equipment: [],
       group: [-1, [Validators.min(0)]],
-      student: [-1, [Validators.min(0)]]
+      student: [-1, [Validators.min(0)]],
     });
-    this.sessionForm.controls.group.valueChanges.subscribe((id: number)=> {
+    this.sessionForm.controls.group.valueChanges.subscribe((id: number) => {
       if (id == -1) return;
-      this.sessionService.getStudentsFromGroup(this.groups[id]).subscribe(students => this.students = students)
-    })
-    this.equipmentChanged$ = this.sessionForm.controls.equipment.valueChanges.pipe( map((i: number) => this.equipments[i]));
+      this.sessionService
+        .getStudentsFromGroup(this.groups[id])
+        .subscribe((students) => (this.students = students));
+    });
+    this.equipmentChanged$ =
+      this.sessionForm.controls.equipment.valueChanges.pipe(
+        map((i: number) => this.equipments[i])
+      );
   }
 
   submit() {
     const indEq: number = this.sessionForm.controls.equipment.value;
     let userId: number;
-    if (this.radioGroupForm.value['mode'] == 'student'){
-      const ind:number = this.sessionForm.controls.student.value;
+    if (this.radioGroupForm.value['mode'] == 'student') {
+      const ind: number = this.sessionForm.controls.student.value;
       userId = this.students[ind].id;
-    }
-    else{
+    } else {
       userId = this.authService.currentUser!.id;
     }
     const newSession = {
       begin: this.selectedBegin!,
-      end: this.selectedEnd!, 
+      end: this.selectedEnd!,
       user: userId,
-      equipment: this.equipments[indEq].id
-    }
-    this.sessionService.createSession(newSession).subscribe(res => { this.activeModal.close()}, err => {
-      alert('Не удалось создать сессию');
-      console.error(err)
-    });
+      equipment: this.equipments[indEq].id,
+    };
+    this.sessionService.createSession(newSession).subscribe(
+      (res) => {
+        this.activeModal.close();
+      },
+      (err) => {
+        alert('Не удалось создать сессию');
+        console.error(err);
+      }
+    );
   }
 
   ngOnInit(): void {
     this.radioGroupForm = this.formBuilder.group({
-      'mode': []
+      mode: [],
     });
     this.getGroups();
     this.getEquipments();
@@ -87,24 +100,23 @@ export class NewSessionComponent implements OnInit {
       });
   }
 
-  getGroups(): void{
+  getGroups(): void {
     this.sessionService.getGroups().subscribe((groups: IGroup[]) => {
       this.groups = groups;
     });
   }
 
-  onSelectedDates(dates:{begin: Date; end: Date}){
-      this.selectedBegin = dates.begin;
-      this.selectedEnd = dates.end;
-      this.isDateCollapsed = !this.isDateCollapsed;
-    }
+  onSelectedDates(dates: { begin: Date; end: Date }) {
+    this.selectedBegin = dates.begin;
+    this.selectedEnd = dates.end;
+    this.isDateCollapsed = !this.isDateCollapsed;
+  }
 
-    isNewSessionInvalid(): boolean{
-      if(this.radioGroupForm.value['mode'] == 'student'){
-      return this.sessionForm.invalid || !this.selectedBegin
-      }
-      else{
-        return !this.selectedBegin;
-      }
+  isNewSessionInvalid(): boolean {
+    if (this.radioGroupForm.value['mode'] == 'student') {
+      return this.sessionForm.invalid || !this.selectedBegin;
+    } else {
+      return !this.selectedBegin;
     }
+  }
 }
