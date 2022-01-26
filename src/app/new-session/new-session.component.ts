@@ -10,7 +10,7 @@ import { map } from 'rxjs/operators';
 import { AuthService } from '../auth.service';
 import { IEquipment } from '../interfaces/equipment.interface';
 import { IGroup } from '../interfaces/group.interface';
-import { ISession } from '../interfaces/session.interface';
+import { INewSession, ISession } from '../interfaces/session.interface';
 import { IStudent } from '../interfaces/student.interface';
 import { SessionService } from '../session.service';
 
@@ -41,7 +41,7 @@ export class NewSessionComponent implements OnInit {
     private authService: AuthService
   ) {
     this.sessionForm = formBuilder.group({
-      equipment: [],
+      equipment: [0],
       group: [-1, [Validators.min(0)]],
       student: [-1, [Validators.min(0)]],
     });
@@ -57,8 +57,7 @@ export class NewSessionComponent implements OnInit {
       );
   }
 
-  submit() {
-    const indEq: number = this.sessionForm.controls.equipment.value;
+  getSelectedUserId(): number{
     let userId: number;
     if (this.radioGroupForm.value['mode'] == 'student') {
       const ind: number = this.sessionForm.controls.student.value;
@@ -66,13 +65,21 @@ export class NewSessionComponent implements OnInit {
     } else {
       userId = this.authService.currentUser!.id;
     }
-    const newSession = {
+    return userId;
+  }
+
+  getDataFromForm(): INewSession {
+    const indEq: number = this.sessionForm.controls.equipment.value;
+    return {
       begin: this.selectedBegin!,
       end: this.selectedEnd!,
-      user: userId,
+      user: this.getSelectedUserId(),
       equipment: this.equipments[indEq].id,
     };
-    this.sessionService.createSession(newSession).subscribe(
+  }
+  
+  submit() {
+    this.sessionService.createSession(this.getDataFromForm()).subscribe(
       (res) => {
         this.activeModal.close();
       },

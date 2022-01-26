@@ -10,7 +10,7 @@ import { AnswerArraySessionsPopulate1 } from './interfaces/answer-array-sessions
 import { DefaultAnswer } from './interfaces/default-answer.interface';
 import { IEquipment } from './interfaces/equipment.interface';
 import { IGroup } from './interfaces/group.interface';
-import { ISession } from './interfaces/session.interface';
+import { INewSession, ISession } from './interfaces/session.interface';
 import { IStudent } from './interfaces/student.interface';
 import { IUser } from './interfaces/user.interface';
 
@@ -106,12 +106,7 @@ export class SessionService {
       );
   }
 
-  createSession(newSession: {
-    begin: Date;
-    end: Date;
-    user: number;
-    equipment: number;
-  }) {
+  createSession(newSession: INewSession) {
     const body = {
       data: { ...newSession, creator: this.authService.currentUser!.id },
     };

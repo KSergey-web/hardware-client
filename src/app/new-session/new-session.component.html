@@ -3,7 +3,7 @@
         <div class="form-group">
             <label for="equipment">Оборудование</label>
             <select class="form-control" id="equipment" name='equipment' formControlName="equipment">
-                <option *ngFor="let equipment of equipments; let i = index" [selected]='i == 0' [value]='i'>
+                <option *ngFor="let equipment of equipments; let i = index" [value]='i'>
                     {{equipment.name}}
                 </option>
             </select>
