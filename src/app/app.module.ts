@@ -13,7 +13,7 @@ import { httpInterceptorProviders } from './http-interceptors.ts';
 import { CustomHeaderComponent } from './custom-header/custom-header.component';
 import { MainPageComponent } from './main-page/main-page.component';
 import { NewSessionComponent } from './new-session/new-session.component';
-import { SessionDateFormComponent } from './new-session/session-date-form/session-date-form.component';
+import { SessionDateFormComponent } from './session-form/session-date-form/session-date-form.component';
 import { SessionsOfCurrentUserComponent } from './sessions-of-current-user/sessions-of-current-user.component';
 import { SessionFormComponent } from './session-form/session-form.component';
 import { EditSessionComponent } from './edit-session/edit-session.component';

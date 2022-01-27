@@ -77,7 +77,6 @@ export class SessionService {
       )
       .pipe(
         map((res) => {
-          console.log(res);
           return this.getSessionsFromResponse(res);
         })
       );

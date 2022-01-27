@@ -97,11 +97,12 @@ export class SessionFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getEquipments();
     if (this.editedSession)
       this.setEditedSessionToFrom();
-    else
+    else{
       this.getGroups();
+    this.getEquipments();
+    }
   }
 
   private setGroupToFormById(groupId: number): void {

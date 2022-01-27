@@ -1,6 +1,12 @@
 <header>
     <div class="header__section">
         SFU
+        <nav>
+            <ul>
+                <li><a routerLink="/manage-sessions" class="header__item">Управление сессиями</a></li>
+                <li><a routerLink="/my-sessions" class="header__item">Мои сессии</a></li>
+            </ul>
+        </nav>
     </div>
     <div *ngIf='currentUser' class="header__section">
         <div class="header__item">    

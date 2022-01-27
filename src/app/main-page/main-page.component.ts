@@ -21,9 +21,6 @@ export class MainPageComponent implements OnInit {
     }
   }
 
-  createNewSession() {
-    const modalRef = this.modalService.open(NewSessionComponent);
-  }
 
   ngOnInit(): void {}
 }
