@@ -12,7 +12,7 @@
   <div class="text-center">
     <div *ngIf='isBusy' class="alert alert-danger" role="alert">
       Выбранный вами промежуток времени пересекается с уже существующими сессиями. Пожалуйста укажите другое время
-      начала или длительность сеанса.
+      начала или длительности сеанса.
     </div>
     <button type="submit" class="btn btn-secondary"
       [disabled]="sessionDateForm.invalid || isBusy || !selectedDate || !sessionDateForm.controls['time'].value">Выбрать

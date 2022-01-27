@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCalendar, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { IEquipment } from 'src/app/interfaces/equipment.interface';
 import { ISession } from 'src/app/interfaces/session.interface';
@@ -23,7 +23,8 @@ export class SessionDateFormComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private sessionService: SessionService
+    private sessionService: SessionService,
+    private ngbCalendar: NgbCalendar, 
   ) {
     this.sessionDateForm = formBuilder.group({
       duration: [
@@ -36,20 +37,34 @@ export class SessionDateFormComponent implements OnInit {
 
   onSelectDate($date: NgbDateStruct) {
     this.getSessionsInDateByEquipment($date);
+    this.isBusy = false;
+  }
+
+  isToday(ngbDate: NgbDateStruct): boolean{
+    const date = new Date();
+    return ngbDate.year === date.getFullYear() && ngbDate.day === date.getDate() && ngbDate.month === (date.getMonth() + 1)
+  }
+
+  private setSelectedDate(ngbDate: NgbDateStruct): void{
+    if (this.isToday(ngbDate)){
+      this.selectedDate = new Date();
+      return;
+    }
+    this.selectedDate = new Date(
+      ngbDate.year,
+      ngbDate.month - 1,
+      ngbDate.day
+    );
   }
 
   private getSessionsInDateByEquipment(newDate?: NgbDateStruct) {
     if (newDate) {
-      this.selectedDate = new Date(
-        newDate.year,
-        newDate.month - 1,
-        newDate.day
-      );
+      this.setSelectedDate(newDate);
     } else if (!this.selectedDate) {
       return;
     }
     this.sessionService
-      .getSessionsInDateByEquipment(this.selectedEquipment!, this.selectedDate)
+      .getSessionsInDateByEquipment(this.selectedEquipment!, this.selectedDate!)
       .subscribe((sessions: ISession[]) => {
         this.sessions = sessions;
       });
@@ -66,6 +81,7 @@ export class SessionDateFormComponent implements OnInit {
 
   getMaxDay(): NgbDateStruct {
     const today = new Date();
+    //console.log(this.ngbCalendar.getNext(this.ngbCalendar.getToday(),'d',7));
     return {
       year: today.getFullYear(),
       month: today.getMonth() + 1,
@@ -73,7 +89,7 @@ export class SessionDateFormComponent implements OnInit {
     };
   }
 
-  getBeginAndDatesFromForm(): { begin: Date; end: Date } | null {
+  getBeginAndEndFromForm(): { begin: Date; end: Date } | null {
     if (!this.selectedDate) {
       return null;
     }
@@ -87,9 +103,10 @@ export class SessionDateFormComponent implements OnInit {
   }
 
   submit(): void {
-    const res = this.getBeginAndDatesFromForm();
+    const res = this.getBeginAndEndFromForm();
     if (!res) return;
     const { begin, end } = res;
+    debugger
     const ind = this.sessions.find((session: ISession) => {
       if (
         (session.begin <= begin && session.end >= begin) ||

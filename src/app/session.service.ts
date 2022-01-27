@@ -7,6 +7,7 @@ import { API_URL } from './app.module';
 import { AuthService } from './auth.service';
 import { roleUserEnum } from './enums/role-user.enum';
 import { AnswerArraySessionsPopulate1 } from './interfaces/answer-array-sessions-populate1.interface copy';
+import { AnswerArrayStudentsPopulate1 } from './interfaces/answer-array-students-populate1.interface';
 import { DefaultAnswer } from './interfaces/default-answer.interface';
 import { IEquipment } from './interfaces/equipment.interface';
 import { IGroup } from './interfaces/group.interface';
@@ -25,6 +26,34 @@ export class SessionService {
     private authService: AuthService
   ) {}
 
+
+  getInfoAboutStudentByUserId(userId: number): Observable<null | IStudent>{
+    const filter0 = `filters[user][id][$eq][0]=${userId}`;
+    return this.http.get<AnswerArrayStudentsPopulate1>(
+      `${this.apiUrl}/api/students?populate=%2A&` + filter0).pipe(
+        map((res) => {
+          if (res.data.length === 0) return null;
+          return this.getStudentsFromResponse(res)[0];
+        })
+      );
+  }
+
+  getStudentsFromResponse(res: AnswerArrayStudentsPopulate1): IStudent[] {
+    const students: IStudent[] = [];
+    res.data.forEach((item) => {
+      const student: any = {
+        id: item.attributes.user.data.id,
+        ...item.attributes.user.data.attributes
+      };
+      student.group = {
+        id: item.attributes.group.data.id,
+        ...item.attributes.group.data.attributes,
+      };
+      students.push(student as IStudent);
+    });
+    return students;
+  }
+
   getSessionsByUser(id: number): Observable<ISession[]> {
     const filter0 = `filters[$and][0][user][id][$eq]=${id}`;
     const filter1 = `filters[$and][1][end][$gte]=${new Date().toJSON()}`;
@@ -34,6 +63,21 @@ export class SessionService {
       )
       .pipe(
         map((res) => {
+          return this.getSessionsFromResponse(res);
+        })
+      );
+  }
+
+  getSessionsByCreator(id: number): Observable<ISession[]> {
+    const filter0 = `filters[$and][0][creator][id][$eq]=${id}`;
+    const filter1 = `filters[$and][1][end][$gte]=${new Date().toJSON()}`;
+    return this.http
+      .get<AnswerArraySessionsPopulate1>(
+        `${this.apiUrl}/api/sessions?populate=%2A&` + filter0 + '&' + filter1
+      )
+      .pipe(
+        map((res) => {
+          console.log(res);
           return this.getSessionsFromResponse(res);
         })
       );
@@ -55,7 +99,7 @@ export class SessionService {
       );
   }
 
-  getGroups(): Observable<IEquipment[]> {
+  getGroups(): Observable<IGroup[]> {
     return this.http
       .get<{ data: Array<{ id: number; attributes: { name: string } }> }>(
         `${this.apiUrl}/api/groups`
@@ -106,12 +150,21 @@ export class SessionService {
       );
   }
 
-  createSession(newSession: INewSession) {
+  createSession(newSession: INewSession): Observable<{data: any}> {
     const body = {
       data: { ...newSession, creator: this.authService.currentUser!.id },
     };
     console.log(body);
-    return this.http.post(`${this.apiUrl}/api/sessions`, body);
+    return this.http.post<any>(`${this.apiUrl}/api/sessions`, body);
+  }
+
+  udateSession(session: INewSession): Observable<{data: any}>  {
+    const body: any = {
+      data: { ...session },
+    };
+    delete body.data.id;
+    console.log(body);
+    return this.http.put<any>(`${this.apiUrl}/api/sessions/${session.id}`, body);
   }
 
   getSessionsInDateByEquipment(
@@ -121,7 +174,7 @@ export class SessionService {
     const lastDate = new Date(date);
     lastDate.setDate(date.getDate() + 1);
     const filter0 = `filters[$and][0][begin][$gte]=${date.toJSON()}`;
-    const filter1 = `filters[$and][1][begin][$lte]=${lastDate.toJSON()}`;
+    const filter1 = `filters[$and][1][begin][$lt]=${lastDate.toJSON()}`;
     const filter2 = `filters[$and][2][equipment][id][$eq]=${equipment.id}`;
     return this.http
       .get<AnswerArraySessionsPopulate1>(
@@ -153,6 +206,10 @@ export class SessionService {
       session.creator = {
         id: item.attributes.creator.data.id,
         ...item.attributes.creator.data.attributes,
+      };
+      session.equipment = {
+        id: item.attributes.equipment.data.id,
+        ...item.attributes.equipment.data.attributes,
       };
       session.begin = new Date(session.begin);
       session.end = new Date(session.end);

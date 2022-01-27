@@ -6,24 +6,30 @@ import { ISession } from '../interfaces/session.interface';
 import { SessionService } from '../session.service';
 
 @Component({
-  selector: 'app-sessions-of-current-user',
-  templateUrl: './sessions-of-current-user.component.html',
-  styleUrls: ['./sessions-of-current-user.component.scss'],
+  selector: 'app-sessions-management',
+  templateUrl: './sessions-management.component.html',
+  styleUrls: ['./sessions-management.component.scss']
 })
-export class SessionsOfCurrentUserComponent implements OnInit {
+export class SessionsManagementComponent implements OnInit {
+
   sessions: ISession[] = [];
 
   constructor(
     private sessionService: SessionService,
     private authService: AuthService,
     private modalService: NgbModal
-  ) {}
+  ) { }
 
-  ngOnInit(): void {
+    ngOnInit(): void {
     this.authService.currentUser$.subscribe((user) => {
-      this.sessionService.getSessionsByUser(user.id).subscribe((sessions) => {
+      this.sessionService.getSessionsByCreator(user.id).subscribe((sessions) => {
         this.sessions = sessions;
       });
     });
+  }
+
+  editSession(session: ISession): void{
+    const modalRef = this.modalService.open(EditSessionComponent);
+    (modalRef.componentInstance as EditSessionComponent).editedSession = session; 
   }
 }
