@@ -43,7 +43,7 @@ export class SessionsManagementComponent implements OnInit {
     modalRef.result.then((result) => {
       this.getSessions();
     }, (reason) => {
-      alert(`Dismissed ${this.getDismissReason(reason)}`);
+      this.outDismissReason(reason);
     }); 
   }
 
@@ -55,13 +55,13 @@ export class SessionsManagementComponent implements OnInit {
 
   
 
-private getDismissReason(reason: any): string {
+private outDismissReason(reason: any): void {
   if (reason === ModalDismissReasons.ESC) {
-    return 'by pressing ESC';
+      'by pressing ESC';
   } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-    return 'by clicking on a backdrop';
+     'by clicking on a backdrop';
   } else {
-    return `with: ${reason}`;
+     console.error(`with: ${reason}`);
   }
 }
 

@@ -1,6 +1,6 @@
 <div>
-Сеансы на которые вы записаны
     <table class="table">
+      <caption><b>Сеансы на которые вы записаны</b></caption>
         <thead>
           <tr>
             <th scope="col">#</th>
@@ -13,8 +13,8 @@
         <tbody>
           <tr *ngFor='let session of sessions; let i = index'>
             <th scope="row">{{i}}</th>
-            <td>{{session.begin | date:'HH:mm'}}</td>
-            <td> {{session.end | date:'HH:mm'}}</td>
+            <td>{{session.begin | date:'dd.MM.YYYY HH:mm'}}</td>
+            <td> {{session.end | date:'dd.MM.YYYY HH:mm'}}</td>
                 <td> {{session.user?.first_name}} {{session.user?.last_name}}
                  {{session.user?.patronymic}}</td>
                  <td> {{session.creator?.first_name}} {{session.creator?.last_name}}

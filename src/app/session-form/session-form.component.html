@@ -67,8 +67,7 @@
             </div>
         </div>
         <div class="text-center">
-            <button class="btn btn-primary" type='submit' [disabled]="isNewSessionInvalid()">Создать
-                сессию</button>
+            <button class="btn btn-primary" type='submit' [disabled]="isNewSessionInvalid()"><ng-content></ng-content></button>
         </div>
     </form>
 </div>

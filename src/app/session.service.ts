@@ -59,7 +59,7 @@ export class SessionService {
     const filter1 = `filters[$and][1][end][$gte]=${new Date().toJSON()}`;
     return this.http
       .get<AnswerArraySessionsPopulate1>(
-        `${this.apiUrl}/api/sessions?populate=%2A&` + filter0 + '&' + filter1
+        `${this.apiUrl}/api/sessions?populate=%2A&sort[0]=begin%3Aasc&` + filter0 + '&' + filter1
       )
       .pipe(
         map((res) => {
@@ -73,7 +73,7 @@ export class SessionService {
     const filter1 = `filters[$and][1][end][$gte]=${new Date().toJSON()}`;
     return this.http
       .get<AnswerArraySessionsPopulate1>(
-        `${this.apiUrl}/api/sessions?populate=%2A&` + filter0 + '&' + filter1
+        `${this.apiUrl}/api/sessions?populate=%2A&sort[0]=begin%3Aasc&` + filter0 + '&' + filter1
       )
       .pipe(
         map((res) => {

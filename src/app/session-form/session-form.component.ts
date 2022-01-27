@@ -101,7 +101,7 @@ export class SessionFormComponent implements OnInit {
       this.setEditedSessionToFrom();
     else{
       this.getGroups();
-    this.getEquipments();
+      this.getEquipments();
     }
   }
 
@@ -144,6 +144,8 @@ export class SessionFormComponent implements OnInit {
     this.setEquipmentToFormById(this.editedSession.equipment!.id);
     if (this.editedSession.user?.id == this.authService.currentUser?.id) {
       this.radioGroupForm.controls.mode.setValue('myself');
+      this.getGroups();
+      this.getEquipments();
       return;
     }
     else{
