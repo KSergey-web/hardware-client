@@ -16,9 +16,11 @@ export class SessionDateFormComponent implements OnInit {
   selectedDate?: Date;
   sessions: ISession[] = [];
   selectedEquipment?: IEquipment;
-  isBusy: boolean = false;
+  isBusyTimeInterval: boolean = false;
+  isPast: boolean = false;
 
   @Input() equipmentChanged$!: Observable<IEquipment>;
+  @Input() editedSession: ISession | null = null;
   @Output() onSelectedDates = new EventEmitter<{ begin: Date; end: Date }>();
 
   constructor(
@@ -37,7 +39,6 @@ export class SessionDateFormComponent implements OnInit {
 
   onSelectDate($date: NgbDateStruct) {
     this.getSessionsInDateByEquipment($date);
-    this.isBusy = false;
   }
 
   isToday(ngbDate: NgbDateStruct): boolean{
@@ -66,6 +67,9 @@ export class SessionDateFormComponent implements OnInit {
     this.sessionService
       .getSessionsInDateByEquipment(this.selectedEquipment!, this.selectedDate!)
       .subscribe((sessions: ISession[]) => {
+        if (this.editedSession){
+          sessions = sessions.filter(session => session.id !== this.editedSession?.id)
+        }
         this.sessions = sessions;
       });
   }
@@ -102,11 +106,17 @@ export class SessionDateFormComponent implements OnInit {
     return { begin, end };
   }
 
-  submit(): void {
-    const res = this.getBeginAndEndFromForm();
-    if (!res) return;
-    const { begin, end } = res;
-    debugger
+  CheckIsBeginInPast(begin: Date): boolean{
+    if (begin < new Date()) {
+      this.isPast = true;
+    }
+    else{
+    this.isPast = false;
+    }
+    return this.isPast; 
+  }
+
+  CheckIsTimeIntervalBusy(begin: Date, end: Date): boolean{
     const ind = this.sessions.find((session: ISession) => {
       if (
         (session.begin <= begin && session.end >= begin) ||
@@ -116,8 +126,18 @@ export class SessionDateFormComponent implements OnInit {
       }
       return false;
     });
-    if (!ind) this.onSelectedDates.emit({ begin, end });
-    else this.isBusy = true;
+    if (ind) this.isBusyTimeInterval = true;
+    else this.isBusyTimeInterval = false;
+    return this.isBusyTimeInterval;
+  }
+
+  submit(): void {
+    const res = this.getBeginAndEndFromForm();
+    if (!res) return;
+    const { begin, end } = res;
+    if (this.CheckIsBeginInPast(begin)) return;
+    if (this.CheckIsTimeIntervalBusy(begin, end)) return;
+    this.onSelectedDates.emit({ begin, end });
   }
 
   ngOnInit(): void {
@@ -125,6 +145,5 @@ export class SessionDateFormComponent implements OnInit {
       this.selectedEquipment = eq;
       this.getSessionsInDateByEquipment();
     });
-    this.sessionDateForm.valueChanges.subscribe(() => (this.isBusy = false));
   }
 }

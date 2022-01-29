@@ -62,7 +62,7 @@
             <div class="card">
                 <div class="card-body">
                     <app-session-date-form [equipmentChanged$]='equipmentChanged$'
-                        (onSelectedDates)="onSelectedDates($event)"></app-session-date-form>
+                        (onSelectedDates)="onSelectedDates($event)" [editedSession]="editedSession"></app-session-date-form>
                 </div>
             </div>
         </div>

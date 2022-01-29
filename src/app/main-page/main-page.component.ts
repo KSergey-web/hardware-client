@@ -14,7 +14,6 @@ export class MainPageComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private modalService: NgbModal
   ) {
     if (this.authService.isLoggedOut()) {
       this.router.navigate(['signin']);

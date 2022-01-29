@@ -10,12 +10,15 @@
     <input class="form-control w-25" id="duration" name="duration" formControlName="duration" type="number" />
   </div>
   <div class="text-center">
-    <div *ngIf='isBusy' class="alert alert-danger" role="alert">
+    <div *ngIf='isBusyTimeInterval' class="alert alert-danger" role="alert">
       Выбранный вами промежуток времени пересекается с уже существующими сессиями. Пожалуйста укажите другое время
       начала или длительности сеанса.
     </div>
+    <div *ngIf='isPast' class="alert alert-danger" role="alert">
+      Нельзя назначать сеансы в прошлом
+    </div>
     <button type="submit" class="btn btn-secondary"
-      [disabled]="sessionDateForm.invalid || isBusy || !selectedDate || !sessionDateForm.controls['time'].value">Выбрать
+      [disabled]="sessionDateForm.invalid || !selectedDate || !sessionDateForm.controls['time'].value">Выбрать
       время</button>
   </div>
 </form>

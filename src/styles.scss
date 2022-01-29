@@ -7,12 +7,19 @@ input.ng-touched.ng-invalid {border:solid red 2px;}
 input.ng-touched.ng-valid {border:solid green 2px;}
 
 body{
-    background-color: black;
+    background: url('./assets/main_background.png') no-repeat;
+    background-size: 100%;
 }
 
 .container{
     background-color: white;
 }
+
+.highlight_tr_hover{
+    tr:hover   {
+        background-color:rgb(104, 194, 189); text-decoration:none
+    }
+} 
 
 caption{
     caption-side: top;

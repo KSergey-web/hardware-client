@@ -171,10 +171,13 @@ export class SessionService {
     date: Date
   ): Observable<ISession[]> {
     const lastDate = new Date(date);
-    lastDate.setDate(date.getDate() + 1);
+    lastDate.setHours(23);
+    lastDate.setMinutes(59);
+    lastDate.setSeconds(59);
     const filter0 = `filters[$and][0][begin][$gte]=${date.toJSON()}`;
     const filter1 = `filters[$and][1][begin][$lt]=${lastDate.toJSON()}`;
     const filter2 = `filters[$and][2][equipment][id][$eq]=${equipment.id}`;
+    const filter3 = `filters[$and][3][end][$gte]=${(new Date()).toJSON()}`;
     return this.http
       .get<AnswerArraySessionsPopulate1>(
         `${this.apiUrl}/api/sessions?populate=%2A&sort[0]=begin%3Aasc&` +
@@ -182,7 +185,9 @@ export class SessionService {
           '&' +
           filter1 +
           '&' +
-          filter2
+          filter2 +
+          '&' +
+          filter3
       )
       .pipe(
         map((res) => {
@@ -215,5 +220,10 @@ export class SessionService {
       sessions.push(session as ISession);
     });
     return sessions;
+  }
+
+  deleteSession(session: ISession): Observable<DefaultAnswer> {
+    return this.http.delete<DefaultAnswer>(
+      `${this.apiUrl}/api/sessions/${session.id}`);
   }
 }

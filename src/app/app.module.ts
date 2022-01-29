@@ -18,6 +18,7 @@ import { SessionsOfCurrentUserComponent } from './sessions-of-current-user/sessi
 import { SessionFormComponent } from './session-form/session-form.component';
 import { EditSessionComponent } from './edit-session/edit-session.component';
 import { SessionsManagementComponent } from './sessions-management/sessions-management.component';
+import { LogoutComponent } from './custom-header/logout/logout.component';
 
 export const API_URL = new InjectionToken<string>('api url');
 
@@ -33,6 +34,7 @@ export const API_URL = new InjectionToken<string>('api url');
     SessionFormComponent,
     EditSessionComponent,
     SessionsManagementComponent,
+    LogoutComponent,
   ],
   imports: [
     BrowserModule,

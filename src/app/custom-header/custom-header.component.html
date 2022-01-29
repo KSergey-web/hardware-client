@@ -1,10 +1,10 @@
 <header>
     <div class="header__section">
-        SFU
+        <img src="../../assets/logo_sfu.png" class="logo" alt="логотип">
         <nav>
             <ul>
-                <li><a routerLink="/manage-sessions" class="header__item">Управление сессиями</a></li>
-                <li><a routerLink="/my-sessions" class="header__item">Мои сессии</a></li>
+                <li *ngIf="isTeacher()"><a routerLink="/main-page/manage-sessions" class="header__item" routerLinkActive="active">Управление сессиями</a></li>
+                <li><a routerLink="/main-page/my-sessions" class="header__item" routerLinkActive="active">Мои сессии</a></li>
             </ul>
         </nav>
     </div>
@@ -12,8 +12,7 @@
         <div class="header__item">    
         {{currentUser.first_name}}
         {{currentUser.last_name}}
-        {{currentUser.role}}
         </div>
-        <button type="button" class="btn btn-primary" (click)="logout()"> logout</button>
+        <button type="button" class="btn" (click)="openLogout()"> <img src="../../assets/logout.png" alt=""></button>
     </div>
 </header>

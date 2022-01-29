@@ -1,7 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '../auth.service';
+import { roleUserEnum } from '../enums/role-user.enum';
 import { IUser } from '../interfaces/user.interface';
+import { LogoutComponent } from './logout/logout.component';
 
 @Component({
   selector: 'app-custom-header',
@@ -11,7 +14,11 @@ import { IUser } from '../interfaces/user.interface';
 export class CustomHeaderComponent implements OnInit {
   currentUser?: IUser;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router,  private modalService: NgbModal) {}
+
+  isTeacher(): boolean{
+    return this.currentUser?.role == roleUserEnum.teacher;
+  }
 
   ngOnInit(): void {
     if (this.authService.isLoggedOut()) {
@@ -23,13 +30,13 @@ export class CustomHeaderComponent implements OnInit {
       (err: Error) => {
         alert("Сouldn't get your data");
         console.error(err);
-        this.logout();
+        this.authService.logout();
         this.router.navigate(['signin']);
       }
     );
   }
 
-  logout(): void {
-    this.authService.logout();
+  openLogout(): void {
+    const modalRef = this.modalService.open(LogoutComponent);
   }
 }

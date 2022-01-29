@@ -21,11 +21,11 @@ export class SessionsManagementComponent implements OnInit {
     private modalService: NgbModal
   ) { }
 
-    ngOnInit(): void {
+  ngOnInit(): void {
     this.getSessions();
   }
 
-  private getSessions(){
+  private getSessions() {
     this.authService.currentUser$.subscribe((user) => {
       this.sessionService.getSessionsByCreator(user.id).subscribe((sessions) => {
         this.sessions = sessions;
@@ -33,18 +33,18 @@ export class SessionsManagementComponent implements OnInit {
     });
   }
 
-  editSession(session: ISession): void{
+  editSession(session: ISession): void {
     const modalRef = this.modalService.open(EditSessionComponent);
     (modalRef.componentInstance as EditSessionComponent).editedSession = session;
     this.performResultModal(modalRef);
   }
 
-  private performResultModal(modalRef: NgbModalRef): void{
+  private performResultModal(modalRef: NgbModalRef): void {
     modalRef.result.then((result) => {
       this.getSessions();
     }, (reason) => {
       this.outDismissReason(reason);
-    }); 
+    });
   }
 
 
@@ -53,16 +53,25 @@ export class SessionsManagementComponent implements OnInit {
     this.performResultModal(modalRef);
   }
 
-  
 
-private outDismissReason(reason: any): void {
-  if (reason === ModalDismissReasons.ESC) {
+
+  private outDismissReason(reason: any): void {
+    if (reason === ModalDismissReasons.ESC) {
       'by pressing ESC';
-  } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-     'by clicking on a backdrop';
-  } else {
-     console.error(`with: ${reason}`);
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      'by clicking on a backdrop';
+    } else {
+      console.error(`with: ${reason}`);
+    }
   }
-}
 
+  deleteSession($event: MouseEvent,session: ISession): void{
+    $event.stopPropagation();
+    this.sessionService.deleteSession(session).subscribe(res => {
+      this.getSessions()
+    }, err => {
+      console.error(err);
+      alert(`Не удалось удалить сессию`)
+    })
+  }
 }
