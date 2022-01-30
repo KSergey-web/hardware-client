@@ -17,7 +17,7 @@
             <td> {{session.end | date:'dd.MM.YYYY HH:mm'}}</td>
                  <td> {{session.creator?.first_name}} {{session.creator?.last_name}}
                     {{session.creator?.patronymic}}</td>
-                    <td><button class="btn btn-secondary">Подключиться</button></td>
+                    <td><button class="btn btn-secondary" (click)="startSession(session)">Подключиться</button></td>
           </tr>
         </tbody>
       </table>

@@ -20,6 +20,8 @@ import { EditSessionComponent } from './edit-session/edit-session.component';
 import { SessionsManagementComponent } from './sessions-management/sessions-management.component';
 import { LogoutComponent } from './custom-header/logout/logout.component';
 import { StartedSessionsComponent } from './sessions-of-current-user/started-sessions/started-sessions.component';
+import { SessionInProgressComponent } from './session-in-progress/session-in-progress.component';
+import { TimerPipe } from './session-in-progress/timer.pipe';
 
 export const API_URL = new InjectionToken<string>('api url');
 
@@ -37,6 +39,8 @@ export const API_URL = new InjectionToken<string>('api url');
     SessionsManagementComponent,
     LogoutComponent,
     StartedSessionsComponent,
+    SessionInProgressComponent,
+    TimerPipe
   ],
   imports: [
     BrowserModule,

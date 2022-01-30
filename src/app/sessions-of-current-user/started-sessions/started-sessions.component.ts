@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Router } from '@angular/router';
 import { ISession } from 'src/app/interfaces/session.interface';
 
 @Component({
@@ -14,7 +15,9 @@ export class StartedSessionsComponent implements OnInit, OnDestroy, OnChanges {
 
   timerId!: any;
 
-  constructor() { }
+  constructor(
+    private router: Router
+  ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
         this.rebaseStartedSessions();
@@ -52,5 +55,9 @@ export class StartedSessionsComponent implements OnInit, OnDestroy, OnChanges {
   ngOnDestroy(): void {
       console.log(1);
       clearInterval(this.timerId);
+  }
+
+  startSession(session: ISession){
+    this.router.navigate(['session',`${session.id}`])
   }
 }

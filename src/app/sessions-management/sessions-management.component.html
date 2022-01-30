@@ -13,7 +13,7 @@
             </thead>
             <tbody class="highlight_tr_hover">
               <tr *ngFor='let session of sessions; let i = index' (click)="editSession(session)">
-                <th scope="row">{{i}}</th>
+                <th scope="row">{{i+1}}</th>
                 <td>{{session.begin | date:'dd.MM.YYYY HH:mm'}}</td>
                 <td> {{session.end | date:'dd.MM.YYYY HH:mm'}}</td>
                     <td> {{session.user?.first_name}} {{session.user?.last_name}}

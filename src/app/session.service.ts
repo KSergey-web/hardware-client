@@ -196,7 +196,8 @@ export class SessionService {
       );
   }
 
-  getSessionsFromResponse(res: AnswerArraySessionsPopulate1): ISession[] {
+
+  private getSessionsFromResponse(res: AnswerArraySessionsPopulate1): ISession[] {
     const sessions: ISession[] = [];
     res.data.forEach((item) => {
       const session: any = {
@@ -225,5 +226,33 @@ export class SessionService {
   deleteSession(session: ISession): Observable<DefaultAnswer> {
     return this.http.delete<DefaultAnswer>(
       `${this.apiUrl}/api/sessions/${session.id}`);
+  }
+
+  private getSessionFromDefaultAnswer(data: any): ISession{
+    const session: any = {
+      id: data.id,
+      ...data.attributes,
+    };
+    session.user = {
+      id: data.attributes.user.data.id,
+      ...data.attributes.user.data.attributes,
+    };
+    session.creator = {
+      id: data.attributes.creator.data.id,
+      ...data.attributes.creator.data.attributes,
+    };
+    session.equipment = {
+      id: data.attributes.equipment.data.id,
+      ...data.attributes.equipment.data.attributes,
+    };
+    session.begin = new Date(session.begin);
+    session.end = new Date(session.end);
+    return session;
+  }
+
+  getSessionById(id: number): Observable<ISession>{
+    return this.http.get<DefaultAnswer>(
+      `${this.apiUrl}/api/sessions/${id}?populate=%2A`).pipe(map(res => this.getSessionFromDefaultAnswer(res.data)
+      ));
   }
 }
