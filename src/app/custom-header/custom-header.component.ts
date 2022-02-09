@@ -1,6 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { roleUserEnum } from '../enums/role-user.enum';
 import { IUser } from '../interfaces/user.interface';
 import { AuthService } from '../services/auth.service';
@@ -11,7 +13,7 @@ import { LogoutComponent } from './logout/logout.component';
   templateUrl: './custom-header.component.html',
   styleUrls: ['./custom-header.component.scss'],
 })
-export class CustomHeaderComponent implements OnInit {
+export class CustomHeaderComponent implements OnInit, OnDestroy {
   currentUser?: IUser;
 
   constructor(private authService: AuthService, private router: Router,  private modalService: NgbModal) {}
@@ -20,12 +22,19 @@ export class CustomHeaderComponent implements OnInit {
     return this.currentUser?.role == roleUserEnum.teacher;
   }
 
+  private onDestroy$ = new Subject<boolean>();
+
+  ngOnDestroy() {
+    this.onDestroy$.next(true);
+    this.onDestroy$.complete();
+  }
+
   ngOnInit(): void {
     if (this.authService.isLoggedOut()) {
       this.router.navigate(['']);
       return;
     }
-    this.authService.currentUser$.subscribe(
+    this.authService.currentUser$.pipe(takeUntil(this.onDestroy$)).subscribe(
       (user) => (this.currentUser = user),
       (err: Error) => {
         alert("Сouldn't get your data");
@@ -35,6 +44,9 @@ export class CustomHeaderComponent implements OnInit {
       }
     );
   }
+
+
+  
 
   openLogout(): void {
     const modalRef = this.modalService.open(LogoutComponent);

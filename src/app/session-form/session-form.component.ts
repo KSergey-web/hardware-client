@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 import { IEquipment } from '../interfaces/equipment.interface';
 import { IGroup } from '../interfaces/group.interface';
 import { INewSession, ISession } from '../interfaces/session.interface';
@@ -17,7 +17,7 @@ import { StudentService } from '../services/student.service';
   templateUrl: './session-form.component.html',
   styleUrls: ['./session-form.component.scss']
 })
-export class SessionFormComponent implements OnInit {
+export class SessionFormComponent implements OnInit, OnDestroy {
 
   sessionForm!: FormGroup;
   radioGroupForm!: FormGroup;
@@ -48,6 +48,15 @@ export class SessionFormComponent implements OnInit {
     this.initForm();
   }
 
+  private onDestroy$ = new Subject<boolean>();
+
+  ngOnDestroy() {
+    this.onDestroy$.next(true);
+    this.onDestroy$.complete();
+  }
+
+  
+
   private initEquipmentChanged$() {
     this.equipmentChanged$ =
       this.sessionForm.controls.equipment.valueChanges.pipe(
@@ -56,10 +65,11 @@ export class SessionFormComponent implements OnInit {
   }
 
   private createSubOnChangeGroup(): void {
-    this.sessionForm.controls.group.valueChanges.subscribe((id: number) => {
+    this.sessionForm.controls.group.valueChanges.pipe(takeUntil(this.onDestroy$)).subscribe((id: number) => {
       if (id == -1) return;
       this.groupService
         .getStudentsFromGroup(this.groups[id])
+        .pipe(takeUntil(this.onDestroy$))
         .subscribe((students) => (this.students = students));
     });
   }
@@ -114,6 +124,7 @@ export class SessionFormComponent implements OnInit {
   private setGroupToFormById(groupId: number): void {
     this.groupService
       .getGroups()
+      .pipe(takeUntil(this.onDestroy$))
       .subscribe(groups => {
         this.groups = groups;
         const indGroup = this.groups.findIndex(group => group.id == groupId);
@@ -124,6 +135,7 @@ export class SessionFormComponent implements OnInit {
   private setStudentFromGroupToFormById(studentId: number, group: IGroup): void {
     this.groupService
       .getStudentsFromGroup(group!)
+      .pipe(takeUntil(this.onDestroy$))
       .subscribe((students) => {
         this.students = students;
         const indStudent = this.students.findIndex(student => student.id == studentId);
@@ -135,6 +147,7 @@ export class SessionFormComponent implements OnInit {
   private setEquipmentToFormById(equipmentId: number): void {
     this.equipmentService
       .getEquipments()
+      .pipe(takeUntil(this.onDestroy$))
       .subscribe((equipments) => {
         this.equipments = equipments;
         const indEquip = this.equipments.findIndex(equipment => equipment.id == equipmentId);
@@ -157,7 +170,7 @@ export class SessionFormComponent implements OnInit {
     else{
       this.radioGroupForm.controls.mode.setValue('student');
     }
-    this.studentService.getInfoAboutStudentByUserId(this.editedSession.user!.id).subscribe(student => {
+    this.studentService.getInfoAboutStudentByUserId(this.editedSession.user!.id).pipe(takeUntil(this.onDestroy$)).subscribe(student => {
       if (!student) {
         console.error('Student not found');
         return
@@ -170,6 +183,7 @@ export class SessionFormComponent implements OnInit {
   private getEquipments(): void {
     this.equipmentService
       .getEquipments()
+      .pipe(takeUntil(this.onDestroy$))
       .subscribe((equipments: IEquipment[]) => {
         this.equipments = equipments;
         this.sessionForm.controls.equipment.setValue(0);
@@ -177,7 +191,7 @@ export class SessionFormComponent implements OnInit {
   }
 
   private getGroups(): void {
-    this.groupService.getGroups().subscribe((groups: IGroup[]) => {
+    this.groupService.getGroups().pipe(takeUntil(this.onDestroy$)).subscribe((groups: IGroup[]) => {
       this.groups = groups;
     });
   }

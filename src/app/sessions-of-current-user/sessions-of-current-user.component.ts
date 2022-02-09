@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { EditSessionComponent } from '../edit-session/edit-session.component';
 import { ISession } from '../interfaces/session.interface';
 import { AuthService } from '../services/auth.service';
@@ -10,8 +12,14 @@ import { SessionService } from '../services/session.service';
   templateUrl: './sessions-of-current-user.component.html',
   styleUrls: ['./sessions-of-current-user.component.scss'],
 })
-export class SessionsOfCurrentUserComponent implements OnInit {
+export class SessionsOfCurrentUserComponent implements OnInit, OnDestroy {
   sessions: ISession[] = [];
+  private onDestroy$ = new Subject<boolean>();
+
+  ngOnDestroy() {
+    this.onDestroy$.next(true);
+    this.onDestroy$.complete();
+  }
 
   constructor(
     private sessionService: SessionService,
@@ -20,8 +28,10 @@ export class SessionsOfCurrentUserComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.authService.currentUser$.subscribe((user) => {
-      this.sessionService.getSessionsByUser(user.id).subscribe((sessions) => {
+    this.authService.currentUser$.pipe(takeUntil(this.onDestroy$)
+    ).subscribe((user) => {
+      this.sessionService.getSessionsByUser(user.id).pipe(takeUntil(this.onDestroy$)
+      ).subscribe((sessions) => {
         this.sessions = sessions;
       });
     });

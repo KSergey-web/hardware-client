@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -8,8 +10,14 @@ import { AuthService } from '../services/auth.service';
   templateUrl: './sign-in.component.html',
   styleUrls: ['./sign-in.component.scss'],
 })
-export class SignInComponent implements OnInit {
+export class SignInComponent implements OnInit, OnDestroy {
   signInForm: FormGroup;
+  private onDestroy$ = new Subject<boolean>();
+
+  ngOnDestroy() {
+    this.onDestroy$.next(true);
+    this.onDestroy$.complete();
+  }
 
   constructor(
     private formBuilder: FormBuilder,
@@ -37,7 +45,7 @@ export class SignInComponent implements OnInit {
 
   login() {
     const val = this.signInForm.value;
-    this.authService.login(val).subscribe(
+    this.authService.login(val).pipe(takeUntil(this.onDestroy$)).subscribe(
       () => {
         this.router.navigate(['']);
       },

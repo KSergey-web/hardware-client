@@ -1,5 +1,7 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 import { INewSession } from "../interfaces/session.interface";
 import { SessionService } from "../services/session.service";
 
@@ -9,8 +11,15 @@ import { SessionService } from "../services/session.service";
   templateUrl: './new-session.component.html',
   styleUrls: ['./new-session.component.scss'],
 })
-export class NewSessionComponent implements OnInit {
+export class NewSessionComponent implements OnInit, OnDestroy {
   ngOnInit( ): void {
+  }
+
+  private onDestroy$ = new Subject<boolean>();
+
+  ngOnDestroy() {
+    this.onDestroy$.next(true);
+    this.onDestroy$.complete();
   }
 
   constructor(
@@ -19,7 +28,7 @@ export class NewSessionComponent implements OnInit {
   ) {}
 
   createSession(session: INewSession): void{
-    this.sessionService.createSession(session).subscribe(
+    this.sessionService.createSession(session).pipe(takeUntil(this.onDestroy$)).subscribe(
       (res) => {
         this.activeModal.close();
       },

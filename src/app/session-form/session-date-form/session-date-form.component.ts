@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbCalendar, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { IEquipment } from 'src/app/interfaces/equipment.interface';
 import { ISession } from 'src/app/interfaces/session.interface';
 import { SessionService } from 'src/app/services/session.service';
@@ -11,13 +12,14 @@ import { SessionService } from 'src/app/services/session.service';
   templateUrl: './session-date-form.component.html',
   styleUrls: ['./session-date-form.component.scss'],
 })
-export class SessionDateFormComponent implements OnInit {
+export class SessionDateFormComponent implements OnInit, OnDestroy {
   sessionDateForm!: FormGroup;
   selectedDate?: Date;
   sessions: ISession[] = [];
   selectedEquipment?: IEquipment;
   isBusyTimeInterval: boolean = false;
   isPast: boolean = false;
+  
 
   @Input() equipmentChanged$!: Observable<IEquipment>;
   @Input() editedSession: ISession | null = null;
@@ -36,6 +38,13 @@ export class SessionDateFormComponent implements OnInit {
       time: [{ minute: 0, hour: 0 }],
     });
   }
+
+  private onDestroy$ = new Subject<boolean>();
+
+  ngOnDestroy() {
+    this.onDestroy$.next(true);
+    this.onDestroy$.complete();
+ }
 
   onSelectDate($date: NgbDateStruct) {
     this.getSessionsInDateByEquipment($date);
@@ -66,6 +75,7 @@ export class SessionDateFormComponent implements OnInit {
     }
     this.sessionService
       .getSessionsInDateByEquipment(this.selectedEquipment!, this.selectedDate!)
+      .pipe(takeUntil(this.onDestroy$))
       .subscribe((sessions: ISession[]) => {
         if (this.editedSession){
           sessions = sessions.filter(session => session.id !== this.editedSession?.id)
@@ -141,7 +151,7 @@ export class SessionDateFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.equipmentChanged$.subscribe((eq) => {
+    this.equipmentChanged$.pipe(takeUntil(this.onDestroy$)).subscribe((eq) => {
       this.selectedEquipment = eq;
       this.getSessionsInDateByEquipment();
     });
