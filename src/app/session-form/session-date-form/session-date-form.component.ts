@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbCalendar, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, Subject } from 'rxjs';
@@ -19,7 +26,6 @@ export class SessionDateFormComponent implements OnInit, OnDestroy {
   selectedEquipment?: IEquipment;
   isBusyTimeInterval: boolean = false;
   isPast: boolean = false;
-  
 
   @Input() equipmentChanged$!: Observable<IEquipment>;
   @Input() editedSession: ISession | null = null;
@@ -28,7 +34,7 @@ export class SessionDateFormComponent implements OnInit, OnDestroy {
   constructor(
     private formBuilder: FormBuilder,
     private sessionService: SessionService,
-    private ngbCalendar: NgbCalendar, 
+    private ngbCalendar: NgbCalendar
   ) {
     this.sessionDateForm = formBuilder.group({
       duration: [
@@ -44,27 +50,27 @@ export class SessionDateFormComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.onDestroy$.next(true);
     this.onDestroy$.complete();
- }
+  }
 
   onSelectDate($date: NgbDateStruct) {
     this.getSessionsInDateByEquipment($date);
   }
 
-  isToday(ngbDate: NgbDateStruct): boolean{
+  isToday(ngbDate: NgbDateStruct): boolean {
     const date = new Date();
-    return ngbDate.year === date.getFullYear() && ngbDate.day === date.getDate() && ngbDate.month === (date.getMonth() + 1)
+    return (
+      ngbDate.year === date.getFullYear() &&
+      ngbDate.day === date.getDate() &&
+      ngbDate.month === date.getMonth() + 1
+    );
   }
 
-  private setSelectedDate(ngbDate: NgbDateStruct): void{
-    if (this.isToday(ngbDate)){
+  private setSelectedDate(ngbDate: NgbDateStruct): void {
+    if (this.isToday(ngbDate)) {
       this.selectedDate = new Date();
       return;
     }
-    this.selectedDate = new Date(
-      ngbDate.year,
-      ngbDate.month - 1,
-      ngbDate.day
-    );
+    this.selectedDate = new Date(ngbDate.year, ngbDate.month - 1, ngbDate.day);
   }
 
   private getSessionsInDateByEquipment(newDate?: NgbDateStruct) {
@@ -77,8 +83,10 @@ export class SessionDateFormComponent implements OnInit, OnDestroy {
       .getSessionsInDateByEquipment(this.selectedEquipment!, this.selectedDate!)
       .pipe(takeUntil(this.onDestroy$))
       .subscribe((sessions: ISession[]) => {
-        if (this.editedSession){
-          sessions = sessions.filter(session => session.id !== this.editedSession?.id)
+        if (this.editedSession) {
+          sessions = sessions.filter(
+            (session) => session.id !== this.editedSession?.id
+          );
         }
         this.sessions = sessions;
       });
@@ -116,17 +124,16 @@ export class SessionDateFormComponent implements OnInit, OnDestroy {
     return { begin, end };
   }
 
-  CheckIsBeginInPast(begin: Date): boolean{
+  CheckIsBeginInPast(begin: Date): boolean {
     if (begin < new Date()) {
       this.isPast = true;
+    } else {
+      this.isPast = false;
     }
-    else{
-    this.isPast = false;
-    }
-    return this.isPast; 
+    return this.isPast;
   }
 
-  CheckIsTimeIntervalBusy(begin: Date, end: Date): boolean{
+  CheckIsTimeIntervalBusy(begin: Date, end: Date): boolean {
     const ind = this.sessions.find((session: ISession) => {
       if (
         (session.begin <= begin && session.end >= begin) ||

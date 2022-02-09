@@ -16,9 +16,13 @@ import { LogoutComponent } from './logout/logout.component';
 export class CustomHeaderComponent implements OnInit, OnDestroy {
   currentUser?: IUser;
 
-  constructor(private authService: AuthService, private router: Router,  private modalService: NgbModal) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private modalService: NgbModal
+  ) {}
 
-  isTeacher(): boolean{
+  isTeacher(): boolean {
     return this.currentUser?.role == roleUserEnum.teacher;
   }
 
@@ -44,9 +48,6 @@ export class CustomHeaderComponent implements OnInit, OnDestroy {
       }
     );
   }
-
-
-  
 
   openLogout(): void {
     const modalRef = this.modalService.open(LogoutComponent);

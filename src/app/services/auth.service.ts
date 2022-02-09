@@ -2,7 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, of, ReplaySubject, Subject } from 'rxjs';
-import { map, tap, mergeMap, switchMap, catchError, takeUntil } from 'rxjs/operators';
+import {
+  map,
+  tap,
+  mergeMap,
+  switchMap,
+  catchError,
+  takeUntil,
+} from 'rxjs/operators';
 import { API_URL } from '../app.module';
 import { roleUserEnum } from '../enums/role-user.enum';
 import { IUser } from '../interfaces/user.interface';
@@ -60,49 +67,47 @@ export class AuthService implements OnDestroy {
   }
 
   private trySetRoleStudent(user: IUser): Observable<IUser> {
-    return this.studentService.isUserAStudent(user)
-      .pipe(map((isStudent: boolean) => {
+    return this.studentService.isUserAStudent(user).pipe(
+      map((isStudent: boolean) => {
         if (isStudent) {
           user.role = roleUserEnum.student;
         }
         return user;
-      }))
+      })
+    );
   }
 
   private trySetRoleTeacher(user: IUser): Observable<IUser> {
-    return this.teacherService.isUserATeacher(user)
-      .pipe(
-        map((isTeacher) => {
-          if (isTeacher) {
-            user.role = roleUserEnum.teacher;
-          }
-          return user;
-        })
-      );
+    return this.teacherService.isUserATeacher(user).pipe(
+      map((isTeacher) => {
+        if (isTeacher) {
+          user.role = roleUserEnum.teacher;
+        }
+        return user;
+      })
+    );
   }
 
   private assignRoleToUser(user: IUser): Observable<IUser> {
-    return this.trySetRoleStudent(user)
-      .pipe(
-        mergeMap((user: IUser) => {
-          if (user.role) {
-            return of(user);
-          } else {
-            return this.trySetRoleTeacher(user)
-          }
-        }),
-        tap((user) => {
-          if (!user.role) {
-            throw new Error('Not found role');
-          }
-        }
-        ),
-        catchError((err: Error) => {
-          alert(err.message);
-          this.logout();
+    return this.trySetRoleStudent(user).pipe(
+      mergeMap((user: IUser) => {
+        if (user.role) {
           return of(user);
-        })
-      );
+        } else {
+          return this.trySetRoleTeacher(user);
+        }
+      }),
+      tap((user) => {
+        if (!user.role) {
+          throw new Error('Not found role');
+        }
+      }),
+      catchError((err: Error) => {
+        alert(err.message);
+        this.logout();
+        return of(user);
+      })
+    );
   }
 
   private getCurrentUser(): Observable<IUser> {
@@ -113,15 +118,16 @@ export class AuthService implements OnDestroy {
 
   private setСurrentUser$(user?: IUser): void {
     if (user) {
-      this.assignRoleToUser(user).pipe(takeUntil(this.onDestroy$)
-      ).subscribe((user) =>
-        this._currentUser$.next(user)
-      );
+      this.assignRoleToUser(user)
+        .pipe(takeUntil(this.onDestroy$))
+        .subscribe((user) => this._currentUser$.next(user));
       return;
     }
-    this.getCurrentUser().pipe(takeUntil(this.onDestroy$)).subscribe((user: IUser) => {
-      this._currentUser$.next(user);
-    });
+    this.getCurrentUser()
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe((user: IUser) => {
+        this._currentUser$.next(user);
+      });
   }
 
   private setSession(authResult: { user: IUser; jwt: string }) {

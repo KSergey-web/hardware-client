@@ -45,14 +45,17 @@ export class SignInComponent implements OnInit, OnDestroy {
 
   login() {
     const val = this.signInForm.value;
-    this.authService.login(val).pipe(takeUntil(this.onDestroy$)).subscribe(
-      () => {
-        this.router.navigate(['']);
-      },
-      (err: Error) => {
-        alert(`Incorrect data`);
-        console.log(err);
-      }
-    );
+    this.authService
+      .login(val)
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe(
+        () => {
+          this.router.navigate(['']);
+        },
+        (err: Error) => {
+          alert(`Incorrect data`);
+          console.log(err);
+        }
+      );
   }
 }

@@ -10,7 +10,6 @@ import { IEquipment } from '../interfaces/equipment.interface';
 import { INewSession, ISession } from '../interfaces/session.interface';
 import { AuthService } from './auth.service';
 
-
 @Injectable({
   providedIn: 'root',
 })
@@ -22,17 +21,15 @@ export class SessionService {
     private authService: AuthService
   ) {}
 
-
-  
-
-  
-
   getSessionsByUser(id: number): Observable<ISession[]> {
     const filter0 = `filters[$and][0][user][id][$eq]=${id}`;
     const filter1 = `filters[$and][1][end][$gte]=${new Date().toJSON()}`;
     return this.http
       .get<AnswerArraySessionsPopulate1>(
-        `${this.apiUrl}/api/sessions?populate=%2A&sort[0]=begin%3Aasc&` + filter0 + '&' + filter1
+        `${this.apiUrl}/api/sessions?populate=%2A&sort[0]=begin%3Aasc&` +
+          filter0 +
+          '&' +
+          filter1
       )
       .pipe(
         map((res) => {
@@ -46,7 +43,10 @@ export class SessionService {
     const filter1 = `filters[$and][1][end][$gte]=${new Date().toJSON()}`;
     return this.http
       .get<AnswerArraySessionsPopulate1>(
-        `${this.apiUrl}/api/sessions?populate=%2A&sort[0]=begin%3Aasc&` + filter0 + '&' + filter1
+        `${this.apiUrl}/api/sessions?populate=%2A&sort[0]=begin%3Aasc&` +
+          filter0 +
+          '&' +
+          filter1
       )
       .pipe(
         map((res) => {
@@ -55,11 +55,7 @@ export class SessionService {
       );
   }
 
-  
-
-  
-
-  createSession(newSession: INewSession): Observable<{data: any}> {
+  createSession(newSession: INewSession): Observable<{ data: any }> {
     const body = {
       data: { ...newSession, creator: this.authService.currentUser!.id },
     };
@@ -67,13 +63,16 @@ export class SessionService {
     return this.http.post<any>(`${this.apiUrl}/api/sessions`, body);
   }
 
-  updateSession(session: INewSession): Observable<{data: any}>  {
+  updateSession(session: INewSession): Observable<{ data: any }> {
     const body: any = {
       data: { ...session },
     };
     delete body.data.id;
     console.log(body);
-    return this.http.put<any>(`${this.apiUrl}/api/sessions/${session.id}`, body);
+    return this.http.put<any>(
+      `${this.apiUrl}/api/sessions/${session.id}`,
+      body
+    );
   }
 
   getSessionsInDateByEquipment(
@@ -87,7 +86,7 @@ export class SessionService {
     const filter0 = `filters[$and][0][begin][$gte]=${date.toJSON()}`;
     const filter1 = `filters[$and][1][begin][$lt]=${lastDate.toJSON()}`;
     const filter2 = `filters[$and][2][equipment][id][$eq]=${equipment.id}`;
-    const filter3 = `filters[$and][3][end][$gte]=${(new Date()).toJSON()}`;
+    const filter3 = `filters[$and][3][end][$gte]=${new Date().toJSON()}`;
     return this.http
       .get<AnswerArraySessionsPopulate1>(
         `${this.apiUrl}/api/sessions?populate=%2A&sort[0]=begin%3Aasc&` +
@@ -106,8 +105,9 @@ export class SessionService {
       );
   }
 
-
-  private getSessionsFromResponse(res: AnswerArraySessionsPopulate1): ISession[] {
+  private getSessionsFromResponse(
+    res: AnswerArraySessionsPopulate1
+  ): ISession[] {
     const sessions: ISession[] = [];
     res.data.forEach((item) => {
       const session: any = {
@@ -135,10 +135,11 @@ export class SessionService {
 
   deleteSession(session: ISession): Observable<DefaultAnswer> {
     return this.http.delete<DefaultAnswer>(
-      `${this.apiUrl}/api/sessions/${session.id}`);
+      `${this.apiUrl}/api/sessions/${session.id}`
+    );
   }
 
-  private getSessionFromDefaultAnswer(data: any): ISession{
+  private getSessionFromDefaultAnswer(data: any): ISession {
     const session: any = {
       id: data.id,
       ...data.attributes,
@@ -160,9 +161,9 @@ export class SessionService {
     return session;
   }
 
-  getSessionById(id: number): Observable<ISession>{
-    return this.http.get<DefaultAnswer>(
-      `${this.apiUrl}/api/sessions/${id}?populate=%2A`).pipe(map(res => this.getSessionFromDefaultAnswer(res.data)
-      ));
+  getSessionById(id: number): Observable<ISession> {
+    return this.http
+      .get<DefaultAnswer>(`${this.apiUrl}/api/sessions/${id}?populate=%2A`)
+      .pipe(map((res) => this.getSessionFromDefaultAnswer(res.data)));
   }
 }

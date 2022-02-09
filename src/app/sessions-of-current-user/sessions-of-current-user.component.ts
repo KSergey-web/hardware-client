@@ -28,12 +28,15 @@ export class SessionsOfCurrentUserComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.authService.currentUser$.pipe(takeUntil(this.onDestroy$)
-    ).subscribe((user) => {
-      this.sessionService.getSessionsByUser(user.id).pipe(takeUntil(this.onDestroy$)
-      ).subscribe((sessions) => {
-        this.sessions = sessions;
+    this.authService.currentUser$
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe((user) => {
+        this.sessionService
+          .getSessionsByUser(user.id)
+          .pipe(takeUntil(this.onDestroy$))
+          .subscribe((sessions) => {
+            this.sessions = sessions;
+          });
       });
-    });
   }
 }

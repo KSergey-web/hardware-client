@@ -11,16 +11,29 @@ import { SignInComponent } from './sign-in/sign-in.component';
 
 // определение дочерних маршрутов
 const mainPageRoutes: Routes = [
-      { path: 'my-sessions', component: SessionsOfCurrentUserComponent},
-      { path: 'manage-sessions', component: SessionsManagementComponent, canActivate:[SessionManagementGuard]},
-  ];
+  { path: 'my-sessions', component: SessionsOfCurrentUserComponent },
+  {
+    path: 'manage-sessions',
+    component: SessionsManagementComponent,
+    canActivate: [SessionManagementGuard],
+  },
+];
 
 const routes: Routes = [
-  { path: 'main-page', redirectTo: '/main-page/my-sessions', pathMatch: 'full'},
+  {
+    path: 'main-page',
+    redirectTo: '/main-page/my-sessions',
+    pathMatch: 'full',
+  },
   { path: 'main-page', component: MainPageComponent, children: mainPageRoutes },
-  { path: 'session/:id', component: SessionInProgressComponent, canActivate:[SessionInProgressGuard], canDeactivate: [ExitSessionInProgressGuard] },
+  {
+    path: 'session/:id',
+    component: SessionInProgressComponent,
+    canActivate: [SessionInProgressGuard],
+    canDeactivate: [ExitSessionInProgressGuard],
+  },
   { path: 'signin', component: SignInComponent },
-  { path: '**', redirectTo: '/main-page/my-sessions'},
+  { path: '**', redirectTo: '/main-page/my-sessions' },
 ];
 
 @NgModule({

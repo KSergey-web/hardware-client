@@ -9,26 +9,33 @@ import { IStudent } from '../interfaces/student.interface';
 import { IUser } from '../interfaces/user.interface';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class StudentService {
-
   constructor(
     @Inject(API_URL) private apiUrl: string,
-    private http: HttpClient,
-  ) { }
+    private http: HttpClient
+  ) {}
 
-  isUserAStudent(user: IUser): Observable<boolean>{
+  isUserAStudent(user: IUser): Observable<boolean> {
     return this.http
-      .get<DefaultArrayAnswer>(`${this.apiUrl}/api/students?filters[user][id][$eq]=${user.id}`).pipe(map(res => {
-        return (res.data.length > 0) ? true : false;
-      }))
+      .get<DefaultArrayAnswer>(
+        `${this.apiUrl}/api/students?filters[user][id][$eq]=${user.id}`
+      )
+      .pipe(
+        map((res) => {
+          return res.data.length > 0 ? true : false;
+        })
+      );
   }
 
-  getInfoAboutStudentByUserId(userId: number): Observable<null | IStudent>{
+  getInfoAboutStudentByUserId(userId: number): Observable<null | IStudent> {
     const filter0 = `filters[user][id][$eq][0]=${userId}`;
-    return this.http.get<AnswerArrayStudentsPopulate1>(
-      `${this.apiUrl}/api/students?populate=%2A&` + filter0).pipe(
+    return this.http
+      .get<AnswerArrayStudentsPopulate1>(
+        `${this.apiUrl}/api/students?populate=%2A&` + filter0
+      )
+      .pipe(
         map((res) => {
           if (res.data.length === 0) return null;
           return this.getStudentsFromResponse(res)[0];
@@ -41,7 +48,7 @@ export class StudentService {
     res.data.forEach((item) => {
       const student: any = {
         id: item.attributes.user.data.id,
-        ...item.attributes.user.data.attributes
+        ...item.attributes.user.data.attributes,
       };
       student.group = {
         id: item.attributes.group.data.id,

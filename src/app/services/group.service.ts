@@ -9,14 +9,13 @@ import { IGroup } from '../interfaces/group.interface';
 import { IStudent } from '../interfaces/student.interface';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GroupService {
-
   constructor(
     @Inject(API_URL) private apiUrl: string,
     private router: Router,
-    private http: HttpClient,
+    private http: HttpClient
   ) {}
 
   getGroups(): Observable<IGroup[]> {

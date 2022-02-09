@@ -7,15 +7,11 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./main-page.component.scss'],
 })
 export class MainPageComponent implements OnInit {
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-  ) {
+  constructor(private authService: AuthService, private router: Router) {
     if (this.authService.isLoggedOut()) {
       this.router.navigate(['signin']);
     }
   }
-
 
   ngOnInit(): void {}
 }

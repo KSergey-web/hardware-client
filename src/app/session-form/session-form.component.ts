@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
@@ -15,10 +22,9 @@ import { StudentService } from '../services/student.service';
 @Component({
   selector: 'app-session-form',
   templateUrl: './session-form.component.html',
-  styleUrls: ['./session-form.component.scss']
+  styleUrls: ['./session-form.component.scss'],
 })
 export class SessionFormComponent implements OnInit, OnDestroy {
-
   sessionForm!: FormGroup;
   radioGroupForm!: FormGroup;
   equipments: IEquipment[] = [];
@@ -55,8 +61,6 @@ export class SessionFormComponent implements OnInit, OnDestroy {
     this.onDestroy$.complete();
   }
 
-  
-
   private initEquipmentChanged$() {
     this.equipmentChanged$ =
       this.sessionForm.controls.equipment.valueChanges.pipe(
@@ -65,13 +69,15 @@ export class SessionFormComponent implements OnInit, OnDestroy {
   }
 
   private createSubOnChangeGroup(): void {
-    this.sessionForm.controls.group.valueChanges.pipe(takeUntil(this.onDestroy$)).subscribe((id: number) => {
-      if (id == -1) return;
-      this.groupService
-        .getStudentsFromGroup(this.groups[id])
-        .pipe(takeUntil(this.onDestroy$))
-        .subscribe((students) => (this.students = students));
-    });
+    this.sessionForm.controls.group.valueChanges
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe((id: number) => {
+        if (id == -1) return;
+        this.groupService
+          .getStudentsFromGroup(this.groups[id])
+          .pipe(takeUntil(this.onDestroy$))
+          .subscribe((students) => (this.students = students));
+      });
   }
 
   private initForm(): void {
@@ -84,7 +90,7 @@ export class SessionFormComponent implements OnInit, OnDestroy {
       mode: [],
     });
     this.createSubOnChangeGroup();
-    this.initEquipmentChanged$()
+    this.initEquipmentChanged$();
   }
 
   getSelectedUserId(): number {
@@ -113,9 +119,8 @@ export class SessionFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    if (this.editedSession)
-      this.setEditedSessionToFrom();
-    else{
+    if (this.editedSession) this.setEditedSessionToFrom();
+    else {
       this.getGroups();
       this.getEquipments();
     }
@@ -125,23 +130,27 @@ export class SessionFormComponent implements OnInit, OnDestroy {
     this.groupService
       .getGroups()
       .pipe(takeUntil(this.onDestroy$))
-      .subscribe(groups => {
+      .subscribe((groups) => {
         this.groups = groups;
-        const indGroup = this.groups.findIndex(group => group.id == groupId);
+        const indGroup = this.groups.findIndex((group) => group.id == groupId);
         this.sessionForm.controls.group.setValue(indGroup);
-      })
+      });
   }
 
-  private setStudentFromGroupToFormById(studentId: number, group: IGroup): void {
+  private setStudentFromGroupToFormById(
+    studentId: number,
+    group: IGroup
+  ): void {
     this.groupService
       .getStudentsFromGroup(group!)
       .pipe(takeUntil(this.onDestroy$))
       .subscribe((students) => {
         this.students = students;
-        const indStudent = this.students.findIndex(student => student.id == studentId);
+        const indStudent = this.students.findIndex(
+          (student) => student.id == studentId
+        );
         this.sessionForm.controls.student.setValue(indStudent);
-      }
-      );
+      });
   }
 
   private setEquipmentToFormById(equipmentId: number): void {
@@ -150,10 +159,11 @@ export class SessionFormComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.onDestroy$))
       .subscribe((equipments) => {
         this.equipments = equipments;
-        const indEquip = this.equipments.findIndex(equipment => equipment.id == equipmentId);
+        const indEquip = this.equipments.findIndex(
+          (equipment) => equipment.id == equipmentId
+        );
         this.sessionForm.controls.equipment.setValue(indEquip);
-      }
-      );
+      });
   }
 
   private setEditedSessionToFrom(): void {
@@ -166,18 +176,20 @@ export class SessionFormComponent implements OnInit, OnDestroy {
       this.getGroups();
       this.getEquipments();
       return;
-    }
-    else{
+    } else {
       this.radioGroupForm.controls.mode.setValue('student');
     }
-    this.studentService.getInfoAboutStudentByUserId(this.editedSession.user!.id).pipe(takeUntil(this.onDestroy$)).subscribe(student => {
-      if (!student) {
-        console.error('Student not found');
-        return
-      }
-      this.setGroupToFormById(student.group!.id);
-      this.setStudentFromGroupToFormById(student.id, student.group!);
-    })
+    this.studentService
+      .getInfoAboutStudentByUserId(this.editedSession.user!.id)
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe((student) => {
+        if (!student) {
+          console.error('Student not found');
+          return;
+        }
+        this.setGroupToFormById(student.group!.id);
+        this.setStudentFromGroupToFormById(student.id, student.group!);
+      });
   }
 
   private getEquipments(): void {
@@ -191,9 +203,12 @@ export class SessionFormComponent implements OnInit, OnDestroy {
   }
 
   private getGroups(): void {
-    this.groupService.getGroups().pipe(takeUntil(this.onDestroy$)).subscribe((groups: IGroup[]) => {
-      this.groups = groups;
-    });
+    this.groupService
+      .getGroups()
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe((groups: IGroup[]) => {
+        this.groups = groups;
+      });
   }
 
   onSelectedDates(dates: { begin: Date; end: Date }) {

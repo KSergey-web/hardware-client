@@ -7,14 +7,13 @@ import { API_URL } from '../app.module';
 import { IEquipment } from '../interfaces/equipment.interface';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class EquipmentService {
-
   constructor(
     @Inject(API_URL) private apiUrl: string,
     private router: Router,
-    private http: HttpClient,
+    private http: HttpClient
   ) {}
 
   getEquipments(): Observable<IEquipment[]> {

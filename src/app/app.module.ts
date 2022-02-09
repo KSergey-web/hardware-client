@@ -40,7 +40,7 @@ export const API_URL = new InjectionToken<string>('api url');
     LogoutComponent,
     StartedSessionsComponent,
     SessionInProgressComponent,
-    TimerPipe
+    TimerPipe,
   ],
   imports: [
     BrowserModule,

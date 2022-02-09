@@ -10,7 +10,7 @@ export interface ISession {
   end: Date;
 }
 
-export interface INewSession{
+export interface INewSession {
   id?: number;
   user?: number;
   creator?: number;
