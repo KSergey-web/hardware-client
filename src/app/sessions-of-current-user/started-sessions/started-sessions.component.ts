@@ -53,7 +53,6 @@ export class StartedSessionsComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnDestroy(): void {
-      console.log(1);
       clearInterval(this.timerId);
   }
 

@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
+import { Inject, Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, of, ReplaySubject } from 'rxjs';
-import { map, tap, mergeMap, switchMap, catchError } from 'rxjs/operators';
+import { Observable, of, ReplaySubject, Subject } from 'rxjs';
+import { map, tap, mergeMap, switchMap, catchError, takeUntil } from 'rxjs/operators';
 import { API_URL } from './app.module';
 import { roleUserEnum } from './enums/role-user.enum';
 import { IUser } from './interfaces/user.interface';
@@ -10,9 +10,16 @@ import { IUser } from './interfaces/user.interface';
 @Injectable({
   providedIn: 'root',
 })
-export class AuthService {
+export class AuthService implements OnDestroy {
   private _currentUser$: ReplaySubject<IUser> = new ReplaySubject(1);
   private _currentUser?: IUser;
+  private onDestroy$ = new Subject<boolean>();
+  
+  ngOnDestroy() {
+    this.onDestroy$.next(true);
+    this.onDestroy$.complete();
+    this._currentUser$.complete();
+  }
 
   get currentUser$(): Observable<IUser> {
     return this._currentUser$.asObservable();
@@ -62,6 +69,8 @@ export class AuthService {
                 `${this.apiUrl}/api/teachers?filters[user][id][$eq]=${user.id}`
               )
               .pipe(
+                takeUntil(this.onDestroy$)
+              ,
                 tap((res) => {
                   if (res.data.length == 0) {
                     throw new Error('Not found role');
@@ -90,12 +99,13 @@ export class AuthService {
 
   private setСurrentUser$(user?: IUser): void {
     if (user) {
-      this.assignStatus(user).subscribe((user) =>
+      this.assignStatus(user).pipe(takeUntil(this.onDestroy$)
+      ).subscribe((user) =>
         this._currentUser$.next(user)
       );
       return;
     }
-    this.getCurrentUser().subscribe((user: IUser) => {
+    this.getCurrentUser().pipe(takeUntil(this.onDestroy$)).subscribe((user: IUser) => {
       this._currentUser$.next(user);
     });
   }
