@@ -1,10 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { AuthService } from '../auth.service';
-import { IUser } from '../interfaces/user.interface';
-import { NewSessionComponent } from '../new-session/new-session.component';
-
+import { AuthService } from '../services/auth.service';
 @Component({
   selector: 'app-main-page',
   templateUrl: './main-page.component.html',

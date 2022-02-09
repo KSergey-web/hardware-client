@@ -2,12 +2,15 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { AuthService } from '../auth.service';
 import { IEquipment } from '../interfaces/equipment.interface';
 import { IGroup } from '../interfaces/group.interface';
 import { INewSession, ISession } from '../interfaces/session.interface';
 import { IStudent } from '../interfaces/student.interface';
-import { SessionService } from '../session.service';
+import { AuthService } from '../services/auth.service';
+import { EquipmentService } from '../services/equipment.service';
+import { GroupService } from '../services/group.service';
+import { SessionService } from '../services/session.service';
+import { StudentService } from '../services/student.service';
 
 @Component({
   selector: 'app-session-form',
@@ -37,7 +40,10 @@ export class SessionFormComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private sessionService: SessionService,
-    private authService: AuthService
+    private authService: AuthService,
+    private studentService: StudentService,
+    private groupService: GroupService,
+    private equipmentService: EquipmentService
   ) {
     this.initForm();
   }
@@ -52,7 +58,7 @@ export class SessionFormComponent implements OnInit {
   private createSubOnChangeGroup(): void {
     this.sessionForm.controls.group.valueChanges.subscribe((id: number) => {
       if (id == -1) return;
-      this.sessionService
+      this.groupService
         .getStudentsFromGroup(this.groups[id])
         .subscribe((students) => (this.students = students));
     });
@@ -106,7 +112,7 @@ export class SessionFormComponent implements OnInit {
   }
 
   private setGroupToFormById(groupId: number): void {
-    this.sessionService
+    this.groupService
       .getGroups()
       .subscribe(groups => {
         this.groups = groups;
@@ -116,7 +122,7 @@ export class SessionFormComponent implements OnInit {
   }
 
   private setStudentFromGroupToFormById(studentId: number, group: IGroup): void {
-    this.sessionService
+    this.groupService
       .getStudentsFromGroup(group!)
       .subscribe((students) => {
         this.students = students;
@@ -127,7 +133,7 @@ export class SessionFormComponent implements OnInit {
   }
 
   private setEquipmentToFormById(equipmentId: number): void {
-    this.sessionService
+    this.equipmentService
       .getEquipments()
       .subscribe((equipments) => {
         this.equipments = equipments;
@@ -151,7 +157,7 @@ export class SessionFormComponent implements OnInit {
     else{
       this.radioGroupForm.controls.mode.setValue('student');
     }
-    this.sessionService.getInfoAboutStudentByUserId(this.editedSession.user!.id).subscribe(student => {
+    this.studentService.getInfoAboutStudentByUserId(this.editedSession.user!.id).subscribe(student => {
       if (!student) {
         console.error('Student not found');
         return
@@ -162,7 +168,7 @@ export class SessionFormComponent implements OnInit {
   }
 
   private getEquipments(): void {
-    this.sessionService
+    this.equipmentService
       .getEquipments()
       .subscribe((equipments: IEquipment[]) => {
         this.equipments = equipments;
@@ -171,7 +177,7 @@ export class SessionFormComponent implements OnInit {
   }
 
   private getGroups(): void {
-    this.sessionService.getGroups().subscribe((groups: IGroup[]) => {
+    this.groupService.getGroups().subscribe((groups: IGroup[]) => {
       this.groups = groups;
     });
   }

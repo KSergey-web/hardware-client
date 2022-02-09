@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { INewSession, ISession } from '../interfaces/session.interface';
-import { SessionService } from '../session.service';
 import * as _ from "lodash";
+import { SessionService } from '../services/session.service';
 
 @Component({
   selector: 'app-edit-session',
@@ -26,7 +26,7 @@ export class EditSessionComponent implements OnInit {
 
   saveSession(session: INewSession): void{
     session.id = this.editedSession.id;
-    this.sessionService.udateSession(session).subscribe(
+    this.sessionService.updateSession(session).subscribe(
       (res) => {
         this.activeModal.close();
       },

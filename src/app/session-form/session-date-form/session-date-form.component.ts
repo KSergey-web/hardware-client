@@ -4,7 +4,7 @@ import { NgbCalendar, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { IEquipment } from 'src/app/interfaces/equipment.interface';
 import { ISession } from 'src/app/interfaces/session.interface';
-import { SessionService } from 'src/app/session.service';
+import { SessionService } from 'src/app/services/session.service';
 
 @Component({
   selector: 'app-session-date-form',

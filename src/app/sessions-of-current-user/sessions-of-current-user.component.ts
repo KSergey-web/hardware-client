@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { AuthService } from '../auth.service';
 import { EditSessionComponent } from '../edit-session/edit-session.component';
 import { ISession } from '../interfaces/session.interface';
-import { SessionService } from '../session.service';
+import { AuthService } from '../services/auth.service';
+import { SessionService } from '../services/session.service';
 
 @Component({
   selector: 'app-sessions-of-current-user',

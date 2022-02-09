@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { timer } from 'rxjs';
-import { AuthService } from '../auth.service';
 import { ISession } from '../interfaces/session.interface';
-import { SessionService } from '../session.service';
+import { AuthService } from '../services/auth.service';
+import { SessionService } from '../services/session.service';
 import { Timer } from './timer.class';
 import { ITimer } from './timer.interface';
 

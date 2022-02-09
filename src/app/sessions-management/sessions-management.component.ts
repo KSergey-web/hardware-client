@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalDismissReasons, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { AuthService } from '../auth.service';
 import { EditSessionComponent } from '../edit-session/edit-session.component';
 import { ISession } from '../interfaces/session.interface';
 import { NewSessionComponent } from '../new-session/new-session.component';
-import { SessionService } from '../session.service';
+import { AuthService } from '../services/auth.service';
+import { SessionService } from '../services/session.service';
 
 @Component({
   selector: 'app-sessions-management',

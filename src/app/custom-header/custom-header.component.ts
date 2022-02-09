@@ -1,9 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { AuthService } from '../auth.service';
 import { roleUserEnum } from '../enums/role-user.enum';
 import { IUser } from '../interfaces/user.interface';
+import { AuthService } from '../services/auth.service';
 import { LogoutComponent } from './logout/logout.component';
 
 @Component({

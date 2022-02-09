@@ -3,11 +3,11 @@ import { Inject, Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, of, ReplaySubject, Subject } from 'rxjs';
 import { map, tap, mergeMap, switchMap, catchError, takeUntil } from 'rxjs/operators';
-import { API_URL } from './app.module';
-import { roleUserEnum } from './enums/role-user.enum';
-import { IUser } from './interfaces/user.interface';
-import { StudentService } from './services/student.service';
-import { TeacherService } from './services/teacher.service';
+import { API_URL } from '../app.module';
+import { roleUserEnum } from '../enums/role-user.enum';
+import { IUser } from '../interfaces/user.interface';
+import { StudentService } from './student.service';
+import { TeacherService } from './teacher.service';
 
 @Injectable({
   providedIn: 'root',
