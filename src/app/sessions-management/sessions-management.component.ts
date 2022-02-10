@@ -19,6 +19,10 @@ import { SessionService } from '../services/session.service';
 })
 export class SessionsManagementComponent implements OnInit, OnDestroy {
   sessions: ISession[] = [];
+  currentPage: number = 1;
+  selectedPage: number = 1;
+  pageCount: number = 1;
+  totalCount: number = 0;
 
   constructor(
     private sessionService: SessionService,
@@ -37,15 +41,24 @@ export class SessionsManagementComponent implements OnInit, OnDestroy {
     this.getSessions();
   }
 
+  onChangePage(): void{
+    if (this.selectedPage == this.currentPage) return;
+    this.currentPage = this.selectedPage;
+    this.getSessions();
+  }
+
   private getSessions() {
     this.authService.currentUser$
       .pipe(takeUntil(this.onDestroy$))
       .subscribe((user) => {
         this.sessionService
-          .getSessionsByCreator(user.id)
+          .getSessionsByCreator(user.id, this.selectedPage)
           .pipe(takeUntil(this.onDestroy$))
-          .subscribe((sessions) => {
-            this.sessions = sessions;
+          .subscribe((res) => {
+            this.sessions = res.sessions;
+            this.currentPage = res.pagination.page;
+            this.pageCount = res.pagination.pageCount;
+            this.totalCount = res.pagination.total;
           });
       });
   }

@@ -1,4 +1,5 @@
 import { DefaultAnswer } from './default-answer.interface';
+import { PaginationInfo } from './pagination-info.interface';
 
 export interface AnswerArraySessionsPopulate1 {
   data: Array<{
@@ -10,4 +11,5 @@ export interface AnswerArraySessionsPopulate1 {
       equipment: DefaultAnswer;
     };
   }>;
+  meta: {pagination: PaginationInfo};
 }

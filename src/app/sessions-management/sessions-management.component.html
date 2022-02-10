@@ -13,7 +13,7 @@
             </thead>
             <tbody class="highlight_tr_hover">
               <tr *ngFor='let session of sessions; let i = index' (click)="editSession(session)">
-                <th scope="row">{{i+1}}</th>
+                <th scope="row">{{session.id}}</th>
                 <td>{{session.begin | date:'dd.MM.YYYY HH:mm'}}</td>
                 <td> {{session.end | date:'dd.MM.YYYY HH:mm'}}</td>
                     <td> {{session.user?.first_name}} {{session.user?.last_name}}
@@ -22,4 +22,5 @@
               </tr>
             </tbody>
           </table>
+          <ngb-pagination [collectionSize]="totalCount" [pageSize]="15" [(page)]="selectedPage" (pageChange)="onChangePage()" [maxSize]="5" [rotate]="true" [boundaryLinks]="true"></ngb-pagination>
     </div>

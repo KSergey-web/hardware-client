@@ -4,9 +4,11 @@ import { Data, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { API_URL } from '../app.module';
+import { queryParamEnum } from '../enums/query-param.enum';
 import { AnswerArraySessionsPopulate1 } from '../interfaces/answer-array-sessions-populate1.interface copy';
 import { DefaultAnswer } from '../interfaces/default-answer.interface';
 import { IEquipment } from '../interfaces/equipment.interface';
+import { PaginationInfo } from '../interfaces/pagination-info.interface';
 import { INewSession, ISession } from '../interfaces/session.interface';
 import { AuthService } from './auth.service';
 
@@ -21,32 +23,42 @@ export class SessionService {
     private authService: AuthService
   ) {}
 
-  getSessionsByUser(id: number): Observable<ISession[]> {
+  getSessionsByUser(id: number, page: number = 1): Observable<ISession[]> {
     const filter0 = `filters[$and][0][user][id][$eq]=${id}`;
     const filter1 = `filters[$and][1][end][$gte]=${new Date().toJSON()}`;
+    const pagination = `pagination[page]=${page}`;
     return this.http
       .get<AnswerArraySessionsPopulate1>(
         `${this.apiUrl}/api/sessions?populate=%2A&sort[0]=begin%3Aasc&` +
           filter0 +
           '&' +
-          filter1
+          filter1+
+          '&' +
+          pagination+
+          '&' +
+          queryParamEnum.paginationSize15
       )
       .pipe(
         map((res) => {
-          return this.getSessionsFromResponse(res);
+          return this.getSessionsFromResponse(res).sessions;
         })
       );
   }
 
-  getSessionsByCreator(id: number): Observable<ISession[]> {
+  getSessionsByCreator(id: number, page: number = 1): Observable<{sessions:ISession[], pagination: PaginationInfo }> {
     const filter0 = `filters[$and][0][creator][id][$eq]=${id}`;
     const filter1 = `filters[$and][1][end][$gte]=${new Date().toJSON()}`;
+    const pagination = `pagination[page]=${page}`;
     return this.http
       .get<AnswerArraySessionsPopulate1>(
         `${this.apiUrl}/api/sessions?populate=%2A&sort[0]=begin%3Aasc&` +
           filter0 +
           '&' +
-          filter1
+          filter1+
+          '&' +
+          pagination+
+          '&' +
+          queryParamEnum.paginationSize15
       )
       .pipe(
         map((res) => {
@@ -59,7 +71,6 @@ export class SessionService {
     const body = {
       data: { ...newSession, creator: this.authService.currentUser!.id },
     };
-    console.log(body);
     return this.http.post<any>(`${this.apiUrl}/api/sessions`, body);
   }
 
@@ -108,14 +119,14 @@ export class SessionService {
       .pipe(
         map((res) => {
           console.log(res);
-          return this.getSessionsFromResponse(res);
+          return this.getSessionsFromResponse(res).sessions;
         })
       );
   }
 
   private getSessionsFromResponse(
     res: AnswerArraySessionsPopulate1
-  ): ISession[] {
+  ): {sessions:ISession[], pagination: PaginationInfo } {
     const sessions: ISession[] = [];
     res.data.forEach((item) => {
       const session: any = {
@@ -138,7 +149,7 @@ export class SessionService {
       session.end = new Date(session.end);
       sessions.push(session as ISession);
     });
-    return sessions;
+    return {sessions, pagination: res.meta.pagination};
   }
 
   deleteSession(session: ISession): Observable<DefaultAnswer> {

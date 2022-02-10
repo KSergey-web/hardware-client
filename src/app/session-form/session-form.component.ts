@@ -87,7 +87,7 @@ export class SessionFormComponent implements OnInit, OnDestroy {
       student: [-1, [Validators.min(0)]],
     });
     this.radioGroupForm = this.formBuilder.group({
-      mode: [],
+      mode: ['myself'],
     });
     this.createSubOnChangeGroup();
     this.initEquipmentChanged$();
