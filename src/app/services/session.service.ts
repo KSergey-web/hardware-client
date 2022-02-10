@@ -83,23 +83,31 @@ export class SessionService {
     lastDate.setHours(23);
     lastDate.setMinutes(59);
     lastDate.setSeconds(59);
-    const filter0 = `filters[$and][0][begin][$gte]=${date.toJSON()}`;
-    const filter1 = `filters[$and][1][begin][$lt]=${lastDate.toJSON()}`;
-    const filter2 = `filters[$and][2][equipment][id][$eq]=${equipment.id}`;
-    const filter3 = `filters[$and][3][end][$gte]=${new Date().toJSON()}`;
-    return this.http
+    const filter0 = `filters[$or][0][begin][$between][0]=${date.toJSON()}`;
+    const filter1 = `filters[$or][0][begin][$between][1]=${lastDate.toJSON()}`;
+    const filter2 = `filters[$or][1][end][$between][0]=${date.toJSON()}`;
+    const filter3 = `filters[$or][1][end][$between][1]=${lastDate.toJSON()}`;
+    const filter4 = `filters[equipment][id][$eq]=${equipment.id}`;
+    const filter5 = `filters[end][$gte]=${new Date().toJSON()}`;
+     return this.http
       .get<AnswerArraySessionsPopulate1>(
         `${this.apiUrl}/api/sessions?populate=%2A&sort[0]=begin%3Aasc&` +
           filter0 +
           '&' +
           filter1 +
           '&' +
-          filter2 +
+          filter2 
+          +
           '&' +
-          filter3
-      )
+          filter3+
+          '&' +
+          filter4+
+          '&' +
+          filter5
+       )
       .pipe(
         map((res) => {
+          console.log(res);
           return this.getSessionsFromResponse(res);
         })
       );

@@ -26,6 +26,8 @@ export class SessionDateFormComponent implements OnInit, OnDestroy {
   selectedEquipment?: IEquipment;
   isBusyTimeInterval: boolean = false;
   isPast: boolean = false;
+  maxDateNgb = this.ngbCalendar.getNext(this.ngbCalendar.getToday(),'d',7);
+  todayNgb = this.ngbCalendar.getToday();
 
   @Input() equipmentChanged$!: Observable<IEquipment>;
   @Input() editedSession: ISession | null = null;
@@ -56,20 +58,7 @@ export class SessionDateFormComponent implements OnInit, OnDestroy {
     this.getSessionsInDateByEquipment($date);
   }
 
-  isToday(ngbDate: NgbDateStruct): boolean {
-    const date = new Date();
-    return (
-      ngbDate.year === date.getFullYear() &&
-      ngbDate.day === date.getDate() &&
-      ngbDate.month === date.getMonth() + 1
-    );
-  }
-
   private setSelectedDate(ngbDate: NgbDateStruct): void {
-    if (this.isToday(ngbDate)) {
-      this.selectedDate = new Date();
-      return;
-    }
     this.selectedDate = new Date(ngbDate.year, ngbDate.month - 1, ngbDate.day);
   }
 
@@ -92,25 +81,6 @@ export class SessionDateFormComponent implements OnInit, OnDestroy {
       });
   }
 
-  getToday(): NgbDateStruct {
-    const today = new Date();
-    return {
-      year: today.getFullYear(),
-      month: today.getMonth() + 1,
-      day: today.getDate(),
-    };
-  }
-
-  getMaxDay(): NgbDateStruct {
-    const today = new Date();
-    //console.log(this.ngbCalendar.getNext(this.ngbCalendar.getToday(),'d',7));
-    return {
-      year: today.getFullYear(),
-      month: today.getMonth() + 1,
-      day: today.getDate() + 7,
-    };
-  }
-
   getBeginAndEndFromForm(): { begin: Date; end: Date } | null {
     if (!this.selectedDate) {
       return null;
@@ -124,7 +94,7 @@ export class SessionDateFormComponent implements OnInit, OnDestroy {
     return { begin, end };
   }
 
-  CheckIsBeginInPast(begin: Date): boolean {
+  isBeginInPast(begin: Date): boolean {
     if (begin < new Date()) {
       this.isPast = true;
     } else {
@@ -133,7 +103,7 @@ export class SessionDateFormComponent implements OnInit, OnDestroy {
     return this.isPast;
   }
 
-  CheckIsTimeIntervalBusy(begin: Date, end: Date): boolean {
+  isTimeIntervalBusy(begin: Date, end: Date): boolean {
     const ind = this.sessions.find((session: ISession) => {
       if (
         (session.begin <= begin && session.end >= begin) ||
@@ -152,8 +122,8 @@ export class SessionDateFormComponent implements OnInit, OnDestroy {
     const res = this.getBeginAndEndFromForm();
     if (!res) return;
     const { begin, end } = res;
-    if (this.CheckIsBeginInPast(begin)) return;
-    if (this.CheckIsTimeIntervalBusy(begin, end)) return;
+    if (this.isBeginInPast(begin)) return;
+    if (this.isTimeIntervalBusy(begin, end)) return;
     this.onSelectedDates.emit({ begin, end });
   }
 
