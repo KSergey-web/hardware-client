@@ -26,18 +26,18 @@ nav {
     li {
     display:inline;
     }
-    a:link    {
-        color: white;
-        text-decoration:none;
+    a {
+        color: rgb(195, 233, 233);
+        text-decoration:underline;
     }
     a:hover   {
         color:rgb(182, 166, 166); 
         text-decoration:none;
     }
+    .active {
+        color:rgb(21, 167, 235);
+        text-decoration:none;
+    }
     // a:active  {color:rgb(121, 121, 104); text-decoration:none}
 }
 
-.active {
-    color:rgb(126, 92, 238);
-    text-decoration:underline;
-}

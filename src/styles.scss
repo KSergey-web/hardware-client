@@ -9,6 +9,7 @@ input.ng-touched.ng-valid {border:solid green 2px;}
 body{
     background: url('./assets/main_background.png') no-repeat;
     background-size: 100%;
+    background-attachment: fixed;
 }
 
 .container{

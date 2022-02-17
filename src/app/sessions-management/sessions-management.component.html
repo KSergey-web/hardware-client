@@ -4,7 +4,7 @@
             <caption><b>Назначенные вами сессии</b></caption>
             <thead>
               <tr>
-                <th scope="col">#</th>
+                <th scope="col">id</th>
                 <th scope="col">Начало</th>
                 <th scope="col">Конец</th>
                 <th scope="col">Кому назначено</th>
@@ -22,5 +22,7 @@
               </tr>
             </tbody>
           </table>
-          <ngb-pagination [collectionSize]="totalCount" [pageSize]="15" [(page)]="selectedPage" (pageChange)="onChangePage()" [maxSize]="5" [rotate]="true" [boundaryLinks]="true"></ngb-pagination>
+          <div class="text-center">
+          <ngb-pagination class="d-inline-block" [pageSize]="15" [(page)]="selectedPage" (pageChange)="onChangePage()" [maxSize]="5" [rotate]="true" [boundaryLinks]="true"></ngb-pagination>
+        </div>
     </div>
