@@ -4,7 +4,7 @@
             <caption><b>Назначенные вами сессии</b></caption>
             <thead>
               <tr>
-                <th scope="col">id</th>
+                <th scope="col">#</th>
                 <th scope="col">Начало</th>
                 <th scope="col">Конец</th>
                 <th scope="col">Кому назначено</th>
@@ -13,7 +13,7 @@
             </thead>
             <tbody class="highlight_tr_hover">
               <tr *ngFor='let session of sessions; let i = index' (click)="editSession(session)">
-                <th scope="row">{{session.id}}</th>
+                <th scope="row">{{i+1}}</th>
                 <td>{{session.begin | date:'dd.MM.YYYY HH:mm'}}</td>
                 <td> {{session.end | date:'dd.MM.YYYY HH:mm'}}</td>
                     <td> {{session.user?.first_name}} {{session.user?.last_name}}
