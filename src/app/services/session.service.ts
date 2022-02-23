@@ -118,7 +118,6 @@ export class SessionService {
        )
       .pipe(
         map((res) => {
-          console.log(res);
           return this.getSessionsFromResponse(res).sessions;
         })
       );
@@ -184,5 +183,56 @@ export class SessionService {
     return this.http
       .get<DefaultAnswer>(`${this.apiUrl}/api/sessions/${id}?populate=%2A`)
       .pipe(map((res) => this.getSessionFromDefaultAnswer(res.data)));
+  }
+
+  getNearestSessions(): Observable<ISession[]>{
+    const now = new Date();
+    const lastDate = new Date(+now + 600000);
+    const filter0 = `filters[$or][0][begin][$between][0]=${now.toJSON()}`;
+    const filter1 = `filters[$or][0][begin][$between][1]=${lastDate.toJSON()}`;
+    const filter2 = `filters[$or][1][end][$gte]=${now.toJSON()}`;
+    const filter3 = `filters[$or][1][begin][$lte]=${now.toJSON()}`;
+     return this.http
+      .get<AnswerArraySessionsPopulate1>(
+        `${this.apiUrl}/api/sessions?populate=%2A&sort[0]=begin%3Aasc&` +
+          filter0 +
+          '&' +
+          filter1 +
+          '&' +
+          filter2           +
+          '&' +
+          filter3
+       )
+      .pipe(
+        map((res) => {
+          return this.getSessionsFromResponse(res).sessions;
+        })
+      );
+  }
+
+  getNearestSessionsByEquipment(equipment: IEquipment): Observable<ISession[]>{
+    const now = new Date();
+    const lastDate = new Date(+now + 600000);
+    const filter0 = `filters[$or][0][begin][$between][0]=${now.toJSON()}`;
+    const filter1 = `filters[$or][0][begin][$between][1]=${lastDate.toJSON()}`;
+    const filter2 = `filters[$or][1][end][$gte]=${now.toJSON()}`;
+    const filter3 = `filters[equipment][id][$eq]=${equipment.id}`;
+     return this.http
+      .get<AnswerArraySessionsPopulate1>(
+        `${this.apiUrl}/api/sessions?populate=%2A&sort[0]=begin%3Aasc&` +
+          filter0 +
+          '&' +
+          filter1 +
+          '&' +
+          filter2 
+          +
+          '&' +
+          filter3
+       )
+      .pipe(
+        map((res) => {
+          return this.getSessionsFromResponse(res).sessions;
+        })
+      );
   }
 }

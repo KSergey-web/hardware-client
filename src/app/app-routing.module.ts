@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { FindSessionsComponent } from './find-sessions/find-sessions.component';
 import { ExitSessionInProgressGuard } from './guards/exit-session-in-progress.guard';
 import { SessionInProgressGuard } from './guards/session-in-progress.guard';
 import { SessionManagementGuard } from './guards/session-management.guard';
@@ -12,6 +13,7 @@ import { SignInComponent } from './sign-in/sign-in.component';
 // определение дочерних маршрутов
 const mainPageRoutes: Routes = [
   { path: 'my-sessions', component: SessionsOfCurrentUserComponent },
+  { path: 'find-sessions', component: FindSessionsComponent },
   {
     path: 'manage-sessions',
     component: SessionsManagementComponent,
