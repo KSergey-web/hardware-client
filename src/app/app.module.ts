@@ -23,7 +23,6 @@ import { StartedSessionsComponent } from './sessions-of-current-user/started-ses
 import { SessionInProgressComponent } from './session-in-progress/session-in-progress.component';
 import { TimerPipe } from './session-in-progress/timer.pipe';
 import { FindSessionsComponent } from './find-sessions/find-sessions.component';
-import { FilterSessionsComponent } from './find-sessions/filter-sessions/filter-sessions.component';
 
 export const API_URL = new InjectionToken<string>('api url');
 
@@ -44,7 +43,6 @@ export const API_URL = new InjectionToken<string>('api url');
     SessionInProgressComponent,
     TimerPipe,
     FindSessionsComponent,
-    FilterSessionsComponent,
   ],
   imports: [
     BrowserModule,
