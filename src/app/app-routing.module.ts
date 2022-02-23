@@ -9,6 +9,7 @@ import { SessionInProgressComponent } from './session-in-progress/session-in-pro
 import { SessionsManagementComponent } from './sessions-management/sessions-management.component';
 import { SessionsOfCurrentUserComponent } from './sessions-of-current-user/sessions-of-current-user.component';
 import { SignInComponent } from './sign-in/sign-in.component';
+import { WaitingRoomComponent } from './waiting-room/waiting-room.component';
 
 // определение дочерних маршрутов
 const mainPageRoutes: Routes = [
@@ -33,6 +34,11 @@ const routes: Routes = [
     component: SessionInProgressComponent,
     canActivate: [SessionInProgressGuard],
     canDeactivate: [ExitSessionInProgressGuard],
+  },
+  {
+    path: 'waiting-room/:id',
+    component: WaitingRoomComponent,
+    canActivate: [SessionInProgressGuard],
   },
   { path: 'signin', component: SignInComponent },
   { path: '**', redirectTo: '/main-page/my-sessions' },

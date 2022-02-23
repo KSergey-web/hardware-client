@@ -1,3 +1,6 @@
+<div>
+    <input type="checkbox" (change)="filterByCreatorCurrentUser($event)"/> Отобразить только созданные мной сессии 
+</div>
 <div class="container">
         <table class="table">
             <caption><b>Запущенные и ближайшие сеансы</b></caption>
@@ -21,7 +24,7 @@
                         {{session.creator?.patronymic}}</td>
                     <td> {{session.user?.first_name}} {{session.user?.last_name}}
                         {{session.user?.patronymic}}</td>
-                    <td><button type="button" class="btn btn-secondary">Подключиться</button></td>
+                    <td><button type="button" class="btn btn-secondary" (click)="connectToSession(session.id)">Подключиться</button></td>
                 </tr>
             </tbody>
         </table>
