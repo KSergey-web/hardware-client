@@ -63,4 +63,8 @@ export const API_URL = new InjectionToken<string>('api url');
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(){
+  console.log(environment.serverAddres);
+  }
+}
