@@ -125,9 +125,17 @@ export class AuthService implements OnDestroy {
     }
     this.getCurrentUser()
       .pipe(takeUntil(this.onDestroy$))
-      .subscribe((user: IUser) => {
+      .subscribe(
+        {
+        next: (user: IUser) => {
         this._currentUser$.next(user);
-      });
+      },
+      error: (err: Error) => {
+        console.error(err);
+        alert(err.message);
+        this.logout();
+      }
+    });
   }
 
   private setSession(authResult: { user: IUser; jwt: string }) {
