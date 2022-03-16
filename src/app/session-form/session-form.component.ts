@@ -32,8 +32,8 @@ export class SessionFormComponent implements OnInit, OnDestroy {
   students: IStudent[] = [];
 
   selectedEquipment?: IEquipment;
-  selectedBegin?: Date;
-  selectedEnd?: Date;
+  selectedBegin?: Date | null = null;
+  selectedEnd?: Date | null = null;
 
   isDateCollapsed: boolean = true;
 
@@ -80,6 +80,11 @@ export class SessionFormComponent implements OnInit, OnDestroy {
       });
   }
 
+  private resetSelectedBeginAndEnd(): void{
+    this.selectedBegin = null;
+    this.selectedEnd = null;
+  }
+
   private initForm(): void {
     this.sessionForm = this.formBuilder.group({
       equipment: [0],
@@ -91,6 +96,7 @@ export class SessionFormComponent implements OnInit, OnDestroy {
     });
     this.createSubOnChangeGroup();
     this.initEquipmentChanged$();
+    this.equipmentChanged$.subscribe(this.resetSelectedBeginAndEnd.bind(this))
   }
 
   getSelectedUserId(): number {
