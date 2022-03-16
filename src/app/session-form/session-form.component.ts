@@ -80,7 +80,7 @@ export class SessionFormComponent implements OnInit, OnDestroy {
       });
   }
 
-  private resetSelectedBeginAndEnd(): void{
+  private resetSelectedBeginAndEnd(): void {
     this.selectedBegin = null;
     this.selectedEnd = null;
   }
@@ -96,7 +96,6 @@ export class SessionFormComponent implements OnInit, OnDestroy {
     });
     this.createSubOnChangeGroup();
     this.initEquipmentChanged$();
-    this.equipmentChanged$.subscribe(this.resetSelectedBeginAndEnd.bind(this))
   }
 
   getSelectedUserId(): number {
@@ -124,9 +123,21 @@ export class SessionFormComponent implements OnInit, OnDestroy {
     this.onCreateSession.emit(this.getDataFromForm());
   }
 
+  isSubscribedOnEquipmentChanges = false;
+
+  subscribeOnEquipmentChanges() {
+    if (!this.isSubscribedOnEquipmentChanges) {
+      this.equipmentChanged$.pipe(takeUntil(this.onDestroy$)).subscribe(this.resetSelectedBeginAndEnd.bind(this));
+      this.isSubscribedOnEquipmentChanges = true;
+    }
+  }
+
   ngOnInit(): void {
-    if (this.editedSession) this.setEditedSessionToFrom();
+    if (this.editedSession) {
+      this.setEditedSessionToFrom();
+    }
     else {
+      this.equipmentChanged$.subscribe(this.resetSelectedBeginAndEnd.bind(this));
       this.getGroups();
       this.getEquipments();
     }
@@ -159,6 +170,8 @@ export class SessionFormComponent implements OnInit, OnDestroy {
       });
   }
 
+
+
   private setEquipmentToFormById(equipmentId: number): void {
     this.equipmentService
       .getEquipments()
@@ -169,6 +182,7 @@ export class SessionFormComponent implements OnInit, OnDestroy {
           (equipment) => equipment.id == equipmentId
         );
         this.sessionForm.controls.equipment.setValue(indEquip);
+        this.subscribeOnEquipmentChanges();
       });
   }
 
