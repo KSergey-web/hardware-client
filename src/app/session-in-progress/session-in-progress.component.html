@@ -4,14 +4,14 @@
         <p>
             Пользователю предоставлен доступ к оборудованию <br>
             До окончания сессии осталось <span *ngIf="timer">{{timer.time$| async | timer}}</span>
-            <br/>
+            <br />
         </p>
     </section>
     <section>
         <h2>Информация о времени</h2>
         <p>
-            Начало сеанса в: {{session?.begin | date:'HH:mm dd:MM:YYYY'}} <br/>
-            Конец сеанса в: {{session?.end | date:'HH:mm dd:MM:YYYY'}} <br/>
+            Начало сеанса в: {{session?.begin | date:'HH:mm dd:MM:YYYY'}} <br />
+            Конец сеанса в: {{session?.end | date:'HH:mm dd:MM:YYYY'}} <br />
         </p>
     </section>
     <section>
@@ -25,7 +25,10 @@
             {{session?.user?.last_name}}
         </p>
     </section>
-    <div class="text-center">
-    <button class="btn btn-primary" (click)="exitSession()">Покинуть сессию</button>
-</div>
+    <section>
+        <app-stk500></app-stk500>
+    </section>
+    <div class="text-center">   
+        <button class="btn btn-primary" (click)="exitSession()">Покинуть сессию</button>
+    </div>
 </div>

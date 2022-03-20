@@ -182,25 +182,22 @@ export class SessionFormComponent implements OnInit, OnDestroy {
           (equipment) => equipment.id == equipmentId
         );
         this.sessionForm.controls.equipment.setValue(indEquip);
+        console.warn('7');
+        console.warn(this.isSubscribedOnEquipmentChanges);
         this.subscribeOnEquipmentChanges();
       });
   }
 
-  private setEditedSessionToFrom(): void {
-    if (!this.editedSession) return;
-    this.selectedBegin = this.editedSession.begin;
-    this.selectedEnd = this.editedSession.end;
-    this.setEquipmentToFormById(this.editedSession.equipment!.id);
-    if (this.editedSession.user?.id == this.authService.currentUser?.id) {
-      this.radioGroupForm.controls.mode.setValue('myself');
-      this.getGroups();
-      this.getEquipments();
-      return;
-    } else {
-      this.radioGroupForm.controls.mode.setValue('student');
-    }
+  initFormByMyself() {
+    this.radioGroupForm.controls.mode.setValue('myself');
+    this.getGroups();
+    return;
+  }
+
+  initFormByStudent() {
+    this.radioGroupForm.controls.mode.setValue('student');
     this.studentService
-      .getInfoAboutStudentByUserId(this.editedSession.user!.id)
+      .getInfoAboutStudentByUserId(this.editedSession!.user!.id)
       .pipe(takeUntil(this.onDestroy$))
       .subscribe((student) => {
         if (!student) {
@@ -210,6 +207,19 @@ export class SessionFormComponent implements OnInit, OnDestroy {
         this.setGroupToFormById(student.group!.id);
         this.setStudentFromGroupToFormById(student.id, student.group!);
       });
+  }
+
+  private setEditedSessionToFrom(): void {
+    if (!this.editedSession) return;
+    debugger;
+    this.selectedBegin = this.editedSession.begin;
+    this.selectedEnd = this.editedSession.end;
+    this.setEquipmentToFormById(this.editedSession.equipment!.id);
+    if (this.editedSession.user?.id == this.authService.currentUser?.id) {
+      this.initFormByMyself();
+    } else {
+      this.initFormByStudent();
+    }
   }
 
   private getEquipments(): void {

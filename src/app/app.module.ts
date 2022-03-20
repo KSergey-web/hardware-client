@@ -24,6 +24,7 @@ import { SessionInProgressComponent } from './session-in-progress/session-in-pro
 import { TimerPipe } from './session-in-progress/timer.pipe';
 import { FindSessionsComponent } from './find-sessions/find-sessions.component';
 import { WaitingRoomComponent } from './waiting-room/waiting-room.component';
+import { STK500Component } from './session-in-progress/stk500/stk500.component';
 
 export const API_URL = new InjectionToken<string>('api url');
 
@@ -45,6 +46,7 @@ export const API_URL = new InjectionToken<string>('api url');
     TimerPipe,
     FindSessionsComponent,
     WaitingRoomComponent,
+    STK500Component,
   ],
   imports: [
     BrowserModule,
