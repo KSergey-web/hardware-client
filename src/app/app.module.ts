@@ -27,6 +27,7 @@ import { WaitingRoomComponent } from './waiting-room/waiting-room.component';
 import { STK500Component } from './session-in-progress/stk500/stk500.component';
 
 export const API_URL = new InjectionToken<string>('api url');
+export const API_STK500_URL = new InjectionToken<string>('api url stk500');
 
 @NgModule({
   declarations: [
@@ -61,6 +62,10 @@ export const API_URL = new InjectionToken<string>('api url');
     {
       provide: API_URL,
       useValue: environment.serverAddres,
+    },
+    {
+      provide: API_STK500_URL,
+      useValue: environment.labServerAddres,
     },
   ],
   bootstrap: [AppComponent],

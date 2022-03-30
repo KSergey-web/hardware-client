@@ -16,14 +16,22 @@ export class STK500Component implements OnInit {
 
   selectedFile: File | null = null;
 
+  preValueResistor: number = 0;
+
+  logs: string[] = [];
+
+  canReset = false;
+
   constructor(
     private stk500Service: STK500Service
   ) { }
 
   ngOnInit(): void {
-    this.rangeControl.valueChanges.subscribe(values => {
-      console.log("1"+values);
-      this.stk500Service.uploadButtonCommand(undefined,"1"+values);
+    this.rangeControl.valueChanges.subscribe(value => {
+      console.log("1" + value);
+      if (this.preValueResistor == value) return;
+      this.preValueResistor = value;
+      this.stk500Service.sendButtonCommand(undefined, "1" + value).subscribe(this.getDefaultObserver());
     })
   }
 
@@ -32,18 +40,46 @@ export class STK500Component implements OnInit {
     console.log(this.selectedFile.name);
   }
 
-  onButtonClick(ind: number): void{
-    let command: Array<number>= [0,0,0,0,0,0,0,0]; 
+  onButtonClick(ind: number): void {
+    let command: Array<number> = [0, 0, 0, 0, 0, 0, 0, 0];
     command[ind] = 1;
-    console.log(command.join(""));
-    this.stk500Service.uploadButtonCommand(command.join(''));
+    this.stk500Service.sendButtonCommand(command.join('')).subscribe(this.getDefaultObserver());
   }
 
-  onReset(): void{
-    console.log("reset");
+  private getDefaultObserver(){
+    return {
+      next: this.getDefaultNext(),
+      error: this.getDefaultError() 
+    }
   }
 
-  onUploadFile(): void{
-    console.log(`upload ${this.selectedFile?.name}`)
+  private getDefaultNext(){
+    return (res: { stdout:string, stderr: string }) => {
+      this.logs.push(res.stdout)
+    }
+  }
+
+  private getDefaultError(){
+    return (err: Error) => { 
+      alert(err.message); 
+      console.error(err); 
+      this.logs.push(JSON.stringify(err));
+    }
+  }
+
+  onReset(): void {
+    this.stk500Service.reset().subscribe(this.getDefaultObserver());;
+  }
+
+  onUploadFile(): void {
+    console.log(`upload ${this.selectedFile?.name}`);
+    if (!this.selectedFile) return;
+    this.stk500Service.uploadHex(this.selectedFile).subscribe({ 
+      next: (res: { stdout:string, stderr: string }) => {
+        this.logs.push(res.stdout);
+        this.canReset = true;
+      },
+      error: this.getDefaultError() 
+    });;
   }
 }

@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
-import { API_URL } from 'src/app/app.module';
+import { Observable } from 'rxjs';
+import { API_STK500_URL, API_URL } from 'src/app/app.module';
 
 @Injectable({
   providedIn: 'root'
@@ -9,18 +10,26 @@ export class STK500Service {
 
   constructor(
     private http: HttpClient,
-    @Inject(API_URL) private apiUrl: string
+    @Inject(API_STK500_URL) private apiUrlSTK500: string
   ) { }
 
-  uploadButtonCommand(button: string = '00000000', resistor: string = '00000') {
-    console.log(`${this.apiUrl}/?command=python c:\\STK-scripts\\STK_but_adc.py ` + button + " " + resistor);
-    // return this.http
-    //   .get(`${this.apiUrl}/?command=python c:\\STK-scripts\\STK_but_adc.py ` + button + resistor)
+  sendButtonCommand(button: string = '00000000', resistor: string = '00000'): Observable<any> {
+    console.log(button + ' ' + resistor)
+    return this.http
+      .get<any>(`${this.apiUrlSTK500}/stk500/button/` + button + "/resistor/" + resistor)
   }
 
-  uploadHex(selectedFile: File){
+  uploadHex(selectedFile: File): Observable<any>{
       const fd = new FormData();
       fd.append('file', selectedFile, selectedFile.name);
-      return this.http.post<Task>(`${this.apiUrl}/`, fd)
+      return this.http.post<any>(`${this.apiUrlSTK500}/stk500/upload`, fd)
+  }
+
+  clean(): Observable<any>{
+    return this.http.get<any>(`${this.apiUrlSTK500}/stk500/clean`)
+  }
+
+  reset(): Observable<any>{
+    return this.http.get<any>(`${this.apiUrlSTK500}/stk500/reset`)
   }
 }
