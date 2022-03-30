@@ -27,11 +27,15 @@ export class STK500Component implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.rangeControl.valueChanges.subscribe(value => {
-      console.log("1" + value);
+    this.rangeControl.valueChanges.subscribe((value: number) => {
       if (this.preValueResistor == value) return;
       this.preValueResistor = value;
-      this.stk500Service.sendButtonCommand(undefined, "1" + value).subscribe(this.getDefaultObserver());
+      let command: string = '10000';
+      const strValue = value.toString();
+      const lenght = strValue.length;
+      console.warn(5-lenght);
+      command = command.slice(0, 5 - lenght) + strValue
+      this.stk500Service.sendButtonCommand(undefined, command).subscribe(this.getDefaultObserver());
     })
   }
 
