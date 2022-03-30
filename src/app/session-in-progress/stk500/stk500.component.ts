@@ -54,7 +54,7 @@ export class STK500Component implements OnInit {
   }
 
   private getDefaultNext(){
-    return (res: { stdout:string, stderr: string }) => {
+    return (res: {stdout: string}) => {
       this.logs.push(res.stdout)
     }
   }
@@ -75,7 +75,7 @@ export class STK500Component implements OnInit {
     console.log(`upload ${this.selectedFile?.name}`);
     if (!this.selectedFile) return;
     this.stk500Service.uploadHex(this.selectedFile).subscribe({ 
-      next: (res: { stdout:string, stderr: string }) => {
+      next: (res) => {
         this.logs.push(res.stdout);
         this.canReset = true;
       },
