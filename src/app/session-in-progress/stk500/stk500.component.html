@@ -11,7 +11,8 @@
     <div>
         <button *ngIf='selectedFile' type="button" class="btn btn-secondary" (click)="onUploadFile()">Прошить
             оборудование выбранным файлом</button>
-        <button *ngIf='canReset' type="button" class="ml-2 btn btn-danger" (click)="onReset()">Перепрошить оборудование уже загруженным файлом</button>
+        <button *ngIf='canReset' type="button" class="ml-2 btn btn-secondary" (click)="onReset()">Перепрошить оборудование уже загруженным файлом</button>
+        <button type="button" class="ml-2 btn btn-danger" (click)="onClean()">Очистить оборудование</button>
     </div>
     <div class="d-flex justify-content-around mt-3">
         <button class="buttonstk" *ngFor='let button of buttons; let i = index'

@@ -82,4 +82,15 @@ export class STK500Component implements OnInit {
       error: this.getDefaultError() 
     });;
   }
+
+  onClean(): void{
+    this.stk500Service.clean().subscribe({
+      next: (res)=>{
+      this.canReset = false;
+      const next = this.getDefaultNext();
+      next(res);
+    },
+    error: this.getDefaultError() 
+  })
+  }
 }
