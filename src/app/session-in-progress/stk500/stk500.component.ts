@@ -30,12 +30,8 @@ export class STK500Component implements OnInit {
     this.rangeControl.valueChanges.subscribe((value: number) => {
       if (this.preValueResistor == value) return;
       this.preValueResistor = value;
-      let command: string = '10000';
-      const strValue = value.toString();
-      const lenght = strValue.length;
-      console.warn(5-lenght);
-      command = command.slice(0, 5 - lenght) + strValue
-      this.stk500Service.sendButtonCommand(undefined, command).subscribe(this.getDefaultObserver());
+      let command: string = this.stk500Service.valueResistorToCommand(value);
+      this.stk500Service.sendButtonsAndResistorCommand(undefined, command).subscribe(this.getDefaultObserver());
     })
   }
 
@@ -47,7 +43,7 @@ export class STK500Component implements OnInit {
   onButtonClick(ind: number): void {
     let command: Array<number> = [0, 0, 0, 0, 0, 0, 0, 0];
     command[ind] = 1;
-    this.stk500Service.sendButtonCommand(command.join('')).subscribe(this.getDefaultObserver());
+    this.stk500Service.sendButtonsAndResistorCommand(command.join('')).subscribe(this.getDefaultObserver());
   }
 
   private getDefaultObserver(){

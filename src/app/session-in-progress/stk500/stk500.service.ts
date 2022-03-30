@@ -13,10 +13,17 @@ export class STK500Service {
     @Inject(API_STK500_URL) private apiUrlSTK500: string
   ) { }
 
-  sendButtonCommand(button: string = '00000000', resistor: string = '00000'): Observable<any> {
-    console.log(button + ' ' + resistor)
+  sendButtonsAndResistorCommand(button: string = '00000000', resistor: string = '00000'): Observable<any> {
     return this.http
       .get<any>(`${this.apiUrlSTK500}/stk500/button/` + button + "/resistor/" + resistor)
+  }
+
+  valueResistorToCommand(value: number): string{
+    let command: string = '10000';
+    const strValue = value.toString();
+    const lenght = strValue.length;
+    command = command.slice(0, 5 - lenght) + strValue;
+    return command;
   }
 
   uploadHex(selectedFile: File): Observable<any>{
