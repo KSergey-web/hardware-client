@@ -41,7 +41,7 @@ export class SessionsManagementComponent implements OnInit, OnDestroy {
     this.getSessions();
   }
 
-  onChangePage(): void{
+  onChangePage(): void {
     if (this.selectedPage == this.currentPage) return;
     this.currentPage = this.selectedPage;
     this.getSessions();
@@ -64,7 +64,9 @@ export class SessionsManagementComponent implements OnInit, OnDestroy {
   }
 
   editSession(session: ISession): void {
-    const modalRef = this.modalService.open(EditSessionComponent, { size: 'lg' });
+    const modalRef = this.modalService.open(EditSessionComponent, {
+      size: 'lg',
+    });
     (modalRef.componentInstance as EditSessionComponent).editedSession =
       session;
     this.performResultModal(modalRef);
@@ -82,7 +84,9 @@ export class SessionsManagementComponent implements OnInit, OnDestroy {
   }
 
   createNewSession() {
-    const modalRef = this.modalService.open(NewSessionComponent, { size: 'lg' });
+    const modalRef = this.modalService.open(NewSessionComponent, {
+      size: 'lg',
+    });
     this.performResultModal(modalRef);
   }
 

@@ -8,9 +8,8 @@ describe('FindSessionsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ FindSessionsComponent ]
-    })
-    .compileComponents();
+      declarations: [FindSessionsComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

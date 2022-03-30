@@ -11,5 +11,5 @@ export interface AnswerArraySessionsPopulate1 {
       equipment: DefaultAnswer;
     };
   }>;
-  meta: {pagination: PaginationInfo};
+  meta: { pagination: PaginationInfo };
 }

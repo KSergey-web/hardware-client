@@ -41,7 +41,7 @@ export class SessionInProgressComponent implements OnInit, OnDestroy {
     }
     this.timer!.time$.pipe(takeUntil(this.onDestroy$)).subscribe({
       complete: () => {
-        if (this.timer?.isFinished){
+        if (this.timer?.isFinished) {
           alert('Время сеанса вышло.');
         }
         this.router.navigate(['my-sessions']);

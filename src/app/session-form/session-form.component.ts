@@ -127,7 +127,9 @@ export class SessionFormComponent implements OnInit, OnDestroy {
 
   subscribeOnEquipmentChanges() {
     if (!this.isSubscribedOnEquipmentChanges) {
-      this.equipmentChanged$.pipe(takeUntil(this.onDestroy$)).subscribe(this.resetSelectedBeginAndEnd.bind(this));
+      this.equipmentChanged$
+        .pipe(takeUntil(this.onDestroy$))
+        .subscribe(this.resetSelectedBeginAndEnd.bind(this));
       this.isSubscribedOnEquipmentChanges = true;
     }
   }
@@ -135,9 +137,10 @@ export class SessionFormComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (this.editedSession) {
       this.setEditedSessionToFrom();
-    }
-    else {
-      this.equipmentChanged$.subscribe(this.resetSelectedBeginAndEnd.bind(this));
+    } else {
+      this.equipmentChanged$.subscribe(
+        this.resetSelectedBeginAndEnd.bind(this)
+      );
       this.getGroups();
       this.getEquipments();
     }
@@ -169,8 +172,6 @@ export class SessionFormComponent implements OnInit, OnDestroy {
         this.sessionForm.controls.student.setValue(indStudent);
       });
   }
-
-
 
   private setEquipmentToFormById(equipmentId: number): void {
     this.equipmentService

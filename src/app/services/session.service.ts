@@ -32,9 +32,9 @@ export class SessionService {
         `${this.apiUrl}/api/sessions?populate=%2A&sort[0]=begin%3Aasc&` +
           filter0 +
           '&' +
-          filter1+
+          filter1 +
           '&' +
-          pagination+
+          pagination +
           '&' +
           queryParamEnum.paginationSize15
       )
@@ -45,7 +45,10 @@ export class SessionService {
       );
   }
 
-  getSessionsByCreator(id: number, page: number = 1): Observable<{sessions:ISession[], pagination: PaginationInfo }> {
+  getSessionsByCreator(
+    id: number,
+    page: number = 1
+  ): Observable<{ sessions: ISession[]; pagination: PaginationInfo }> {
     const filter0 = `filters[$and][0][creator][id][$eq]=${id}`;
     const filter1 = `filters[$and][1][end][$gte]=${new Date().toJSON()}`;
     const pagination = `pagination[page]=${page}`;
@@ -54,9 +57,9 @@ export class SessionService {
         `${this.apiUrl}/api/sessions?populate=%2A&sort[0]=begin%3Aasc&` +
           filter0 +
           '&' +
-          filter1+
+          filter1 +
           '&' +
-          pagination+
+          pagination +
           '&' +
           queryParamEnum.paginationSize15
       )
@@ -100,22 +103,21 @@ export class SessionService {
     const filter3 = `filters[$or][1][end][$between][1]=${lastDate.toJSON()}`;
     const filter4 = `filters[equipment][id][$eq]=${equipment.id}`;
     const filter5 = `filters[end][$gte]=${new Date().toJSON()}`;
-     return this.http
+    return this.http
       .get<AnswerArraySessionsPopulate1>(
         `${this.apiUrl}/api/sessions?populate=%2A&sort[0]=begin%3Aasc&` +
           filter0 +
           '&' +
           filter1 +
           '&' +
-          filter2 
-          +
+          filter2 +
           '&' +
-          filter3+
+          filter3 +
           '&' +
-          filter4+
+          filter4 +
           '&' +
           filter5
-       )
+      )
       .pipe(
         map((res) => {
           return this.getSessionsFromResponse(res).sessions;
@@ -123,9 +125,10 @@ export class SessionService {
       );
   }
 
-  private getSessionsFromResponse(
-    res: AnswerArraySessionsPopulate1
-  ): {sessions:ISession[], pagination: PaginationInfo } {
+  private getSessionsFromResponse(res: AnswerArraySessionsPopulate1): {
+    sessions: ISession[];
+    pagination: PaginationInfo;
+  } {
     const sessions: ISession[] = [];
     res.data.forEach((item) => {
       const session: any = {
@@ -148,7 +151,7 @@ export class SessionService {
       session.end = new Date(session.end);
       sessions.push(session as ISession);
     });
-    return {sessions, pagination: res.meta.pagination};
+    return { sessions, pagination: res.meta.pagination };
   }
 
   deleteSession(session: ISession): Observable<DefaultAnswer> {
@@ -185,24 +188,24 @@ export class SessionService {
       .pipe(map((res) => this.getSessionFromDefaultAnswer(res.data)));
   }
 
-  getNearestSessions(): Observable<ISession[]>{
+  getNearestSessions(): Observable<ISession[]> {
     const now = new Date();
     const lastDate = new Date(+now + 600000);
     const filter0 = `filters[$or][0][begin][$between][0]=${now.toJSON()}`;
     const filter1 = `filters[$or][0][begin][$between][1]=${lastDate.toJSON()}`;
     const filter2 = `filters[$or][1][end][$gte]=${now.toJSON()}`;
     const filter3 = `filters[$or][1][begin][$lte]=${now.toJSON()}`;
-     return this.http
+    return this.http
       .get<AnswerArraySessionsPopulate1>(
         `${this.apiUrl}/api/sessions?populate=%2A&sort[0]=begin%3Aasc&` +
           filter0 +
           '&' +
           filter1 +
           '&' +
-          filter2           +
+          filter2 +
           '&' +
           filter3
-       )
+      )
       .pipe(
         map((res) => {
           return this.getSessionsFromResponse(res).sessions;
@@ -210,25 +213,24 @@ export class SessionService {
       );
   }
 
-  getNearestSessionsByEquipment(equipment: IEquipment): Observable<ISession[]>{
+  getNearestSessionsByEquipment(equipment: IEquipment): Observable<ISession[]> {
     const now = new Date();
     const lastDate = new Date(+now + 600000);
     const filter0 = `filters[$or][0][begin][$between][0]=${now.toJSON()}`;
     const filter1 = `filters[$or][0][begin][$between][1]=${lastDate.toJSON()}`;
     const filter2 = `filters[$or][1][end][$gte]=${now.toJSON()}`;
     const filter3 = `filters[equipment][id][$eq]=${equipment.id}`;
-     return this.http
+    return this.http
       .get<AnswerArraySessionsPopulate1>(
         `${this.apiUrl}/api/sessions?populate=%2A&sort[0]=begin%3Aasc&` +
           filter0 +
           '&' +
           filter1 +
           '&' +
-          filter2 
-          +
+          filter2 +
           '&' +
           filter3
-       )
+      )
       .pipe(
         map((res) => {
           return this.getSessionsFromResponse(res).sessions;

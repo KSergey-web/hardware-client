@@ -71,7 +71,7 @@ export const API_STK500_URL = new InjectionToken<string>('api url stk500');
   bootstrap: [AppComponent],
 })
 export class AppModule {
-  constructor(){
-  console.log(environment.serverAddres);
+  constructor() {
+    console.log(environment.serverAddres);
   }
 }

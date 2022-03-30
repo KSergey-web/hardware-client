@@ -9,10 +9,9 @@ import { Timer } from '../session-in-progress/timer.class';
 @Component({
   selector: 'app-waiting-room',
   templateUrl: './waiting-room.component.html',
-  styleUrls: ['./waiting-room.component.scss']
+  styleUrls: ['./waiting-room.component.scss'],
 })
 export class WaitingRoomComponent implements OnInit, OnDestroy {
-
   session?: ISession;
   timer?: Timer;
 
@@ -58,5 +57,4 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
   exitSession(): void {
     this.router.navigate(['my-sessions']);
   }
-
 }

@@ -8,9 +8,8 @@ describe('STK500Component', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ STK500Component ]
-    })
-    .compileComponents();
+      declarations: [STK500Component],
+    }).compileComponents();
   });
 
   beforeEach(() => {

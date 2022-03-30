@@ -26,7 +26,7 @@ export class SessionDateFormComponent implements OnInit, OnDestroy {
   selectedEquipment?: IEquipment;
   isBusyTimeInterval: boolean = false;
   isPast: boolean = false;
-  maxDateNgb = this.ngbCalendar.getNext(this.ngbCalendar.getToday(),'d',7);
+  maxDateNgb = this.ngbCalendar.getNext(this.ngbCalendar.getToday(), 'd', 7);
   todayNgb = this.ngbCalendar.getToday();
 
   @Input() equipmentChanged$!: Observable<IEquipment>;

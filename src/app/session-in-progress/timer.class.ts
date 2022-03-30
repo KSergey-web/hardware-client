@@ -37,7 +37,7 @@ export class Timer implements ITimer {
       if (this._remainingTime <= 0) {
         this.stopTimer();
         this.isFinished = true;
-        this.time$.complete();       
+        this.time$.complete();
       }
       --this._remainingTime;
     }, 1000);

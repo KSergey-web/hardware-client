@@ -14,14 +14,12 @@ import { SessionService } from '../services/session.service';
 @Component({
   selector: 'app-find-sessions',
   templateUrl: './find-sessions.component.html',
-  styleUrls: ['./find-sessions.component.scss']
+  styleUrls: ['./find-sessions.component.scss'],
 })
 export class FindSessionsComponent implements OnInit, OnDestroy {
   sessions: ISession[] = [];
 
   sourceSessions: ISession[] = [];
-
-
 
   private onDestroy$ = new Subject<boolean>();
 
@@ -34,19 +32,19 @@ export class FindSessionsComponent implements OnInit, OnDestroy {
     private sessionService: SessionService,
     private authService: AuthService,
     private router: Router
-  ){
+  ) {}
+
+  getSessions(): void {
+    this.sessionService
+      .getNearestSessions()
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe((sessions) => {
+        this.sessions = sessions;
+        this.sourceSessions = sessions;
+      });
   }
 
-  getSessions(): void{
-    this.sessionService.getNearestSessions()
-    .pipe(takeUntil(this.onDestroy$))
-    .subscribe(sessions => {
-      this.sessions = sessions;
-      this.sourceSessions = sessions;
-    });
-  }
-
-  connectToSession(sessionid: number): void{
+  connectToSession(sessionid: number): void {
     this.router.navigate(['waiting-room', sessionid]);
   }
 
@@ -54,13 +52,14 @@ export class FindSessionsComponent implements OnInit, OnDestroy {
     this.getSessions();
   }
 
-  filterByCreatorCurrentUser(event: any){
-    debugger
-    if (event.target.checked){
-    this.sessions = this.sourceSessions.filter(session => session.creator?.id === this.authService.currentUser?.id)
-    }
-    else {
-    this.sessions = this.sourceSessions
+  filterByCreatorCurrentUser(event: any) {
+    debugger;
+    if (event.target.checked) {
+      this.sessions = this.sourceSessions.filter(
+        (session) => session.creator?.id === this.authService.currentUser?.id
+      );
+    } else {
+      this.sessions = this.sourceSessions;
     }
   }
 }
