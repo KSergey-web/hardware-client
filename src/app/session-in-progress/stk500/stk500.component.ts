@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component,OnDestroy, OnInit} from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { values } from 'lodash';
 import { Subject } from 'rxjs';
@@ -23,7 +23,9 @@ export class STK500Component implements OnInit, OnDestroy {
 
   canReset = false;
 
-  constructor(private stk500Service: STK500Service) {}
+  constructor(
+    private stk500Service: STK500Service,
+    ) {}
 
   private onDestroy$ = new Subject<boolean>();
 
@@ -32,7 +34,7 @@ export class STK500Component implements OnInit, OnDestroy {
     this.onDestroy$.complete();
   }
 
-  ngOnInit(): void {
+  private subscrubeOnRangeChanges(): void {
     this.rangeControl.valueChanges
       .pipe(takeUntil(this.onDestroy$))
       .subscribe((value: number) => {
@@ -44,6 +46,10 @@ export class STK500Component implements OnInit, OnDestroy {
           .pipe(takeUntil(this.onDestroy$))
           .subscribe(this.getDefaultObserver());
       });
+  }
+  
+  ngOnInit(): void {
+    this.subscrubeOnRangeChanges();
   }
 
   onFileSelected(event: any) {

@@ -1,5 +1,8 @@
 <div>
     <h2 class="text-center">STK500</h2>
+    <iframe src="http://localhost:8888/compressed" width="100%" height="450px" seamless   autoplay >
+        Ваш браузер не поддерживает плавающие фреймы!
+     </iframe>    
     <input style="display: none" #fileInput type="file" (change)="onFileSelected($event)" accept=".hex">
     <div class="console card text-white bg-dark mb-3">
         <ul>
@@ -24,4 +27,4 @@
             [formControl]="rangeControl" />4095
         <p>Значение: {{rangeControl.value}}</p>
     </div>
-    <div>
+<div>
