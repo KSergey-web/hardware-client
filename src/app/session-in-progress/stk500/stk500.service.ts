@@ -3,14 +3,13 @@ import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { API_STK500_URL, API_URL } from 'src/app/app.module';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class STK500Service {
   constructor(
     private http: HttpClient,
-    @Inject(API_STK500_URL) private apiUrlSTK500: string
   ) {}
+
+  public apiUrlSTK500: string = '';
 
   sendButtonsAndResistorCommand(
     button: string = '00000000',

@@ -12,6 +12,7 @@ import { STK500Service } from './stk500.service';
   selector: 'app-stk500',
   templateUrl: './stk500.component.html',
   styleUrls: ['./stk500.component.scss'],
+  providers: [STK500Service]
 })
 export class STK500Component implements OnInit, OnDestroy {
   buttons = [0, 1, 2, 3, 4, 5, 6, 7];
@@ -65,6 +66,7 @@ export class STK500Component implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subscrubeOnRangeChanges();
     this.checkEquipmentServer();
+    this.stk500Service.apiUrlSTK500 = this.equipment?.server_url ?? '';
   }
 
   onFileSelected(event: any) {
