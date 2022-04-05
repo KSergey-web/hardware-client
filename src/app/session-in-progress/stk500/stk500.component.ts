@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component,Input,OnDestroy, OnInit} from '@angular/core';
+import { Component,ElementRef,Input,OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { values } from 'lodash';
@@ -29,6 +29,9 @@ export class STK500Component implements OnInit, OnDestroy {
   canReset = false;
 
   @Input() equipment: IEquipment | undefined;
+
+  @ViewChild('console', {static: false})
+  private console: ElementRef | undefined;
 
 
   constructor(
@@ -90,15 +93,20 @@ export class STK500Component implements OnInit, OnDestroy {
 
   private getDefaultNext() {
     return (res: { stdout: string }) => {
-      this.logs.push(res.stdout);
+      this.logToConsole(res.stdout);
     };
+  }
+
+  private logToConsole(log: string){
+    this.logs.push(log);
+    this.console!.nativeElement.scrollTop = this.console!.nativeElement.scrollHeight;
   }
 
   private getDefaultError() {
     return (err: Error) => {
       alert(err.message);
       console.error(err);
-      this.logs.push(JSON.stringify(err));
+      this.logToConsole(JSON.stringify(err));
     };
   }
 
@@ -117,7 +125,7 @@ export class STK500Component implements OnInit, OnDestroy {
       .pipe(takeUntil(this.onDestroy$))
       .subscribe({
         next: (res) => {
-          this.logs.push(res.stdout);
+          this.logToConsole(res.stdout);
           this.canReset = true;
         },
         error: this.getDefaultError(),
