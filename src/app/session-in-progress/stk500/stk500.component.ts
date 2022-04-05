@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { values } from 'lodash';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { stateButtonEnum } from 'src/app/enums/state-button.enum';
 import { IEquipment } from 'src/app/interfaces/equipment.interface';
 import { STK500Service } from './stk500.service';
 
@@ -15,7 +16,7 @@ import { STK500Service } from './stk500.service';
   providers: [STK500Service]
 })
 export class STK500Component implements OnInit, OnDestroy {
-  buttons = [0, 1, 2, 3, 4, 5, 6, 7];
+  buttons: [number, stateButtonEnum][] = [];
 
   rangeControl = new FormControl('0');
 
@@ -33,7 +34,11 @@ export class STK500Component implements OnInit, OnDestroy {
   constructor(
     private stk500Service: STK500Service,
     private router: Router,
-    ) {}
+    ) {
+      for(let i = 0; i < 8; ++i){
+        this.buttons.push([i, stateButtonEnum.mouseup])
+      }
+    }
 
   private onDestroy$ = new Subject<boolean>();
 
@@ -74,14 +79,7 @@ export class STK500Component implements OnInit, OnDestroy {
     console.log(this.selectedFile.name);
   }
 
-  onButtonClick(ind: number): void {
-    let command: Array<number> = [0, 0, 0, 0, 0, 0, 0, 0];
-    command[ind] = 1;
-    this.stk500Service
-      .sendButtonsAndResistorCommand(command.join(''))
-      .pipe(takeUntil(this.onDestroy$))
-      .subscribe(this.getDefaultObserver());
-  }
+
 
   private getDefaultObserver() {
     return {
@@ -139,4 +137,30 @@ export class STK500Component implements OnInit, OnDestroy {
         error: this.getDefaultError(),
       });
   }
+
+  sendCommand(ind: number): void {
+    let command: Array<number> = [0, 0, 0, 0, 0, 0, 0, 0];
+    command[ind] = 1;
+    this.stk500Service
+      .sendButtonsAndResistorCommand(command.join(''))
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe(this.getDefaultObserver());
+  }
+
+  onMouseOutFromButton($event: MouseEvent, index: number){
+    if (this.buttons[index][1] === stateButtonEnum.mousedown) {
+      $event.target?.dispatchEvent(new Event("mouseup"));
+    }
+  }
+
+  onButtonDown(index: number){
+   this.buttons[index][1] = stateButtonEnum.mousedown;
+    this.sendCommand(index);
+  }
+
+  onButtonUp(index: number){
+    this.buttons[index][1] = stateButtonEnum.mouseup;
+    this.sendCommand(index);
+  }
+
 }

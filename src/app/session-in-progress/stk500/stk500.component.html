@@ -5,7 +5,7 @@
      </iframe>
      <div class="d-flex justify-content-around mt-3">
         <button class="buttonstk" *ngFor='let button of buttons; let i = index'
-            (mousedown)="onButtonClick(7-i)" (mouseup)="onButtonClick(7-i)">SW{{7-i}}</button>
+            (mousedown)="onButtonDown(7-i)" (mouseup)="onButtonUp(7-i)" (mouseout)="onMouseOutFromButton($event,7-i)">SW{{7-i}}</button>
     </div>
     <div class="form-group  w-100">
         <label for="range">Ползунок</label> <br>
