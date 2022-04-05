@@ -31,6 +31,7 @@ export class SessionsOfCurrentUserComponent implements OnInit, OnDestroy {
     this.authService.currentUser$
       .pipe(takeUntil(this.onDestroy$))
       .subscribe((user) => {
+        console.log(user);
         this.sessionService
           .getSessionsByUser(user.id)
           .pipe(takeUntil(this.onDestroy$))

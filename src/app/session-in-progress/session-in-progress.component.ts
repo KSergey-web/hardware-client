@@ -34,7 +34,7 @@ export class SessionInProgressComponent implements OnInit, OnDestroy {
 
   checkEquipmentServer(url: string): void{
     this.stateSession = stateSessionEnum.tryingToConnect;
-    this.sessionInProgressService.checkEquipmentServer(url).subscribe(res => {
+    this.sessionInProgressService.checkEquipmentServer(url).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
       this.stateSession = stateSessionEnum.connenected;
       setTimeout(this.addEquipmentToComponent.bind(this));
     }, (err: HttpErrorResponse) => {

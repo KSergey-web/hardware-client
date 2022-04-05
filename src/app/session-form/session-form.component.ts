@@ -212,7 +212,6 @@ export class SessionFormComponent implements OnInit, OnDestroy {
 
   private setEditedSessionToFrom(): void {
     if (!this.editedSession) return;
-    debugger;
     this.selectedBegin = this.editedSession.begin;
     this.selectedEnd = this.editedSession.end;
     this.setEquipmentToFormById(this.editedSession.equipment!.id);

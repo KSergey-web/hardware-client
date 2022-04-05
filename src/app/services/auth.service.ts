@@ -25,9 +25,15 @@ export class AuthService implements OnDestroy {
   private onDestroy$ = new Subject<boolean>();
 
   ngOnDestroy() {
+    this.clearMemory();
+  }
+
+  clearMemory(){
     this.onDestroy$.next(true);
     this.onDestroy$.complete();
     this._currentUser$.complete();
+    this._currentUser$ = new ReplaySubject(1);
+    this._currentUser = undefined;
   }
 
   get currentUser$(): Observable<IUser> {
@@ -120,7 +126,9 @@ export class AuthService implements OnDestroy {
     if (user) {
       this.assignRoleToUser(user)
         .pipe(takeUntil(this.onDestroy$))
-        .subscribe((user) => this._currentUser$.next(user));
+        .subscribe((user) => {
+          this._currentUser$.next(user)
+        });
       return;
     }
     this.getCurrentUser()
@@ -148,6 +156,7 @@ export class AuthService implements OnDestroy {
     console.log('logout');
     localStorage.removeItem('id_token');
     this.router.navigate(['signin']);
+    this.clearMemory();
     //localStorage.removeItem("expires_at");
   }
 

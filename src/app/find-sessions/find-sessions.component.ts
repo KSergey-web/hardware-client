@@ -53,7 +53,6 @@ export class FindSessionsComponent implements OnInit, OnDestroy {
   }
 
   filterByCreatorCurrentUser(event: any) {
-    debugger;
     if (event.target.checked) {
       this.sessions = this.sourceSessions.filter(
         (session) => session.creator?.id === this.authService.currentUser?.id
