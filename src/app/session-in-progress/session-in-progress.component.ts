@@ -1,14 +1,17 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { AfterViewInit, Component, ComponentFactoryResolver, ComponentRef, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, timer } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { equipmentTypeEnum } from '../enums/equipments.enum';
+import { stateSessionEnum } from '../enums/state-session.enum';
 import { IEquipment } from '../interfaces/equipment.interface';
 import { ISession } from '../interfaces/session.interface';
 import { AuthService } from '../services/auth.service';
 import { SessionService } from '../services/session.service';
 import { EquipmentItem } from './equipment-item';
 import { EquipmentDirective } from './equipment.directive';
+import { SessionInProgressService } from './session-in-progress.service';
 import { STK500Component } from './stk500/stk500.component';
 import { Timer } from './timer.class';
 import { ITimer } from './timer.interface';
@@ -17,17 +20,36 @@ import { ITimer } from './timer.interface';
   selector: 'app-session-in-progress',
   templateUrl: './session-in-progress.component.html',
   styleUrls: ['./session-in-progress.component.scss'],
+  providers: [SessionInProgressService]
 })
 export class SessionInProgressComponent implements OnInit, OnDestroy {
   session?: ISession;
   timer?: Timer;
+
+  stateSession: stateSessionEnum = stateSessionEnum.disconnenected;
+
+  tryConnectToEquipment(){
+    this.checkEquipmentServer(this.session!.equipment!.server_url!);
+  }
+
+  checkEquipmentServer(url: string): void{
+    this.stateSession = stateSessionEnum.tryingToConnect;
+    this.sessionInProgressService.checkEquipmentServer(url).subscribe(res => {
+      this.stateSession = stateSessionEnum.connenected;
+      setTimeout(this.addEquipmentToComponent.bind(this));
+    }, (err: HttpErrorResponse) => {
+      this.stateSession = stateSessionEnum.disconnenected;
+      alert('Простите, сервер оборудования сейчас не доступен')
+    })
+  }
 
   constructor(
     private activateRoute: ActivatedRoute,
     private authService: AuthService,
     private sessionService: SessionService,
     private router: Router,
-    private componentFactoryResolver: ComponentFactoryResolver
+    private componentFactoryResolver: ComponentFactoryResolver,
+    private sessionInProgressService: SessionInProgressService
   ) {}
 
   @ViewChild(EquipmentDirective, {static: false}) 
@@ -90,7 +112,7 @@ export class SessionInProgressComponent implements OnInit, OnDestroy {
       .subscribe((session) => {
         this.session = session;
         this.initTimer();
-        this.addEquipmentToComponent();
+        this.checkEquipmentServer(this.session.equipment!.server_url!)
       });
   }
 
@@ -100,5 +122,17 @@ export class SessionInProgressComponent implements OnInit, OnDestroy {
 
   exitSession(): void {
     this.router.navigate(['my-sessions']);
+  }
+
+  isTryingToConnect(): boolean{
+    return this.stateSession === stateSessionEnum.tryingToConnect;
+  }
+
+  isDisconnected(): boolean{
+    return this.stateSession === stateSessionEnum.disconnenected;
+  }
+
+  isConnected(): boolean{
+    return this.stateSession === stateSessionEnum.connenected;
   }
 }

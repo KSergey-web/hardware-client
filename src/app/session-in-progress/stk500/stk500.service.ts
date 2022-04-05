@@ -43,6 +43,6 @@ export class STK500Service {
   }
 
   checkEquipmentServer(): Observable<any> {
-    return this.http.get(`${this.apiUrlSTK500}/`,{ responseType: 'text' });
+    return this.http.get(`${this.apiUrlSTK500}`,{ responseType: 'text' });
   }
 }

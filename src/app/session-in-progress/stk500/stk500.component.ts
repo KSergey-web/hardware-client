@@ -57,7 +57,7 @@ export class STK500Component implements OnInit, OnDestroy {
   }
 
   checkEquipmentServer(): void{
-    this.stk500Service.checkEquipmentServer().subscribe(res => {}, (err: HttpErrorResponse) => {
+    this.stk500Service.checkEquipmentServer().pipe(takeUntil(this.onDestroy$)).subscribe(res => {}, (err: HttpErrorResponse) => {
       alert('Простите, сервер оборудования сейчас не доступен')
       this.router.navigate(['']);
     })
