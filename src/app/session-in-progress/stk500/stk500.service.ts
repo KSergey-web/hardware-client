@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { API_STK500_URL, API_URL } from 'src/app/app.module';
@@ -41,5 +41,9 @@ export class STK500Service {
 
   reset(): Observable<any> {
     return this.http.get<any>(`${this.apiUrlSTK500}/stk500/reset`);
+  }
+
+  checkEquipmentServer(): Observable<any> {
+    return this.http.get(`${this.apiUrlSTK500}/`,{ responseType: 'text' });
   }
 }

@@ -25,6 +25,7 @@ import { TimerPipe } from './session-in-progress/timer.pipe';
 import { FindSessionsComponent } from './find-sessions/find-sessions.component';
 import { WaitingRoomComponent } from './waiting-room/waiting-room.component';
 import { STK500Component } from './session-in-progress/stk500/stk500.component';
+import { EquipmentDirective } from './session-in-progress/equipment.directive';
 
 export const API_URL = new InjectionToken<string>('api url');
 export const API_STK500_URL = new InjectionToken<string>('api url stk500');
@@ -48,6 +49,7 @@ export const API_STK500_URL = new InjectionToken<string>('api url stk500');
     FindSessionsComponent,
     WaitingRoomComponent,
     STK500Component,
+    EquipmentDirective
   ],
   imports: [
     BrowserModule,
@@ -71,7 +73,4 @@ export const API_STK500_URL = new InjectionToken<string>('api url stk500');
   bootstrap: [AppComponent],
 })
 export class AppModule {
-  constructor() {
-    console.log(environment.serverAddres);
-  }
 }

@@ -3,7 +3,8 @@
         <button class="btn btn-danger" (click)="exitSession()">Покинуть сессию</button>
     </div>
     До окончания сессии осталось <span *ngIf="timer"><strong>{{timer.time$| async | timer}}</strong></span>
-    <app-stk500></app-stk500>
+    <ng-template equipmentHost>
+    </ng-template>
     <section>
         <h2>Информация о времени</h2>
         <p>

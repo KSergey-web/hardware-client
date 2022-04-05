@@ -1,8 +1,11 @@
-import { Component,OnDestroy, OnInit} from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component,Input,OnDestroy, OnInit} from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
 import { values } from 'lodash';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { IEquipment } from 'src/app/interfaces/equipment.interface';
 import { STK500Service } from './stk500.service';
 
 @Component({
@@ -23,8 +26,12 @@ export class STK500Component implements OnInit, OnDestroy {
 
   canReset = false;
 
+  @Input() equipment: IEquipment | undefined;
+
+
   constructor(
     private stk500Service: STK500Service,
+    private router: Router,
     ) {}
 
   private onDestroy$ = new Subject<boolean>();
@@ -47,9 +54,17 @@ export class STK500Component implements OnInit, OnDestroy {
           .subscribe(this.getDefaultObserver());
       });
   }
+
+  checkEquipmentServer(): void{
+    this.stk500Service.checkEquipmentServer().subscribe(res => {}, (err: HttpErrorResponse) => {
+      alert('Простите, сервер оборудования сейчас не доступен')
+      this.router.navigate(['']);
+    })
+  }
   
   ngOnInit(): void {
     this.subscrubeOnRangeChanges();
+    this.checkEquipmentServer();
   }
 
   onFileSelected(event: any) {
