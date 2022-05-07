@@ -13,9 +13,9 @@ import { EquipmentItem } from './equipment-item';
 import { EquipmentDirective } from './equipment.directive';
 import { SessionInProgressService } from './session-in-progress.service';
 import { STK500Component } from './equipments/stk500/stk500.component';
-import { Timer } from './timer.class';
-import { ITimer } from './timer.interface';
+
 import { AlteraDe1SoCComponent } from './equipments/altera-de1-so-c/altera-de1-so-c.component';
+import { Timer } from '../timer/timer.class';
 
 @Component({
   selector: 'app-session-in-progress',
@@ -32,9 +32,7 @@ export class SessionInProgressComponent implements OnInit, OnDestroy {
 
   private set session(session: ISession | null){
     this._session = session;
-    console.warn(session)
     this.sessionInProgressService.sessionId = session?.id;
-    console.log(this.sessionInProgressService.sessionId)
   }
 
   stateSession: stateSessionEnum = stateSessionEnum.disconnenected;

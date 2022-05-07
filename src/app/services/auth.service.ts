@@ -28,7 +28,7 @@ export class AuthService implements OnDestroy {
     this.clearMemory();
   }
 
-  clearMemory(){
+  private clearMemory(){
     this.onDestroy$.next(true);
     this.onDestroy$.complete();
     this._currentUser$.complete();
@@ -59,6 +59,15 @@ export class AuthService implements OnDestroy {
     });
   }
 
+
+  get authToken(){
+    return localStorage.getItem('id_token');
+  }
+
+  get authBearerToken(){
+    return 'Bearer ' + this.authToken;
+  }
+
   login({ email: identifier, password }: any): Observable<any> {
     return this.http
       .post<{ user: IUser; jwt: string }>(`${this.apiUrl}/api/auth/local`, {
@@ -72,7 +81,7 @@ export class AuthService implements OnDestroy {
       );
   }
 
-  private unpuckRoleAndAssingToUSer(user: IUser): IUser {
+  private unpuckRoleAndAssingToUser(user: IUser): IUser {
     user.role = (user.role as any).type;
     return user;
   }
@@ -80,7 +89,7 @@ export class AuthService implements OnDestroy {
   private getCurrentUser(): Observable<IUser> {
     return this.http
       .get<IUser>(`${this.apiUrl}/api/users/me`)
-      .pipe(map(this.unpuckRoleAndAssingToUSer.bind(this)));
+      .pipe(map(this.unpuckRoleAndAssingToUser.bind(this)));
   }
 
   private setСurrentUser$(): void {

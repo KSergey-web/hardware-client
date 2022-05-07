@@ -21,7 +21,7 @@ import { SessionsManagementComponent } from './sessions-management/sessions-mana
 import { LogoutComponent } from './custom-header/logout/logout.component';
 import { StartedSessionsComponent } from './sessions-of-current-user/started-sessions/started-sessions.component';
 import { SessionInProgressComponent } from './session-in-progress/session-in-progress.component';
-import { TimerPipe } from './session-in-progress/timer.pipe';
+import { TimerPipe } from './timer/timer.pipe';
 import { FindSessionsComponent } from './find-sessions/find-sessions.component';
 import { WaitingRoomComponent } from './waiting-room/waiting-room.component';
 import { EquipmentDirective } from './session-in-progress/equipment.directive';

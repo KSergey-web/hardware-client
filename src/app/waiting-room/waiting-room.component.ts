@@ -4,7 +4,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ISession } from '../interfaces/session.interface';
 import { SessionService } from '../services/session.service';
-import { Timer } from '../session-in-progress/timer.class';
+import { Timer } from '../timer/timer.class';
 
 @Component({
   selector: 'app-waiting-room',

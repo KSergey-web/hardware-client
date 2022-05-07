@@ -6,6 +6,7 @@ import { takeUntil, tap } from 'rxjs/operators';
 import { stateButtonEnum } from 'src/app/enums/state-button.enum';
 import { IEquipment } from 'src/app/interfaces/equipment.interface';
 import { ISession } from 'src/app/interfaces/session.interface';
+import { EquipmentSocketService } from '../share/equipment-socket-service';
 import { IOutput } from '../share/output.interface';
 import { ISwitchesManagement } from '../share/switches/switches-management.interface';
 import { AlteraDe1SoCService } from './altera-de1-so-c.service';
@@ -13,7 +14,8 @@ import { AlteraDe1SoCService } from './altera-de1-so-c.service';
 @Component({
   selector: 'app-altera-de1-so-c',
   templateUrl: './altera-de1-so-c.component.html',
-  styleUrls: ['./altera-de1-so-c.component.scss']
+  styleUrls: ['./altera-de1-so-c.component.scss'],
+  providers: [EquipmentSocketService]
 })
 export class AlteraDe1SoCComponent implements OnInit, OnDestroy {
 
@@ -31,7 +33,9 @@ export class AlteraDe1SoCComponent implements OnInit, OnDestroy {
   constructor(
     private alteraDe1SoCService: AlteraDe1SoCService,
     private router: Router,
+    private equipmentSocketService: EquipmentSocketService
   ) {
+    this.subOnOutput();
   }
 
   private get switchesState$(): Subject<string>{
@@ -59,21 +63,15 @@ export class AlteraDe1SoCComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.checkEquipmentServer();
     this.alteraDe1SoCService.apiUrlAlteraDe1SoC = this.equipment?.server_url ?? '';
-    this.alteraDe1SoCService.getStatusSwitches().subscribe(res => this.switchesState$.next(res.switches))
+    this.alteraDe1SoCService.getStatusSwitches().subscribe(res => this.newStateSwitches(res.switches))
   }
 
   private getDefaultObserver() {
     return {
-      next: this.getDefaultNext(),
       error: this.getDefaultError(),
     };
   }
 
-  private getDefaultNext() {
-    return (res: { stdout: string }) => {
-      this.logToConsole(res.stdout);
-    };
-  }
 
   private logToConsole(log: string) {
     this.onLog$.next(log);
@@ -92,9 +90,7 @@ export class AlteraDe1SoCComponent implements OnInit, OnDestroy {
       .reset()
       .pipe(
         takeUntil(this.onDestroy$),
-        tap({
-          next: () => this.switchesToDefault$.next()
-        }
+        tap( () => this.switchesToDefault$.next()
         )
       )
       .subscribe(this.getDefaultObserver());
@@ -125,8 +121,6 @@ export class AlteraDe1SoCComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (res) => {
           this.canReset$.next(false);
-          const next = this.getDefaultNext();
-          next(res);
         },
         error: this.getDefaultError(),
       });
@@ -137,11 +131,8 @@ export class AlteraDe1SoCComponent implements OnInit, OnDestroy {
       .sendSwitchAction(switchInd)
       .pipe(
         takeUntil(this.onDestroy$),
-        tap({
-          next: (res: any) => this.switchesState$.next(res.switches)
-        })
         )
-      .subscribe(this.getDefaultObserver());
+      .subscribe();
   }
 
   onButtonAction(buttonInd: number): void {
@@ -150,4 +141,23 @@ export class AlteraDe1SoCComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.onDestroy$))
       .subscribe(this.getDefaultObserver());
   }
+
+  newStateSwitches(switches: string): void{
+    this.switchesState$.next(switches);
+  }
+
+  subOnOutput() {
+    this.equipmentSocketService.output$
+    .pipe(takeUntil(this.onDestroy$))
+      .subscribe(({stdout, switches}) => {
+      if (stdout) {
+        this.logToConsole(stdout);
+      }
+      if (switches){
+        this.newStateSwitches(switches);
+      }
+    })
+  }
+
+
 }
