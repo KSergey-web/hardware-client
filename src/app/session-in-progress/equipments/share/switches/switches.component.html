@@ -1,0 +1,13 @@
+<div [formGroup]="form">
+    <div class="d-flex justify-content-around mt-3" formArrayName="switches">
+        <div *ngFor='let switch of switches.controls; let i = index' class="text-center">
+            <label class="switch">
+                <input type="checkbox" (change)='sendCommand($event,i)' [formControlName]="i" >
+                <span class="slider round"></span>
+            </label>
+            <div>
+                <ng-container *ngTemplateOutlet="name"></ng-container>{{numberOfSwitches-1-i}}
+            </div>
+        </div>
+    </div>
+</div>

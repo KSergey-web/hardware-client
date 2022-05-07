@@ -12,29 +12,40 @@ import { SessionService } from '../services/session.service';
 import { EquipmentItem } from './equipment-item';
 import { EquipmentDirective } from './equipment.directive';
 import { SessionInProgressService } from './session-in-progress.service';
-import { STK500Component } from './stk500/stk500.component';
+import { STK500Component } from './equipments/stk500/stk500.component';
 import { Timer } from './timer.class';
 import { ITimer } from './timer.interface';
+import { AlteraDe1SoCComponent } from './equipments/altera-de1-so-c/altera-de1-so-c.component';
 
 @Component({
   selector: 'app-session-in-progress',
   templateUrl: './session-in-progress.component.html',
   styleUrls: ['./session-in-progress.component.scss'],
-  providers: [SessionInProgressService]
 })
 export class SessionInProgressComponent implements OnInit, OnDestroy {
-  session?: ISession;
+  private _session: ISession | null = null;
   timer?: Timer;
+
+  get session(): ISession | null {
+    return this._session;
+  }
+
+  private set session(session: ISession | null){
+    this._session = session;
+    console.warn(session)
+    this.sessionInProgressService.sessionId = session?.id;
+    console.log(this.sessionInProgressService.sessionId)
+  }
 
   stateSession: stateSessionEnum = stateSessionEnum.disconnenected;
 
   tryConnectToEquipment(){
-    this.checkEquipmentServer(this.session!.equipment!.server_url!);
+    this.checkEquipmentServerBySession(this.session!.id);
   }
 
-  checkEquipmentServer(url: string): void{
+  checkEquipmentServerBySession(sessionId: number): void{
     this.stateSession = stateSessionEnum.tryingToConnect;
-    this.sessionInProgressService.checkEquipmentServer(url).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+    this.sessionInProgressService.checkEquipmentServerBySession(sessionId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
       this.stateSession = stateSessionEnum.connenected;
       setTimeout(this.addEquipmentToComponent.bind(this));
     }, (err: HttpErrorResponse) => {
@@ -71,10 +82,10 @@ export class SessionInProgressComponent implements OnInit, OnDestroy {
     switch (type) {
       case equipmentTypeEnum.stk500: 
       return new EquipmentItem(STK500Component, equipment);
-      break;
+      case equipmentTypeEnum.alteraDe1SoC: 
+      return new EquipmentItem(AlteraDe1SoCComponent, equipment);
       default:
         throw new Error("There is no matching type of equipmnets");
-        break;
     }
   }
 
@@ -112,7 +123,7 @@ export class SessionInProgressComponent implements OnInit, OnDestroy {
       .subscribe((session) => {
         this.session = session;
         this.initTimer();
-        this.checkEquipmentServer(this.session.equipment!.server_url!)
+        this.tryConnectToEquipment();
       });
   }
 

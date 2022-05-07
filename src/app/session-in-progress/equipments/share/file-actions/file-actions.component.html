@@ -1,0 +1,10 @@
+<input style="display: none" #fileInput type="file" (change)="onFileSelected($event)" accept=".hex,.sof">
+    <button type="button" class="btn btn-dark" (click)="fileInput.click()">Прикрепить код программы</button>
+    <p>Выбранный файл: {{selectedFile?.name}}</p>
+    <div>
+        <button *ngIf='selectedFile' type="button" class="btn btn-secondary" (click)="onUploadFile()">Прошить
+            оборудование выбранным файлом</button>
+        <button *ngIf='canReset' type="button" class="ml-2 btn btn-secondary" (click)="onReset()">Перепрошить
+            оборудование уже загруженным файлом</button>
+        <button type="button" class="ml-2 btn btn-danger" (click)="onClean()">Очистить оборудование</button>
+</div>

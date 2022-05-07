@@ -3,10 +3,10 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  //serverAddres: 'http://localhost:1337',
-  serverAddres: 'http://10.3.3.20:1337',
-  labServerAddres: 'http://10.3.200.20:3000',
-  //labServerAddres: 'http://localhost:3000',
+  serverAddres: 'http://localhost:1337',
+  //serverAddres: 'http://10.3.3.20:1337',
+  //labServerAddres: 'http://10.3.200.20:3000',
+  intermediaryServerAddres: 'http://localhost:3001',
   production: false,
 };
 

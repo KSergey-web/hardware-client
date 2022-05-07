@@ -1,0 +1,10 @@
+.console{
+    overflow: auto;
+    height: 10em;
+    li {
+        list-style-type: none; /* Убираем маркеры у списка */
+       }
+    li:before {
+        content: ">>"; /* Добавляем в качестве маркера символ */
+    }
+}

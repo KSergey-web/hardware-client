@@ -5,7 +5,7 @@
         Ваш браузер не поддерживает плавающие фреймы!
     </iframe>
     <div class="d-flex justify-content-around mt-3">
-        <button class="buttonstk" *ngFor='let button of buttons; let i = index' (mousedown)="onButtonDown(7-i)"
+        <button class="button-equpment" *ngFor='let button of buttons; let i = index' (mousedown)="onButtonDown(7-i)"
             (mouseup)="onButtonUp(7-i)" (mouseout)="onMouseOutFromButton($event,7-i)">SW{{7-i}}</button>
     </div>
     <div class="form-group  w-100 mt-3 d-table">

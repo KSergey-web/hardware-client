@@ -72,65 +72,18 @@ export class AuthService implements OnDestroy {
       );
   }
 
-  private trySetRoleStudent(user: IUser): Observable<IUser> {
-    return this.studentService.isUserAStudent(user).pipe(
-      map((isStudent: boolean) => {
-        if (isStudent) {
-          user.role = roleUserEnum.student;
-        }
-        return user;
-      })
-    );
-  }
-
-  private trySetRoleTeacher(user: IUser): Observable<IUser> {
-    return this.teacherService.isUserATeacher(user).pipe(
-      map((isTeacher) => {
-        if (isTeacher) {
-          user.role = roleUserEnum.teacher;
-        }
-        return user;
-      })
-    );
-  }
-
-  private assignRoleToUser(user: IUser): Observable<IUser> {
-    return this.trySetRoleStudent(user).pipe(
-      mergeMap((user: IUser) => {
-        if (user.role) {
-          return of(user);
-        } else {
-          return this.trySetRoleTeacher(user);
-        }
-      }),
-      tap((user) => {
-        if (!user.role) {
-          throw new Error('Not found role');
-        }
-      }),
-      catchError((err: Error) => {
-        alert(err.message);
-        this.logout();
-        return of(user);
-      })
-    );
+  private unpuckRoleAndAssingToUSer(user: IUser): IUser {
+    user.role = (user.role as any).type;
+    return user;
   }
 
   private getCurrentUser(): Observable<IUser> {
     return this.http
       .get<IUser>(`${this.apiUrl}/api/users/me`)
-      .pipe(switchMap(this.assignRoleToUser.bind(this)));
+      .pipe(map(this.unpuckRoleAndAssingToUSer.bind(this)));
   }
 
-  private setСurrentUser$(user?: IUser): void {
-    if (user) {
-      this.assignRoleToUser(user)
-        .pipe(takeUntil(this.onDestroy$))
-        .subscribe((user) => {
-          this._currentUser$.next(user)
-        });
-      return;
-    }
+  private setСurrentUser$(): void {
     this.getCurrentUser()
       .pipe(takeUntil(this.onDestroy$))
       .subscribe({
@@ -145,9 +98,9 @@ export class AuthService implements OnDestroy {
       });
   }
 
-  private setSession(authResult: { user: IUser; jwt: string }) {
+  private setSession(authResult: { jwt: string }) {
     localStorage.setItem('id_token', authResult.jwt);
-    this.setСurrentUser$(authResult.user);
+    this.setСurrentUser$();
     //const expiresAt = moment().add(authResult.expiresIn, 'second');
     //localStorage.setItem("expires_at", JSON.stringify(expiresAt.valueOf()));
   }

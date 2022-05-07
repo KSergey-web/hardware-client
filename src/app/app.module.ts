@@ -24,12 +24,17 @@ import { SessionInProgressComponent } from './session-in-progress/session-in-pro
 import { TimerPipe } from './session-in-progress/timer.pipe';
 import { FindSessionsComponent } from './find-sessions/find-sessions.component';
 import { WaitingRoomComponent } from './waiting-room/waiting-room.component';
-import { STK500Component } from './session-in-progress/stk500/stk500.component';
 import { EquipmentDirective } from './session-in-progress/equipment.directive';
 import { SafePipe } from './pipes/safe.pipe';
+import { ConsoleComponent } from './session-in-progress/equipments/share/console/console.component';
+import { ButtonsComponent } from './session-in-progress/equipments/share/buttons/buttons.component';
+import { STK500Component } from './session-in-progress/equipments/stk500/stk500.component';
+import { AlteraDe1SoCComponent } from './session-in-progress/equipments/altera-de1-so-c/altera-de1-so-c.component';
+import { FileActionsComponent } from './session-in-progress/equipments/share/file-actions/file-actions.component';
+import { SwitchesComponent } from './session-in-progress/equipments/share/switches/switches.component';
 
 export const API_URL = new InjectionToken<string>('api url');
-export const API_STK500_URL = new InjectionToken<string>('api url stk500');
+export const API_INTERMEDIARY_URL = new InjectionToken<string>('api url stk500');
 
 @NgModule({
   declarations: [
@@ -51,7 +56,12 @@ export const API_STK500_URL = new InjectionToken<string>('api url stk500');
     WaitingRoomComponent,
     STK500Component,
     EquipmentDirective,
-    SafePipe
+    SafePipe,
+    AlteraDe1SoCComponent,
+    ConsoleComponent,
+    ButtonsComponent,
+    FileActionsComponent,
+    SwitchesComponent
   ],
   imports: [
     BrowserModule,
@@ -68,8 +78,8 @@ export const API_STK500_URL = new InjectionToken<string>('api url stk500');
       useValue: environment.serverAddres,
     },
     {
-      provide: API_STK500_URL,
-      useValue: environment.labServerAddres,
+      provide: API_INTERMEDIARY_URL,
+      useValue: environment.intermediaryServerAddres,
     },
   ],
   bootstrap: [AppComponent],
