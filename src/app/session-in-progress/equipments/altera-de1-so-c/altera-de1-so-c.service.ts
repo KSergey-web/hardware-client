@@ -19,13 +19,11 @@ export class AlteraDe1SoCService {
     return this.sessionInProgressService.sessionId;
   }
 
-  public apiUrlAlteraDe1SoC: string = '';
-
   sendSwitchAction(
     switchInd: number,
   ): Observable<any> {
     return this.http.get<any>(
-      `${this.apiUrl}/v1/api/equipment/send-command/session/${this.sessionId}?command=/altera-de1-so-c/switch/${switchInd}`
+      `${this.apiUrl}/v1/api/equipment/send-command/session/${this.sessionId}?command=/switch/${switchInd}`
     );
   }
 
@@ -33,7 +31,7 @@ export class AlteraDe1SoCService {
     buttonInd: number,
   ): Observable<any> {
     return this.http.get<any>(
-      `${this.apiUrl}/v1/api/equipment/send-command/session/${this.sessionId}?command=/altera-de1-so-c/button/${buttonInd}`
+      `${this.apiUrl}/v1/api/equipment/send-command/session/${this.sessionId}?command=/button/${buttonInd}`
     );
   }
 
@@ -42,26 +40,26 @@ export class AlteraDe1SoCService {
   uploadSof(selectedFile: File): Observable<any> {
     const fd = new FormData();
     fd.append('file', selectedFile, selectedFile.name);
-    return this.http.post<any>(`${this.apiUrlAlteraDe1SoC}/altera-de1-so-c/upload`, fd);
+    return this.http.post<any>(`${this.apiUrl}/v1/api/equipment/send-file/session/${this.sessionId}?command=/upload`, fd);
   }
 
   clean(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrlAlteraDe1SoC}/altera-de1-so-c/clean`);
+    return this.http.get<any>(`${this.apiUrl}/v1/api/equipment/send-command/session/${this.sessionId}?command=/clean`);
   }
 
   reset(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrlAlteraDe1SoC}/altera-de1-so-c/reset`);
+    return this.http.get<any>(`${this.apiUrl}/v1/api/equipment/send-command/session/${this.sessionId}?command=/reset`);
   }
 
   getStatusSwitches(): Observable<{switches: string}> {
-    return this.http.get<{switches: string}>(`${this.apiUrlAlteraDe1SoC}/altera-de1-so-c/status-switches`);
+    return this.http.get<{switches: string}>(`${this.apiUrl}/v1/api/equipment/send-command/session/${this.sessionId}?command=/status-switches`);
   }
 
   turnOffSwitches(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrlAlteraDe1SoC}/altera-de1-so-c/turnOffSwitches`);
+    return this.http.get<any>(`${this.apiUrl}/v1/api/equipment/send-command/session/${this.sessionId}?command=/turnOffSwitches`);
   }
 
   checkEquipmentServer(): Observable<any> {
-    return this.http.get(`${this.apiUrlAlteraDe1SoC}`,{ responseType: 'text' });
+    return this.http.get(`${this.apiUrl}/v1/api/equipment/check-availability-server/session/?command=/`,{ responseType: 'text' });
   }
 }

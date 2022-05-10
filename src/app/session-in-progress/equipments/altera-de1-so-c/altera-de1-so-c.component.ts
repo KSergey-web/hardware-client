@@ -61,8 +61,7 @@ export class AlteraDe1SoCComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.checkEquipmentServer();
-    this.alteraDe1SoCService.apiUrlAlteraDe1SoC = this.equipment?.server_url ?? '';
+    //this.checkEquipmentServer();
     this.alteraDe1SoCService.getStatusSwitches().subscribe(res => this.newStateSwitches(res.switches))
   }
 

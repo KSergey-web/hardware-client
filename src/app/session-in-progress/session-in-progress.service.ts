@@ -16,6 +16,6 @@ export class SessionInProgressService {
   sessionId?: number;
 
   checkEquipmentServerBySession(sessionId: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/v1/api/equipment/send-command/session/${sessionId}?command=/`,{ responseType: 'text' });
+    return this.http.get(`${this.apiUrl}/v1/api/equipment/check-availability-server/session/${sessionId}?command=/`,{ responseType: 'text' });
   }
 }
