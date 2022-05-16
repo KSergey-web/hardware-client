@@ -16,6 +16,7 @@ import { STK500Component } from './equipments/stk500/stk500.component';
 
 import { AlteraDe1SoCComponent } from './equipments/altera-de1-so-c/altera-de1-so-c.component';
 import { Timer } from '../timer/timer.class';
+import { Stm32Component } from './equipments/stm32/stm32.component';
 
 @Component({
   selector: 'app-session-in-progress',
@@ -54,7 +55,6 @@ export class SessionInProgressComponent implements OnInit, OnDestroy {
 
   constructor(
     private activateRoute: ActivatedRoute,
-    private authService: AuthService,
     private sessionService: SessionService,
     private router: Router,
     private componentFactoryResolver: ComponentFactoryResolver,
@@ -82,6 +82,8 @@ export class SessionInProgressComponent implements OnInit, OnDestroy {
       return new EquipmentItem(STK500Component, equipment);
       case equipmentTypeEnum.alteraDe1SoC: 
       return new EquipmentItem(AlteraDe1SoCComponent, equipment);
+      case equipmentTypeEnum.stm32: 
+      return new EquipmentItem(Stm32Component, equipment);
       default:
         throw new Error("There is no matching type of equipmnets");
     }

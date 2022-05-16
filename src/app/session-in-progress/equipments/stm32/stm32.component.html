@@ -1,0 +1,13 @@
+<div>
+    <h2 class="text-center">Stm 32</h2>
+    <iframe *ngIf="equipment?.stream_url" [src]="equipment?.stream_url | safe:'resourceUrl'" width="100%" height="450px"
+        seamless autoplay>
+        Ваш браузер не поддерживает плавающие фреймы!
+    </iframe>
+    <app-buttons [numberOfButtons]="1" (onButtonAction)="onButtonAction($event)">
+        <ng-template #name>Key</ng-template>
+    </app-buttons>
+    <app-console [onLog$]="onLog$"></app-console>
+    <app-file-actions (onButtonClean)="onClean()" (onButtonReset)="onReset()" (onButtonUpload)="onUploadFile($event)"
+        [canReset$]="canReset$"></app-file-actions>
+    <div>

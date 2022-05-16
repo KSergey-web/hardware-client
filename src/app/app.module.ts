@@ -32,6 +32,7 @@ import { STK500Component } from './session-in-progress/equipments/stk500/stk500.
 import { AlteraDe1SoCComponent } from './session-in-progress/equipments/altera-de1-so-c/altera-de1-so-c.component';
 import { FileActionsComponent } from './session-in-progress/equipments/share/file-actions/file-actions.component';
 import { SwitchesComponent } from './session-in-progress/equipments/share/switches/switches.component';
+import { Stm32Component } from './session-in-progress/equipments/stm32/stm32.component';
 
 export const API_URL = new InjectionToken<string>('api url');
 export const API_INTERMEDIARY_URL = new InjectionToken<string>('api url stk500');
@@ -61,7 +62,8 @@ export const API_INTERMEDIARY_URL = new InjectionToken<string>('api url stk500')
     ConsoleComponent,
     ButtonsComponent,
     FileActionsComponent,
-    SwitchesComponent
+    SwitchesComponent,
+    Stm32Component
   ],
   imports: [
     BrowserModule,
