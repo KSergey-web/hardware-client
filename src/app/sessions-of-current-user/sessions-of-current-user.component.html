@@ -1,23 +1,25 @@
 <app-started-sessions [sortedSessions]="sessions"></app-started-sessions>
 <div>
-    <table class="table">
-      <caption><b>Сеансы на которые вы записаны</b></caption>
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Начало</th>
-            <th scope="col">Конец</th>
-            <th scope="col">Создатель сессии</th>
-          </tr>
-        </thead>
-        <tbody class="highlight_tr_hover">
-          <tr *ngFor='let session of sessions; let i = index'>
-            <th scope="row">{{i+1}}</th>
-            <td>{{session.begin | date:'dd.MM.YYYY HH:mm'}}</td>
-            <td> {{session.end | date:'dd.MM.YYYY HH:mm'}}</td>
-                 <td> {{session.creator?.first_name}} {{session.creator?.last_name}}
-                    {{session.creator?.patronymic}}</td>
-          </tr>
-        </tbody>
-      </table>
+  <table class="table">
+    <caption><b>Сеансы на которые вы записаны</b></caption>
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Начало</th>
+        <th scope="col">Конец</th>
+        <th scope="col">Создатель сессии</th>
+        <th scope="col">Оборудование</th>
+      </tr>
+    </thead>
+    <tbody class="highlight_tr_hover">
+      <tr *ngFor='let session of sessions; let i = index'>
+        <th scope="row">{{i+1}}</th>
+        <td>{{session.begin | date:'dd.MM.YYYY HH:mm'}}</td>
+        <td> {{session.end | date:'dd.MM.YYYY HH:mm'}}</td>
+        <td> {{session.creator?.first_name}} {{session.creator?.last_name}}
+          {{session.creator?.patronymic}}</td>
+        <td> {{session.equipment?.name}}</td>
+      </tr>
+    </tbody>
+  </table>
 </div>
