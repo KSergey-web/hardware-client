@@ -1,34 +1,10 @@
-<div>
-    <h2 class="text-center">STK500</h2>
-    <iframe *ngIf="equipment?.stream_url" [src]="equipment?.stream_url | safe:'resourceUrl'" width="100%" height="450px"
-        seamless autoplay>
-        Ваш браузер не поддерживает плавающие фреймы!
-    </iframe>
-    <div class="d-flex justify-content-around mt-3">
-        <button class="button button-equpment" *ngFor='let button of buttons; let i = index' (mousedown)="onButtonDown(7-i)"
-            (mouseup)="onButtonUp(7-i)" (mouseout)="onMouseOutFromButton($event,7-i)">SW{{7-i}}</button>
-    </div>
-    <div class="form-group  w-100 mt-3 d-table">
-        <span class="label-range d-table-cell">min</span><input class="w-100" type="range" step="1" min="32" max="4095"
-            value="32" name="range" [formControl]="rangeControl" /><span class="label-range d-table-cell">max</span>
-    </div>
-    <p>Значение: {{rangeControl.value}}</p>
-    <section>
-        <h2>Вывод логов</h2>
-        <div class="console card text-white bg-dark mb-3" #console>
-            <ul>
-                <li *ngFor="let log of logs">{{log}}</li>
-            </ul>
-        </div>
-    </section>
-    <input style="display: none" #fileInput type="file" (change)="onFileSelected($event)" accept=".hex">
-    <button type="button" class="btn btn-dark" (click)="fileInput.click()">Прикрепить код программы</button>
-    <p>Выбранный файл: {{selectedFile?.name}}</p>
-    <div>
-        <button *ngIf='selectedFile' type="button" class="btn btn-secondary" (click)="onUploadFile()">Прошить
-            оборудование выбранным файлом</button>
-        <button *ngIf='canReset' type="button" class="ml-2 btn btn-secondary" (click)="onReset()">Перепрошить
-            оборудование уже загруженным файлом</button>
-        <button type="button" class="ml-2 btn btn-danger" (click)="onClean()">Очистить оборудование</button>
-    </div>
-    <div>
+<h2 class="text-center">STK500</h2>
+<app-video [stream_url]="equipment?.stream_url"></app-video>
+<app-buttons [numberOfButtons]="8" (onButtonAction)="onButtonAction($event)">
+    <ng-template #name>SW</ng-template>
+</app-buttons>
+<app-resistor [resistorManagment]='resistorManagment' (onResistorAction)="onResistorAction($event)">
+</app-resistor>
+<app-console [onLog$]="onLog$"></app-console>
+<app-file-actions (onButtonClean)="onClean()" (onButtonReset)="onReset()" (onButtonUpload)="onUploadFile($event)"
+    [canReset$]="canReset$"></app-file-actions>

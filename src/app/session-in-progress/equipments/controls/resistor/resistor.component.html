@@ -1,0 +1,8 @@
+<ng-container *ngIf="resistorManagment" >
+    <div class="form-group  w-100 mt-3 d-table">
+        <span class="label-range d-table-cell">min</span><input class="w-100" type="range" step="1"
+            [min]="resistorManagment.minValue" [max]="resistorManagment.maxValue" [value]="resistorManagment.minValue"
+            name="range" [formControl]="resistorControl" /><span class="label-range d-table-cell">max</span>
+        <p>Значение: {{resistorControl.value}}</p>
+    </div>
+</ng-container>

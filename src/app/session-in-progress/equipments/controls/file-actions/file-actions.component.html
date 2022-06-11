@@ -1,4 +1,4 @@
-<input style="display: none" #fileInput type="file" (change)="onFileSelected($event)" accept=".hex,.sof">
+<input style="display: none" #fileInput type="file" (change)="onFileSelected($event)" accept=".hex,.sof,.bin">
     <button type="button" class="btn btn-dark" (click)="fileInput.click()">Прикрепить код программы</button>
     <p>Выбранный файл: {{selectedFile?.name}}</p>
     <div>

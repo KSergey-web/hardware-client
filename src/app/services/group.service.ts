@@ -3,10 +3,10 @@ import { Inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { API_URL } from '../app.module';
 import { DefaultAnswer } from '../interfaces/default-answer.interface';
 import { IGroup } from '../interfaces/group.interface';
 import { IStudent } from '../interfaces/student.interface';
+import { API_URL } from '../urls-tokens';
 
 @Injectable({
   providedIn: 'root',

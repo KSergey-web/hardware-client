@@ -1,15 +1,16 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 import { stateButtonEnum } from 'src/app/enums/state-button.enum';
 import { IEquipment } from 'src/app/interfaces/equipment.interface';
 import { ISession } from 'src/app/interfaces/session.interface';
-import { EquipmentSocketService } from '../share/equipment-socket-service';
-import { IOutput } from '../share/output.interface';
-import { ISwitchesManagement } from '../share/switches/switches-management.interface';
-import { AlteraDe1SoCService } from './altera-de1-so-c.service';
+import { I_ALTERA_DE1_So_C_SERVICE } from '../equipment-service-tokens';
+import { IAlteraDe1SoCService } from '../interfaces/equipment-service/altera-de1-so-c-service.interface';
+import { EquipmentSocketService } from '../communication-services/equipment-socket-service';
+import { IOutput } from '../interfaces/output.interface';
+import { ISwitchesManagement } from '../controls/switches/switches-management.interface';
 
 @Component({
   selector: 'app-altera-de1-so-c',
@@ -31,8 +32,7 @@ export class AlteraDe1SoCComponent implements OnInit, OnDestroy {
     switchesToDefault$: new Subject<any>(),
   }
   constructor(
-    private alteraDe1SoCService: AlteraDe1SoCService,
-    private router: Router,
+    @Inject(I_ALTERA_DE1_So_C_SERVICE)private alteraDe1SoCService: IAlteraDe1SoCService,
     private equipmentSocketService: EquipmentSocketService
   ) {
     this.subOnOutput();
@@ -51,13 +51,6 @@ export class AlteraDe1SoCComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.onDestroy$.next(true);
     this.onDestroy$.complete();
-  }
-
-  checkEquipmentServer(): void {
-    this.alteraDe1SoCService.checkEquipmentServer().pipe(takeUntil(this.onDestroy$)).subscribe(res => { }, (err: HttpErrorResponse) => {
-      alert('Простите, сервер оборудования сейчас не доступен')
-      this.router.navigate(['']);
-    })
   }
 
   ngOnInit(): void {
@@ -98,7 +91,7 @@ export class AlteraDe1SoCComponent implements OnInit, OnDestroy {
   onUploadFile(file: File): void {
     console.log(`upload ${file.name}`);
     this.alteraDe1SoCService
-      .uploadSof(file)
+      .uploadFile(file)
       .pipe(takeUntil(this.onDestroy$))
       .subscribe({
         next: (res: IOutput) => {

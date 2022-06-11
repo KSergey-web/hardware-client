@@ -2,7 +2,9 @@
     <div class="text-right">
         <button class="btn btn-danger" (click)="exitSession()">Покинуть сессию</button>
     </div>
-    До окончания сессии осталось <span *ngIf="timer"><strong>{{timer.time$| async | timer}}</strong></span>
+    <p *ngIf="timer">
+    До окончания сессии осталось <span ><strong>{{timer.time$ | async | timer}}</strong></span>
+    </p>
     <div *ngIf="isTryingToConnect()" class="text-center">
         <div class="spinner-border" role="status">
             <span class="sr-only">Loading...</span>
@@ -12,8 +14,9 @@
     <div *ngIf="isDisconnected()" class="text-center">
         <div class="alert alert-danger" role="alert">
             Сервер с оборудованием не доступен
-          </div>
-        <button class="btn btn-primary" (click)="tryConnectToEquipment()">Повторить попытку подключения к серверу</button>
+        </div>
+        <button class="btn btn-primary" (click)="tryConnectToEquipment()">Повторить попытку подключения к
+            серверу</button>
     </div>
     <ng-template *ngIf="isConnected()" equipmentHost>
     </ng-template>

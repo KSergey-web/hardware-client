@@ -3,13 +3,13 @@ import { Inject, Injectable } from '@angular/core';
 import { Data, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { API_URL } from '../app.module';
 import { queryParamEnum } from '../enums/query-param.enum';
 import { AnswerArraySessionsPopulate1 } from '../interfaces/answer-array-sessions-populate1.interface copy';
 import { DefaultAnswer } from '../interfaces/default-answer.interface';
 import { IEquipment } from '../interfaces/equipment.interface';
 import { PaginationInfo } from '../interfaces/pagination-info.interface';
 import { INewSession, ISession } from '../interfaces/session.interface';
+import { API_URL } from '../urls-tokens';
 import { AuthService } from './auth.service';
 
 @Injectable({

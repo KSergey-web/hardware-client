@@ -1,47 +1,45 @@
-import { HttpErrorResponse } from '@angular/common/http';
-import { Component,ElementRef,Input,OnDestroy, OnInit, ViewChild} from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { Router } from '@angular/router';
-import { values } from 'lodash';
+import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { stateButtonEnum } from 'src/app/enums/state-button.enum';
 import { IEquipment } from 'src/app/interfaces/equipment.interface';
-import { STK500Service } from './stk500.service';
+import { ISession } from 'src/app/interfaces/session.interface';
+import { EquipmentSocketService } from '../communication-services/equipment-socket-service';
+import { IResistorManagement } from '../controls/resistor/resistor-management.interface';
+import { I_STK500_SERVICE } from '../equipment-service-tokens';
+import { IStk500Service } from '../interfaces/equipment-service/stk500-service.interface';
+import { IOutput } from '../interfaces/output.interface';
 
 @Component({
   selector: 'app-stk500',
   templateUrl: './stk500.component.html',
   styleUrls: ['./stk500.component.scss'],
-  providers: [STK500Service]
+  providers: [EquipmentSocketService]
 })
 export class STK500Component implements OnInit, OnDestroy {
-  buttons: [number, stateButtonEnum][] = [];
 
-  rangeControl = new FormControl('0');
+  @Input() equipment!: IEquipment;
+  @Input() session!: ISession;
 
-  selectedFile: File | null = null;
+  onLog$: Subject<string> = new Subject<string>();
 
-  preValueResistor: number = 0;
+  canReset$: Subject<boolean> = new Subject<boolean>();
 
-  logs: string[] = [];
+  resistorManagment: IResistorManagement = {
+    minValue: 32,
+    maxValue: 4095,
+    resistorState$: new Subject<number>()
+  }
 
-  canReset = false;
-
-  @Input() equipment: IEquipment | undefined;
-
-  @ViewChild('console', {static: false})
-  private console: ElementRef | undefined;
-
+  private get resistorState$(): Subject<number>{
+    return this.resistorManagment.resistorState$;
+  }
 
   constructor(
-    private stk500Service: STK500Service,
-    private router: Router,
-    ) {
-      for(let i = 0; i < 8; ++i){
-        this.buttons.push([i, stateButtonEnum.mouseup])
-      }
-    }
+    @Inject(I_STK500_SERVICE)private stk500Service: IStk500Service,
+    private equipmentSocketService: EquipmentSocketService
+  ) {
+    this.subOnOutput();
+  }
 
   private onDestroy$ = new Subject<boolean>();
 
@@ -50,56 +48,21 @@ export class STK500Component implements OnInit, OnDestroy {
     this.onDestroy$.complete();
   }
 
-  private subscrubeOnRangeChanges(): void {
-    this.rangeControl.valueChanges
-      .pipe(takeUntil(this.onDestroy$))
-      .subscribe((value: number) => {
-        if (this.preValueResistor == value) return;
-        this.preValueResistor = value;
-        let command: string = this.stk500Service.valueResistorToCommand(value);
-        this.stk500Service
-          .sendButtonsAndResistorCommand(undefined, command)
-          .pipe(takeUntil(this.onDestroy$))
-          .subscribe(this.getDefaultObserver());
-      });
-  }
 
-  checkEquipmentServer(): void{
-    this.stk500Service.checkEquipmentServer().pipe(takeUntil(this.onDestroy$)).subscribe(res => {}, (err: HttpErrorResponse) => {
-      alert('Простите, сервер оборудования сейчас не доступен')
-      this.router.navigate(['']);
-    })
-  }
-  
   ngOnInit(): void {
-    this.subscrubeOnRangeChanges();
-    this.checkEquipmentServer();
-    this.stk500Service.apiUrlSTK500 = this.equipment?.server_url ?? '';
+    //this.checkEquipmentServer();
+    this.stk500Service.getStatusResistor().subscribe(res => this.newStateResistor(res.resistor))
   }
-
-  onFileSelected(event: any) {
-    this.selectedFile = <File>event.target.files[0];
-    console.log(this.selectedFile.name);
-  }
-
-
 
   private getDefaultObserver() {
     return {
-      next: this.getDefaultNext(),
       error: this.getDefaultError(),
     };
   }
 
-  private getDefaultNext() {
-    return (res: { stdout: string }) => {
-      this.logToConsole(res.stdout);
-    };
-  }
 
-  private logToConsole(log: string){
-    this.logs.push(log);
-    this.console!.nativeElement.scrollTop = this.console!.nativeElement.scrollHeight;
+  private logToConsole(log: string) {
+    this.onLog$.next(log);
   }
 
   private getDefaultError() {
@@ -113,20 +76,21 @@ export class STK500Component implements OnInit, OnDestroy {
   onReset(): void {
     this.stk500Service
       .reset()
-      .pipe(takeUntil(this.onDestroy$))
+      .pipe(
+        takeUntil(this.onDestroy$),
+        )
       .subscribe(this.getDefaultObserver());
   }
 
-  onUploadFile(): void {
-    console.log(`upload ${this.selectedFile?.name}`);
-    if (!this.selectedFile) return;
+  onUploadFile(file: File): void {
+    console.log(`upload ${file.name}`);
     this.stk500Service
-      .uploadHex(this.selectedFile)
+      .uploadFile(file)
       .pipe(takeUntil(this.onDestroy$))
       .subscribe({
-        next: (res) => {
+        next: (res: IOutput) => {
           this.logToConsole(res.stdout);
-          this.canReset = true;
+          this.canReset$.next(true);
         },
         error: this.getDefaultError(),
       });
@@ -135,40 +99,48 @@ export class STK500Component implements OnInit, OnDestroy {
   onClean(): void {
     this.stk500Service
       .clean()
-      .pipe(takeUntil(this.onDestroy$))
+      .pipe(
+        takeUntil(this.onDestroy$)
+      )
       .subscribe({
         next: (res) => {
-          this.canReset = false;
-          const next = this.getDefaultNext();
-          next(res);
+          this.canReset$.next(false);
         },
         error: this.getDefaultError(),
       });
   }
 
-  sendCommand(ind: number): void {
-    let command: Array<number> = [0, 0, 0, 0, 0, 0, 0, 0];
-    command[ind] = 1;
+  onResistorAction(resistor: number): void {
     this.stk500Service
-      .sendButtonsAndResistorCommand(command.join(''))
+      .sendResistorAction(resistor)
+      .pipe(
+        takeUntil(this.onDestroy$),
+        )
+      .subscribe();
+  }
+
+  onButtonAction(buttonInd: number): void {
+    this.stk500Service
+      .sendButtonAction(buttonInd)
       .pipe(takeUntil(this.onDestroy$))
       .subscribe(this.getDefaultObserver());
   }
 
-  onMouseOutFromButton($event: MouseEvent, index: number){
-    if (this.buttons[index][1] === stateButtonEnum.mousedown) {
-      $event.target?.dispatchEvent(new Event("mouseup"));
-    }
+  newStateResistor(resistor: number): void{
+    this.resistorState$.next(resistor);
   }
 
-  onButtonDown(index: number){
-   this.buttons[index][1] = stateButtonEnum.mousedown;
-    this.sendCommand(index);
+  subOnOutput() {
+    this.equipmentSocketService.output$
+    .pipe(takeUntil(this.onDestroy$))
+      .subscribe(({stdout, resistor}) => {
+      if (stdout) {
+        this.logToConsole(stdout);
+      }
+      if (resistor){
+        this.newStateResistor(resistor);
+      }
+      console.warn(resistor)
+    })
   }
-
-  onButtonUp(index: number){
-    this.buttons[index][1] = stateButtonEnum.mouseup;
-    this.sendCommand(index);
-  }
-
 }

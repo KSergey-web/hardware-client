@@ -10,9 +10,9 @@ import {
   catchError,
   takeUntil,
 } from 'rxjs/operators';
-import { API_URL } from '../app.module';
 import { roleUserEnum } from '../enums/role-user.enum';
 import { IUser } from '../interfaces/user.interface';
+import { API_URL } from '../urls-tokens';
 import { StudentService } from './student.service';
 import { TeacherService } from './teacher.service';
 

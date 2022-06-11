@@ -15,7 +15,6 @@ export class FileActionsComponent implements OnInit, OnDestroy{
 
   canReset = false;
   @Input() canReset$?: Subject<boolean>;
-  
   @Output() onButtonClean = new EventEmitter();
   @Output() onButtonReset = new EventEmitter();
   @Output() onButtonUpload = new EventEmitter<File>();

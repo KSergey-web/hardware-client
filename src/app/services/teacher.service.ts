@@ -2,9 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { API_URL } from '../app.module';
 import { DefaultArrayAnswer } from '../interfaces/default-array-answer.interface';
 import { IUser } from '../interfaces/user.interface';
+import { API_URL } from '../urls-tokens';
 
 @Injectable({
   providedIn: 'root',

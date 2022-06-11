@@ -1,9 +1,9 @@
 import { Inject, Injectable } from "@angular/core";
-import { API_INTERMEDIARY_URL } from "src/app/app.module";
 import { io, Socket } from "socket.io-client";
 import { AuthService } from "src/app/services/auth.service";
 import { SessionInProgressService } from "../../session-in-progress.service";
 import { Subject } from "rxjs";
+import { API_INTERMEDIARY_URL } from "src/app/urls-tokens";
 
 @Injectable()
   export class EquipmentSocketService {

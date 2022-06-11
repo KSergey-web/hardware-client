@@ -3,8 +3,8 @@ import { Inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { API_URL } from '../app.module';
 import { IEquipment } from '../interfaces/equipment.interface';
+import { API_URL } from '../urls-tokens';
 
 @Injectable({
   providedIn: 'root',

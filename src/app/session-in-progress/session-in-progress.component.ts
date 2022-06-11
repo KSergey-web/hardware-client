@@ -15,7 +15,7 @@ import { SessionInProgressService } from './session-in-progress.service';
 import { STK500Component } from './equipments/stk500/stk500.component';
 
 import { AlteraDe1SoCComponent } from './equipments/altera-de1-so-c/altera-de1-so-c.component';
-import { Timer } from '../timer/timer.class';
+import { Timer } from '../share/timer/timer.service';
 import { Stm32Component } from './equipments/stm32/stm32.component';
 
 @Component({

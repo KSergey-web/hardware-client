@@ -2,11 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { API_URL } from '../app.module';
 import { AnswerArrayStudentsPopulate1 } from '../interfaces/answer-array-students-populate1.interface';
 import { DefaultArrayAnswer } from '../interfaces/default-array-answer.interface';
 import { IStudent } from '../interfaces/student.interface';
 import { IUser } from '../interfaces/user.interface';
+import { API_URL } from '../urls-tokens';
 
 @Injectable({
   providedIn: 'root',
