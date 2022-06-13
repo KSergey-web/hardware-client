@@ -8,9 +8,8 @@ describe('ResistorComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ResistorComponent ]
-    })
-    .compileComponents();
+      declarations: [ResistorComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

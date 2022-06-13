@@ -1,3 +1,3 @@
-export interface IOutput{
-    stdout: string;
+export interface IOutput {
+  stdout: string;
 }

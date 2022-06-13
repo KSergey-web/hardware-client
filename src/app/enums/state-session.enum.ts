@@ -1,6 +1,5 @@
 export enum stateSessionEnum {
-    connenected = 'connected',
-    disconnenected = 'disconnected',
-    tryingToConnect = 'tryingToConnect',
+  connenected = 'connected',
+  disconnenected = 'disconnected',
+  tryingToConnect = 'tryingToConnect',
 }
-  

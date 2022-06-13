@@ -1,7 +1,7 @@
-import { Subject } from "rxjs";
+import { Subject } from 'rxjs';
 
 export interface IResistorManagement {
-    minValue: number;
-    maxValue: number;
-    resistorState$: Subject<number>;
+  minValue: number;
+  maxValue: number;
+  resistorState$: Subject<number>;
 }

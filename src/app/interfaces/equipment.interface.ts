@@ -1,4 +1,4 @@
-import { equipmentTypeEnum } from "../enums/equipments.enum";
+import { equipmentTypeEnum } from '../enums/equipments.enum';
 
 export interface IEquipment {
   id: number;

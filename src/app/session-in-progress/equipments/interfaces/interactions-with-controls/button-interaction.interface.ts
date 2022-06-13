@@ -1,7 +1,5 @@
-import { Observable } from "rxjs";
+import { Observable } from 'rxjs';
 
 export interface IButtonInteraction {
-    sendButtonAction: (
-        buttonInd: number,
-    ) => Observable<any>
+  sendButtonAction: (buttonInd: number) => Observable<any>;
 }

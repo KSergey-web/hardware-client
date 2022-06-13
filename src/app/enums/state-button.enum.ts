@@ -1,5 +1,4 @@
 export enum stateButtonEnum {
-    mouseup = 'mouseup',
-    mousedown = 'mousedown',
+  mouseup = 'mouseup',
+  mousedown = 'mousedown',
 }
-  

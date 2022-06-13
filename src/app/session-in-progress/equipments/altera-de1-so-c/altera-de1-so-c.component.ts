@@ -1,5 +1,12 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  Inject,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
@@ -16,10 +23,9 @@ import { ISwitchesManagement } from '../controls/switches/switches-management.in
   selector: 'app-altera-de1-so-c',
   templateUrl: './altera-de1-so-c.component.html',
   styleUrls: ['./altera-de1-so-c.component.scss'],
-  providers: [EquipmentSocketService]
+  providers: [EquipmentSocketService],
 })
 export class AlteraDe1SoCComponent implements OnInit, OnDestroy {
-
   @Input() equipment: IEquipment | undefined;
   @Input() session: ISession | undefined;
 
@@ -30,19 +36,20 @@ export class AlteraDe1SoCComponent implements OnInit, OnDestroy {
     numberOfSwitches: 8,
     switchesState$: new Subject<string>(),
     switchesToDefault$: new Subject<any>(),
-  }
+  };
   constructor(
-    @Inject(I_ALTERA_DE1_So_C_SERVICE)private alteraDe1SoCService: IAlteraDe1SoCService,
+    @Inject(I_ALTERA_DE1_So_C_SERVICE)
+    private alteraDe1SoCService: IAlteraDe1SoCService,
     private equipmentSocketService: EquipmentSocketService
   ) {
     this.subOnOutput();
   }
 
-  private get switchesState$(): Subject<string>{
+  private get switchesState$(): Subject<string> {
     return this.switchesManagment.switchesState$;
   }
 
-  private get switchesToDefault$(): Subject<void>{
+  private get switchesToDefault$(): Subject<void> {
     return this.switchesManagment.switchesToDefault$;
   }
 
@@ -55,7 +62,9 @@ export class AlteraDe1SoCComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     //this.checkEquipmentServer();
-    this.alteraDe1SoCService.getStatusSwitches().subscribe(res => this.newStateSwitches(res.switches))
+    this.alteraDe1SoCService
+      .getStatusSwitches()
+      .subscribe((res) => this.newStateSwitches(res.switches));
   }
 
   private getDefaultObserver() {
@@ -63,7 +72,6 @@ export class AlteraDe1SoCComponent implements OnInit, OnDestroy {
       error: this.getDefaultError(),
     };
   }
-
 
   private logToConsole(log: string) {
     this.onLog$.next(log);
@@ -82,8 +90,7 @@ export class AlteraDe1SoCComponent implements OnInit, OnDestroy {
       .reset()
       .pipe(
         takeUntil(this.onDestroy$),
-        tap( () => this.switchesToDefault$.next()
-        )
+        tap(() => this.switchesToDefault$.next())
       )
       .subscribe(this.getDefaultObserver());
   }
@@ -106,10 +113,11 @@ export class AlteraDe1SoCComponent implements OnInit, OnDestroy {
     this.alteraDe1SoCService
       .clean()
       .pipe(
-        takeUntil(this.onDestroy$), 
+        takeUntil(this.onDestroy$),
         tap({
-          next: () => this.switchesToDefault$.next()
-        }))
+          next: () => this.switchesToDefault$.next(),
+        })
+      )
       .subscribe({
         next: (res) => {
           this.canReset$.next(false);
@@ -121,9 +129,7 @@ export class AlteraDe1SoCComponent implements OnInit, OnDestroy {
   onSwitchAction(switchInd: number): void {
     this.alteraDe1SoCService
       .sendSwitchAction(switchInd)
-      .pipe(
-        takeUntil(this.onDestroy$),
-        )
+      .pipe(takeUntil(this.onDestroy$))
       .subscribe();
   }
 
@@ -134,22 +140,20 @@ export class AlteraDe1SoCComponent implements OnInit, OnDestroy {
       .subscribe(this.getDefaultObserver());
   }
 
-  newStateSwitches(switches: string): void{
+  newStateSwitches(switches: string): void {
     this.switchesState$.next(switches);
   }
 
   subOnOutput() {
     this.equipmentSocketService.output$
-    .pipe(takeUntil(this.onDestroy$))
-      .subscribe(({stdout, switches}) => {
-      if (stdout) {
-        this.logToConsole(stdout);
-      }
-      if (switches){
-        this.newStateSwitches(switches);
-      }
-    })
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe(({ stdout, switches }) => {
+        if (stdout) {
+          this.logToConsole(stdout);
+        }
+        if (switches) {
+          this.newStateSwitches(switches);
+        }
+      });
   }
-
-
 }

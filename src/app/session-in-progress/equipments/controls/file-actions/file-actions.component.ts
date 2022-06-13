@@ -1,15 +1,21 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-file-actions',
   templateUrl: './file-actions.component.html',
-  styleUrls: ['./file-actions.component.scss']
+  styleUrls: ['./file-actions.component.scss'],
 })
-export class FileActionsComponent implements OnInit, OnDestroy{
-
-  constructor() { }
+export class FileActionsComponent implements OnInit, OnDestroy {
+  constructor() {}
 
   selectedFile: File | null = null;
 
@@ -27,9 +33,11 @@ export class FileActionsComponent implements OnInit, OnDestroy{
   }
 
   ngOnInit(): void {
-    if (this.canReset$){
-      this.canReset$?.pipe(takeUntil(this.onDestroy$)).subscribe(res => this.canReset = res);
-    } 
+    if (this.canReset$) {
+      this.canReset$
+        ?.pipe(takeUntil(this.onDestroy$))
+        .subscribe((res) => (this.canReset = res));
+    }
   }
 
   onFileSelected(event: any) {
@@ -37,12 +45,9 @@ export class FileActionsComponent implements OnInit, OnDestroy{
     console.log(this.selectedFile.name);
   }
 
-
   onReset(): void {
     this.onButtonReset.emit();
   }
-
-  
 
   onUploadFile(): void {
     console.log(`upload ${this.selectedFile?.name}`);

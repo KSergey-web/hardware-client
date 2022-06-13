@@ -1,5 +1,16 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { AfterViewInit, Component, ComponentFactoryResolver, ComponentRef, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ComponentFactoryResolver,
+  ComponentRef,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  ViewContainerRef,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, timer } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -31,26 +42,32 @@ export class SessionInProgressComponent implements OnInit, OnDestroy {
     return this._session;
   }
 
-  private set session(session: ISession | null){
+  private set session(session: ISession | null) {
     this._session = session;
     this.sessionInProgressService.sessionId = session?.id;
   }
 
   stateSession: stateSessionEnum = stateSessionEnum.disconnenected;
 
-  tryConnectToEquipment(){
+  tryConnectToEquipment() {
     this.checkEquipmentServerBySession(this.session!.id);
   }
 
-  checkEquipmentServerBySession(sessionId: number): void{
+  checkEquipmentServerBySession(sessionId: number): void {
     this.stateSession = stateSessionEnum.tryingToConnect;
-    this.sessionInProgressService.checkEquipmentServerBySession(sessionId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
-      this.stateSession = stateSessionEnum.connenected;
-      setTimeout(this.addEquipmentToComponent.bind(this));
-    }, (err: HttpErrorResponse) => {
-      this.stateSession = stateSessionEnum.disconnenected;
-      alert('Простите, сервер оборудования сейчас не доступен')
-    })
+    this.sessionInProgressService
+      .checkEquipmentServerBySession(sessionId)
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe(
+        (res) => {
+          this.stateSession = stateSessionEnum.connenected;
+          setTimeout(this.addEquipmentToComponent.bind(this));
+        },
+        (err: HttpErrorResponse) => {
+          this.stateSession = stateSessionEnum.disconnenected;
+          alert('Простите, сервер оборудования сейчас не доступен');
+        }
+      );
   }
 
   constructor(
@@ -61,31 +78,38 @@ export class SessionInProgressComponent implements OnInit, OnDestroy {
     private sessionInProgressService: SessionInProgressService
   ) {}
 
-  @ViewChild(EquipmentDirective, {static: false}) 
+  @ViewChild(EquipmentDirective, { static: false })
   private equipmentHost!: EquipmentDirective;
 
   private addEquipmentToComponent() {
     const equipment = this.session?.equipment;
     if (!equipment) throw new Error('Equipment was not downloaded');
-    const equipmentItem: EquipmentItem = this.selectEquipmentComponent(equipment);
+    const equipmentItem: EquipmentItem =
+      this.selectEquipmentComponent(equipment);
     const viewContainerRef = this.equipmentHost.viewContainerRef;
     viewContainerRef.clear();
-    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(equipmentItem.component);
-    const componentRef = viewContainerRef.createComponent<{equipment: IEquipment}>(componentFactory);
+    const componentFactory =
+      this.componentFactoryResolver.resolveComponentFactory(
+        equipmentItem.component
+      );
+    const componentRef =
+      viewContainerRef.createComponent<{ equipment: IEquipment }>(
+        componentFactory
+      );
     componentRef.instance.equipment = equipmentItem.equipment;
   }
 
-  private selectEquipmentComponent(equipment: IEquipment): EquipmentItem{
-    const type = equipment.type; 
+  private selectEquipmentComponent(equipment: IEquipment): EquipmentItem {
+    const type = equipment.type;
     switch (type) {
-      case equipmentTypeEnum.stk500: 
-      return new EquipmentItem(STK500Component, equipment);
-      case equipmentTypeEnum.alteraDe1SoC: 
-      return new EquipmentItem(AlteraDe1SoCComponent, equipment);
-      case equipmentTypeEnum.stm32: 
-      return new EquipmentItem(Stm32Component, equipment);
+      case equipmentTypeEnum.stk500:
+        return new EquipmentItem(STK500Component, equipment);
+      case equipmentTypeEnum.alteraDe1SoC:
+        return new EquipmentItem(AlteraDe1SoCComponent, equipment);
+      case equipmentTypeEnum.stm32:
+        return new EquipmentItem(Stm32Component, equipment);
       default:
-        throw new Error("There is no matching type of equipmnets");
+        throw new Error('There is no matching type of equipmnets');
     }
   }
 
@@ -115,7 +139,7 @@ export class SessionInProgressComponent implements OnInit, OnDestroy {
     this.timer!.startTimer();
   }
 
-  private getSession(){
+  private getSession() {
     const sessionid: number = this.activateRoute.snapshot.params['id'];
     this.sessionService
       .getSessionById(sessionid)
@@ -135,15 +159,15 @@ export class SessionInProgressComponent implements OnInit, OnDestroy {
     this.router.navigate(['my-sessions']);
   }
 
-  isTryingToConnect(): boolean{
+  isTryingToConnect(): boolean {
     return this.stateSession === stateSessionEnum.tryingToConnect;
   }
 
-  isDisconnected(): boolean{
+  isDisconnected(): boolean {
     return this.stateSession === stateSessionEnum.disconnenected;
   }
 
-  isConnected(): boolean{
+  isConnected(): boolean {
     return this.stateSession === stateSessionEnum.connenected;
   }
 }

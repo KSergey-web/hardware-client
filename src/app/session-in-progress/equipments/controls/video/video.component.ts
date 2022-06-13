@@ -5,13 +5,12 @@ import { takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'app-video',
   templateUrl: './video.component.html',
-  styleUrls: ['./video.component.scss']
+  styleUrls: ['./video.component.scss'],
 })
 export class VideoComponent implements OnInit, OnDestroy {
-
   @Input()
   stream_url?: string;
-  constructor() { }
+  constructor() {}
 
   private onDestroy$ = new Subject<boolean>();
 
@@ -21,13 +20,15 @@ export class VideoComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    fromEvent(window, 'focus').pipe(takeUntil(this.onDestroy$)).subscribe(this.reset.bind(this))
+    fromEvent(window, 'focus')
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe(this.reset.bind(this));
   }
 
   visible = true;
 
-  reset(){
+  reset() {
     this.visible = false;
-    setTimeout(()=> this.visible = true);
+    setTimeout(() => (this.visible = true));
   }
 }

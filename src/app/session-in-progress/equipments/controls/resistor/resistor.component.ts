@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -7,11 +14,10 @@ import { IResistorManagement } from './resistor-management.interface';
 @Component({
   selector: 'app-resistor',
   templateUrl: './resistor.component.html',
-  styleUrls: ['./resistor.component.scss']
+  styleUrls: ['./resistor.component.scss'],
 })
 export class ResistorComponent implements OnInit, OnDestroy {
-
-  constructor() { }
+  constructor() {}
 
   ngOnInit(): void {
     this.preValueResistor = this.resistorManagment.minValue;
@@ -44,14 +50,14 @@ export class ResistorComponent implements OnInit, OnDestroy {
   }
 
   private subOnResistorState$() {
-    this.resistorManagment.resistorState$.pipe(takeUntil(this.onDestroy$)).subscribe((resistor: number) => {
-      this.resistorControl.setValue(resistor, {emitEvent: false});
-    }
-    )
+    this.resistorManagment.resistorState$
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe((resistor: number) => {
+        this.resistorControl.setValue(resistor, { emitEvent: false });
+      });
   }
 
   sendResistorAction(resistor: number): void {
     this.onResistorAction.emit(resistor);
   }
-
 }

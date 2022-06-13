@@ -8,9 +8,8 @@ describe('AlteraDe1SoCComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AlteraDe1SoCComponent ]
-    })
-    .compileComponents();
+      declarations: [AlteraDe1SoCComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

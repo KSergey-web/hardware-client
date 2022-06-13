@@ -1,4 +1,13 @@
-import { Component, ContentChild, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef } from '@angular/core';
+import {
+  Component,
+  ContentChild,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  TemplateRef,
+} from '@angular/core';
 import { FormArray, FormBuilder } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -7,13 +16,12 @@ import { ISwitchesManagement } from './switches-management.interface';
 @Component({
   selector: 'app-switches',
   templateUrl: './switches.component.html',
-  styleUrls: ['./switches.component.scss']
+  styleUrls: ['./switches.component.scss'],
 })
 export class SwitchesComponent implements OnInit, OnDestroy {
-
   @Output() onSwitchAction = new EventEmitter<number>();
   @Input() switchesManagment!: ISwitchesManagement;
-  @ContentChild("name") name!: TemplateRef<any>;
+  @ContentChild('name') name!: TemplateRef<any>;
 
   get numberOfSwitches(): number {
     return this.switchesManagment.numberOfSwitches;
@@ -28,13 +36,13 @@ export class SwitchesComponent implements OnInit, OnDestroy {
   }
 
   form = this.fb.group({
-    switches: this.fb.array([])
-  })
+    switches: this.fb.array([]),
+  });
   get switches(): FormArray {
-    return this.form.controls["switches"] as FormArray;
+    return this.form.controls['switches'] as FormArray;
   }
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder) {}
 
   private onDestroy$ = new Subject<boolean>();
 
@@ -44,22 +52,23 @@ export class SwitchesComponent implements OnInit, OnDestroy {
   }
 
   private subOnSwitchToDefault$() {
-    this.switchesToDefault$.pipe(takeUntil(this.onDestroy$)).subscribe(() => this.switches.controls
-      .forEach((control) => {
+    this.switchesToDefault$.pipe(takeUntil(this.onDestroy$)).subscribe(() =>
+      this.switches.controls.forEach((control) => {
         control.setValue(false);
-      }))
+      })
+    );
   }
 
   private subOnSwitchesState$() {
-    this.switchesState$.pipe(takeUntil(this.onDestroy$)).subscribe((switches: string) => {
-      for (let i = 0; i < switches.length; ++i) {
-        const control = this.switches.at(this.numberOfSwitches - 1 - i);
-        control.setValue(switches[i] == '1');
-      }
-    }
-    )
+    this.switchesState$
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe((switches: string) => {
+        for (let i = 0; i < switches.length; ++i) {
+          const control = this.switches.at(this.numberOfSwitches - 1 - i);
+          control.setValue(switches[i] == '1');
+        }
+      });
   }
-
 
   createSwitches() {
     for (let i = 0; i < this.numberOfSwitches; ++i) {
@@ -72,7 +81,6 @@ export class SwitchesComponent implements OnInit, OnDestroy {
     this.subOnSwitchToDefault$();
     this.subOnSwitchesState$();
   }
-
 
   sendCommand(event: Event, ind: number): void {
     const control = this.switches.controls[ind];

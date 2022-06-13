@@ -24,8 +24,6 @@ import { SignInComponent } from './sign-in/sign-in.component';
 import { API_URL } from './urls-tokens';
 import { WaitingRoomComponent } from './waiting-room/waiting-room.component';
 
-
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -62,5 +60,4 @@ import { WaitingRoomComponent } from './waiting-room/waiting-room.component';
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {
-}
+export class AppModule {}

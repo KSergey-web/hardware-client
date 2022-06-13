@@ -13,10 +13,9 @@ import { IStm32Service } from '../interfaces/equipment-service/stm32-service.int
   selector: 'app-stm32',
   templateUrl: './stm32.component.html',
   styleUrls: ['./stm32.component.scss'],
-  providers: [EquipmentSocketService]
+  providers: [EquipmentSocketService],
 })
 export class Stm32Component implements OnInit, OnDestroy {
-
   @Input() equipment: IEquipment | undefined;
   @Input() session: ISession | undefined;
 
@@ -25,13 +24,12 @@ export class Stm32Component implements OnInit, OnDestroy {
   canReset$: Subject<boolean> = new Subject<boolean>();
 
   constructor(
-    @Inject(I_STM32_SERVICE)private equipmentCommunication: IStm32Service,
+    @Inject(I_STM32_SERVICE) private equipmentCommunication: IStm32Service,
     private router: Router,
     private equipmentSocketService: EquipmentSocketService
   ) {
     this.subOnOutput();
   }
-
 
   private onDestroy$ = new Subject<boolean>();
 
@@ -50,7 +48,6 @@ export class Stm32Component implements OnInit, OnDestroy {
     };
   }
 
-
   private logToConsole(log: string) {
     this.onLog$.next(log);
   }
@@ -66,9 +63,7 @@ export class Stm32Component implements OnInit, OnDestroy {
   onReset(): void {
     this.equipmentCommunication
       .reset()
-      .pipe(
-        takeUntil(this.onDestroy$),
-        )
+      .pipe(takeUntil(this.onDestroy$))
       .subscribe(this.getDefaultObserver());
   }
 
@@ -89,9 +84,7 @@ export class Stm32Component implements OnInit, OnDestroy {
   onClean(): void {
     this.equipmentCommunication
       .clean()
-      .pipe(
-        takeUntil(this.onDestroy$),
-        )
+      .pipe(takeUntil(this.onDestroy$))
       .subscribe({
         next: () => {
           this.canReset$.next(false);
@@ -107,16 +100,13 @@ export class Stm32Component implements OnInit, OnDestroy {
       .subscribe(this.getDefaultObserver());
   }
 
-
   subOnOutput() {
     this.equipmentSocketService.output$
-    .pipe(takeUntil(this.onDestroy$))
-      .subscribe(({stdout}) => {
-      if (stdout) {
-        this.logToConsole(stdout);
-      }
-    })
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe(({ stdout }) => {
+        if (stdout) {
+          this.logToConsole(stdout);
+        }
+      });
   }
-
-
 }

@@ -28,7 +28,7 @@ export class AuthService implements OnDestroy {
     this.clearMemory();
   }
 
-  private clearMemory(){
+  private clearMemory() {
     this.onDestroy$.next(true);
     this.onDestroy$.complete();
     this._currentUser$.complete();
@@ -59,12 +59,11 @@ export class AuthService implements OnDestroy {
     });
   }
 
-
-  get authToken(){
+  get authToken() {
     return localStorage.getItem('id_token');
   }
 
-  get authBearerToken(){
+  get authBearerToken() {
     return 'Bearer ' + this.authToken;
   }
 

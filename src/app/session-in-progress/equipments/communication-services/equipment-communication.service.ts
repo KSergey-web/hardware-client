@@ -9,38 +9,39 @@ import { IResistorInteraction } from '../interfaces/interactions-with-controls/r
 import { ISwitchInteraction } from '../interfaces/interactions-with-controls/switch-interaction.interface';
 
 @Injectable()
-export class EquipmentCommunicationService implements IFirmwareInteraction, IButtonInteraction, ISwitchInteraction, IResistorInteraction {
-
+export class EquipmentCommunicationService
+  implements
+    IFirmwareInteraction,
+    IButtonInteraction,
+    ISwitchInteraction,
+    IResistorInteraction
+{
   constructor(
     private http: HttpClient,
     @Inject(API_INTERMEDIARY_URL) private apiUrl: string,
     private sessionInProgressService: SessionInProgressService
-  ) { }
+  ) {}
 
   private get sessionId(): number | undefined {
     return this.sessionInProgressService.sessionId;
   }
 
-  sendSwitchAction(
-    switchInd: number,
-  ): Observable<any> {
+  sendSwitchAction(switchInd: number): Observable<any> {
     return this.http.get<any>(
       `${this.apiUrl}/v1/api/equipment/send-command/session/${this.sessionId}?command=/switch/${switchInd}`
     );
   }
 
-  sendButtonAction(
-    buttonInd: number,
-  ): Observable<any> {
-    console.log(`${this.apiUrl}/v1/api/equipment/send-command/session/${this.sessionId}?command=/button/${buttonInd}`);
+  sendButtonAction(buttonInd: number): Observable<any> {
+    console.log(
+      `${this.apiUrl}/v1/api/equipment/send-command/session/${this.sessionId}?command=/button/${buttonInd}`
+    );
     return this.http.get<any>(
       `${this.apiUrl}/v1/api/equipment/send-command/session/${this.sessionId}?command=/button/${buttonInd}`
     );
   }
 
-  sendResistorAction(
-    resistor: number,
-  ): Observable<any> {
+  sendResistorAction(resistor: number): Observable<any> {
     return this.http.get<any>(
       `${this.apiUrl}/v1/api/equipment/send-command/session/${this.sessionId}?command=/resistor/${resistor}`
     );
@@ -55,22 +56,33 @@ export class EquipmentCommunicationService implements IFirmwareInteraction, IBut
   uploadFile(selectedFile: File): Observable<any> {
     const fd = new FormData();
     fd.append('file', selectedFile, selectedFile.name);
-    return this.http.post<any>(`${this.apiUrl}/v1/api/equipment/send-file/session/${this.sessionId}?command=/upload`, fd);
+    return this.http.post<any>(
+      `${this.apiUrl}/v1/api/equipment/send-file/session/${this.sessionId}?command=/upload`,
+      fd
+    );
   }
 
   clean(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/v1/api/equipment/send-command/session/${this.sessionId}?command=/clean`);
+    return this.http.get<any>(
+      `${this.apiUrl}/v1/api/equipment/send-command/session/${this.sessionId}?command=/clean`
+    );
   }
 
   reset(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/v1/api/equipment/send-command/session/${this.sessionId}?command=/reset`);
+    return this.http.get<any>(
+      `${this.apiUrl}/v1/api/equipment/send-command/session/${this.sessionId}?command=/reset`
+    );
   }
 
   getStatusSwitches(): Observable<{ switches: string }> {
-    return this.http.get<{ switches: string }>(`${this.apiUrl}/v1/api/equipment/send-command/session/${this.sessionId}?command=/status-switches`);
+    return this.http.get<{ switches: string }>(
+      `${this.apiUrl}/v1/api/equipment/send-command/session/${this.sessionId}?command=/status-switches`
+    );
   }
 
   turnOffSwitches(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/v1/api/equipment/send-command/session/${this.sessionId}?command=/turnOffSwitches`);
+    return this.http.get<any>(
+      `${this.apiUrl}/v1/api/equipment/send-command/session/${this.sessionId}?command=/turnOffSwitches`
+    );
   }
 }

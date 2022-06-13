@@ -10,7 +10,6 @@ import { ResistorComponent } from './resistor/resistor.component';
 import { SwitchesComponent } from './switches/switches.component';
 import { VideoComponent } from './video/video.component';
 
-
 @NgModule({
   declarations: [
     ConsoleComponent,
@@ -25,18 +24,16 @@ import { VideoComponent } from './video/video.component';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    SharePipesModule
+    SharePipesModule,
   ],
-  exports:[
+  exports: [
     ConsoleComponent,
     ButtonsComponent,
     FileActionsComponent,
     SwitchesComponent,
     ResistorComponent,
-    VideoComponent
+    VideoComponent,
   ],
-  providers: [
-  ],
+  providers: [],
 })
-export class EquipmentControlsModule {
-}
+export class EquipmentControlsModule {}

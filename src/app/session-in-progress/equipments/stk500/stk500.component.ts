@@ -13,10 +13,9 @@ import { IOutput } from '../interfaces/output.interface';
   selector: 'app-stk500',
   templateUrl: './stk500.component.html',
   styleUrls: ['./stk500.component.scss'],
-  providers: [EquipmentSocketService]
+  providers: [EquipmentSocketService],
 })
 export class STK500Component implements OnInit, OnDestroy {
-
   @Input() equipment!: IEquipment;
   @Input() session!: ISession;
 
@@ -27,15 +26,15 @@ export class STK500Component implements OnInit, OnDestroy {
   resistorManagment: IResistorManagement = {
     minValue: 32,
     maxValue: 4095,
-    resistorState$: new Subject<number>()
-  }
+    resistorState$: new Subject<number>(),
+  };
 
-  private get resistorState$(): Subject<number>{
+  private get resistorState$(): Subject<number> {
     return this.resistorManagment.resistorState$;
   }
 
   constructor(
-    @Inject(I_STK500_SERVICE)private stk500Service: IStk500Service,
+    @Inject(I_STK500_SERVICE) private stk500Service: IStk500Service,
     private equipmentSocketService: EquipmentSocketService
   ) {
     this.subOnOutput();
@@ -48,10 +47,11 @@ export class STK500Component implements OnInit, OnDestroy {
     this.onDestroy$.complete();
   }
 
-
   ngOnInit(): void {
     //this.checkEquipmentServer();
-    this.stk500Service.getStatusResistor().subscribe(res => this.newStateResistor(res.resistor))
+    this.stk500Service
+      .getStatusResistor()
+      .subscribe((res) => this.newStateResistor(res.resistor));
   }
 
   private getDefaultObserver() {
@@ -59,7 +59,6 @@ export class STK500Component implements OnInit, OnDestroy {
       error: this.getDefaultError(),
     };
   }
-
 
   private logToConsole(log: string) {
     this.onLog$.next(log);
@@ -76,9 +75,7 @@ export class STK500Component implements OnInit, OnDestroy {
   onReset(): void {
     this.stk500Service
       .reset()
-      .pipe(
-        takeUntil(this.onDestroy$),
-        )
+      .pipe(takeUntil(this.onDestroy$))
       .subscribe(this.getDefaultObserver());
   }
 
@@ -99,9 +96,7 @@ export class STK500Component implements OnInit, OnDestroy {
   onClean(): void {
     this.stk500Service
       .clean()
-      .pipe(
-        takeUntil(this.onDestroy$)
-      )
+      .pipe(takeUntil(this.onDestroy$))
       .subscribe({
         next: (res) => {
           this.canReset$.next(false);
@@ -113,9 +108,7 @@ export class STK500Component implements OnInit, OnDestroy {
   onResistorAction(resistor: number): void {
     this.stk500Service
       .sendResistorAction(resistor)
-      .pipe(
-        takeUntil(this.onDestroy$),
-        )
+      .pipe(takeUntil(this.onDestroy$))
       .subscribe();
   }
 
@@ -126,21 +119,21 @@ export class STK500Component implements OnInit, OnDestroy {
       .subscribe(this.getDefaultObserver());
   }
 
-  newStateResistor(resistor: number): void{
+  newStateResistor(resistor: number): void {
     this.resistorState$.next(resistor);
   }
 
   subOnOutput() {
     this.equipmentSocketService.output$
-    .pipe(takeUntil(this.onDestroy$))
-      .subscribe(({stdout, resistor}) => {
-      if (stdout) {
-        this.logToConsole(stdout);
-      }
-      if (resistor){
-        this.newStateResistor(resistor);
-      }
-      console.warn(resistor)
-    })
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe(({ stdout, resistor }) => {
+        if (stdout) {
+          this.logToConsole(stdout);
+        }
+        if (resistor) {
+          this.newStateResistor(resistor);
+        }
+        console.warn(resistor);
+      });
   }
 }

@@ -11,12 +11,8 @@ import { EquipmentControlsModule } from './equipments/controls/equipment-control
 import { EquipmentsModule } from './equipments/equipments.module';
 import { SessionInProgressComponent } from './session-in-progress.component';
 
-
 @NgModule({
-  declarations: [
-    SessionInProgressComponent,
-    EquipmentDirective,
-  ],
+  declarations: [SessionInProgressComponent, EquipmentDirective],
   imports: [
     EquipmentsModule,
     EquipmentControlsModule,
@@ -25,7 +21,7 @@ import { SessionInProgressComponent } from './session-in-progress.component';
     ReactiveFormsModule,
     HttpClientModule,
     CommonModule,
-    SharePipesModule
+    SharePipesModule,
   ],
   providers: [
     {
@@ -34,5 +30,4 @@ import { SessionInProgressComponent } from './session-in-progress.component';
     },
   ],
 })
-export class SessionInProgressModule {
-}
+export class SessionInProgressModule {}

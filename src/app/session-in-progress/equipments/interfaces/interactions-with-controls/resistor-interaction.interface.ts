@@ -1,9 +1,7 @@
-import { Observable } from "rxjs";
+import { Observable } from 'rxjs';
 
 export interface IResistorInteraction {
-  sendResistorAction: (
-    resistor: number,
-  ) => Observable<any>;
+  sendResistorAction: (resistor: number) => Observable<any>;
 
   getStatusResistor: () => Observable<{ resistor: number }>;
 }

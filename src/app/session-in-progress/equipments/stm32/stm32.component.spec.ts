@@ -8,9 +8,8 @@ describe('Stm32Component', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ Stm32Component ]
-    })
-    .compileComponents();
+      declarations: [Stm32Component],
+    }).compileComponents();
   });
 
   beforeEach(() => {

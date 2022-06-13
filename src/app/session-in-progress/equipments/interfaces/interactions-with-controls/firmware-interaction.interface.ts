@@ -1,9 +1,9 @@
-import { Observable } from "rxjs";
+import { Observable } from 'rxjs';
 
 export interface IFirmwareInteraction {
-    uploadFile: (selectedFile: File) => Observable<any>;
+  uploadFile: (selectedFile: File) => Observable<any>;
 
-    clean: () => Observable<any>;
+  clean: () => Observable<any>;
 
-    reset: () => Observable<any>;
+  reset: () => Observable<any>;
 }
