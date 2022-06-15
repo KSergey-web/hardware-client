@@ -1,15 +1,15 @@
 .button-equpment {
-    background-color: #4f524f; /* Green */
-    border: none;
-    color: white;
-    text-align: center;
-    text-decoration: none;
-    font-size: 1.5em;
-    border-radius: 50%;
+  background-color: #4f524f; /* Green */
+  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  font-size: 1em;
+  border-radius: 50%;
 }
 
 .button:active:hover {
-    background-color: #1e201e;
-    box-shadow: 0 5px #666;
-    transform: translateY(4px);
+  background-color: #1e201e;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
 }

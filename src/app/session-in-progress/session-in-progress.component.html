@@ -1,41 +1,39 @@
 <div class="container">
-    <div class="text-right">
-        <button class="btn btn-danger" (click)="exitSession()">Покинуть сессию</button>
+  <div class="text-right">
+    <button class="btn btn-danger" (click)="exitSession()">Покинуть сессию</button>
+  </div>
+  <p *ngIf="timer">
+    До окончания сессии осталось <span><strong>{{timer.time$ | async | timer}}</strong></span>
+  </p>
+  <div *ngIf="isTryingToConnect()" class="text-center">
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
     </div>
-    <p *ngIf="timer">
-    До окончания сессии осталось <span ><strong>{{timer.time$ | async | timer}}</strong></span>
-    </p>
-    <div *ngIf="isTryingToConnect()" class="text-center">
-        <div class="spinner-border" role="status">
-            <span class="sr-only">Loading...</span>
-        </div>
-        <h2 class="text-center font-weight-bold h-25">Попытка установить связь с сервером оборудования...</h2>
+    <h2 class="text-center font-weight-bold h-25">Попытка установить связь с сервером оборудования...</h2>
+  </div>
+  <div *ngIf="isDisconnected()" class="text-center">
+    <div class="alert alert-danger" role="alert">
+      Сервер с оборудованием не доступен
     </div>
-    <div *ngIf="isDisconnected()" class="text-center">
-        <div class="alert alert-danger" role="alert">
-            Сервер с оборудованием не доступен
-        </div>
-        <button class="btn btn-primary" (click)="tryConnectToEquipment()">Повторить попытку подключения к
-            серверу</button>
-    </div>
-    <ng-template *ngIf="isConnected()" equipmentHost>
-    </ng-template>
-    <section>
-        <h2>Информация о времени</h2>
-        <p>
-            Начало сеанса в: {{session?.begin | date:'HH:mm dd:MM:YYYY'}} <br />
-            Конец сеанса в: {{session?.end | date:'HH:mm dd:MM:YYYY'}} <br />
-        </p>
+    <button class="btn btn-primary" (click)="tryConnectToEquipment()">Повторить попытку подключения к
+      серверу</button>
+  </div>
+  <ng-template *ngIf="isConnected()" equipmentHost>
+  </ng-template>
+  <div class="row">
+    <section class="col">
+      <h2>Информация о времени</h2>
+      <p>
+        Начало сеанса в: {{session?.begin | date:'HH:mm dd:MM:YYYY'}} <br />
+        Конец сеанса в: {{session?.end | date:'HH:mm dd:MM:YYYY'}} <br />
+      </p>
     </section>
-    <section>
-        <h2>Информация об оборудовании:</h2>
-        <p>{{session?.equipment?.name}}</p>
+    <section class="col">
+      <h2>Информация о пользователе:</h2>
+      <p>
+        {{session?.user?.first_name}}
+        {{session?.user?.last_name}}
+      </p>
     </section>
-    <section>
-        <h2>Информация о пользователе:</h2>
-        <p>
-            {{session?.user?.first_name}}
-            {{session?.user?.last_name}}
-        </p>
-    </section>
+  </div>
 </div>

@@ -1,10 +1,11 @@
 <div *ngIf="visible">
-<iframe  *ngIf="stream_url; else alert" [src]="stream_url | safe:'resourceUrl'" width="50%" height="300px" seamless autoplay scrolling="no">
+  <iframe *ngIf="stream_url; else alert" [src]="stream_url | safe:'resourceUrl'" class='col-md-12' seamless autoplay
+    scrolling="no">
     Ваш браузер не поддерживает плавающие фреймы!
-</iframe>
-<ng-template #alert>
+  </iframe>
+  <ng-template #alert>
     <p class="alert alert-danger" role="alert">
-        This is a danger alert—check it out!
+      This is a danger alert—check it out!
     </p>
-</ng-template>
+  </ng-template>
 </div>

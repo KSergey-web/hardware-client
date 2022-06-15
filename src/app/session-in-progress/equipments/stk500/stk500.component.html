@@ -1,10 +1,16 @@
 <h2 class="text-center">STK500</h2>
-<app-video [stream_url]="equipment?.stream_url"></app-video>
-<app-buttons [numberOfButtons]="8" (onButtonAction)="onButtonAction($event)">
-    <ng-template #name>SW</ng-template>
-</app-buttons>
-<app-resistor [resistorManagment]='resistorManagment' (onResistorAction)="onResistorAction($event)">
-</app-resistor>
-<app-console [onLog$]="onLog$"></app-console>
-<app-file-actions (onButtonClean)="onClean()" (onButtonReset)="onReset()" (onButtonUpload)="onUploadFile($event)"
-    [canReset$]="canReset$"></app-file-actions>
+<div class="row">
+  <app-video class="col" [stream_url]="equipment?.stream_url"></app-video>
+  <app-console class="col" [onLog$]="onLog$"></app-console>
+</div>
+<div class="row">
+  <div class="col">
+    <app-buttons [numberOfButtons]="8" (onButtonAction)="onButtonAction($event)">
+      <ng-template #name>SW</ng-template>
+    </app-buttons>
+    <app-resistor class="mt-1" [resistorManagment]='resistorManagment' (onResistorAction)="onResistorAction($event)">
+    </app-resistor>
+  </div>
+  <app-file-actions class="col" (onButtonClean)="onClean()" (onButtonReset)="onReset()"
+    (onButtonUpload)="onUploadFile($event)" [canReset$]="canReset$"></app-file-actions>
+</div>
