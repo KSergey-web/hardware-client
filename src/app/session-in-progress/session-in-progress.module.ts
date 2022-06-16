@@ -6,13 +6,12 @@ import { environment } from 'src/environments/environment';
 import { AppRoutingModule } from '../app-routing.module';
 import { SharePipesModule } from '../share/share-pipes.module';
 import { API_INTERMEDIARY_URL } from '../urls-tokens';
-import { EquipmentDirective } from './equipment.directive';
 import { EquipmentControlsModule } from './equipments/controls/equipment-controls.module';
 import { EquipmentsModule } from './equipments/equipments.module';
 import { SessionInProgressComponent } from './session-in-progress.component';
 
 @NgModule({
-  declarations: [SessionInProgressComponent, EquipmentDirective],
+  declarations: [SessionInProgressComponent],
   imports: [
     EquipmentsModule,
     EquipmentControlsModule,

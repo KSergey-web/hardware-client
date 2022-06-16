@@ -1,14 +1,11 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-} from '@angular/core';
+import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { EquipmentSocketService } from '../../communication-services/equipment-socket-service';
+import { EquipmentHandlerService } from '../equipment-handler.service';
+import { I_RESISTOR_INTERACTION_SERVICE } from '../../equipment-service-tokens';
+import { IResistorInteraction } from '../../interfaces/interactions-with-controls/resistor-interaction.interface';
 import { IResistorManagement } from './resistor-management.interface';
 
 @Component({
@@ -17,17 +14,24 @@ import { IResistorManagement } from './resistor-management.interface';
   styleUrls: ['./resistor.component.scss'],
 })
 export class ResistorComponent implements OnInit, OnDestroy {
-  constructor() {}
+  constructor(
+    @Inject(I_RESISTOR_INTERACTION_SERVICE)
+    private resistorService: IResistorInteraction,
+    private equipmentHandlerService: EquipmentHandlerService,
+    private equipmentSocketService: EquipmentSocketService
+  ) {}
 
   ngOnInit(): void {
     this.preValueResistor = this.resistorManagment.minValue;
-    this.subOnResistorState$();
     this.subscrubeOnRangeChanges();
+    this.subOnOutput();
+    this.resistorService
+      .getStatusResistor()
+      .subscribe((res) => this.setValueResistor(res.resistor));
   }
 
   preValueResistor: number = 0;
 
-  @Output() onResistorAction = new EventEmitter<number>();
   @Input() resistorManagment!: IResistorManagement;
 
   resistorControl = new FormControl();
@@ -49,15 +53,24 @@ export class ResistorComponent implements OnInit, OnDestroy {
       });
   }
 
-  private subOnResistorState$() {
-    this.resistorManagment.resistorState$
-      .pipe(takeUntil(this.onDestroy$))
-      .subscribe((resistor: number) => {
-        this.resistorControl.setValue(resistor, { emitEvent: false });
-      });
+  setValueResistor(resistor: number) {
+    this.resistorControl.setValue(resistor, { emitEvent: false });
   }
 
   sendResistorAction(resistor: number): void {
-    this.onResistorAction.emit(resistor);
+    this.resistorService
+      .sendResistorAction(resistor)
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe(this.equipmentHandlerService.getDefaultObserver());
+  }
+
+  subOnOutput() {
+    this.equipmentSocketService.output$
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe(({ resistor }) => {
+        if (resistor) {
+          this.setValueResistor(resistor);
+        }
+      });
   }
 }

@@ -1,29 +1,25 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-} from '@angular/core';
+import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { EquipmentHandlerService } from '../equipment-handler.service';
+import { I_FIRMWARE_INTERACTION_SERVICE } from '../../equipment-service-tokens';
+import { IFirmwareInteraction } from '../../interfaces/interactions-with-controls/firmware-interaction.interface';
 
 @Component({
   selector: 'app-file-actions',
   templateUrl: './file-actions.component.html',
   styleUrls: ['./file-actions.component.scss'],
 })
-export class FileActionsComponent implements OnInit, OnDestroy {
-  constructor() {}
+export class FileActionsComponent implements OnDestroy {
+  constructor(
+    @Inject(I_FIRMWARE_INTERACTION_SERVICE)
+    private firmwareService: IFirmwareInteraction,
+    private equipmentHandlerService: EquipmentHandlerService
+  ) {}
 
   selectedFile: File | null = null;
 
   canReset = false;
-  @Input() canReset$?: Subject<boolean>;
-  @Output() onButtonClean = new EventEmitter();
-  @Output() onButtonReset = new EventEmitter();
-  @Output() onButtonUpload = new EventEmitter<File>();
 
   private onDestroy$ = new Subject<boolean>();
 
@@ -32,30 +28,40 @@ export class FileActionsComponent implements OnInit, OnDestroy {
     this.onDestroy$.complete();
   }
 
-  ngOnInit(): void {
-    if (this.canReset$) {
-      this.canReset$
-        ?.pipe(takeUntil(this.onDestroy$))
-        .subscribe((res) => (this.canReset = res));
-    }
-  }
-
   onFileSelected(event: any) {
     this.selectedFile = <File>event.target.files[0];
     console.log(this.selectedFile.name);
   }
 
-  onReset(): void {
-    this.onButtonReset.emit();
+  onUploadFile(): void {
+    if (!this.selectedFile) return;
+    this.firmwareService
+      .uploadFile(this.selectedFile)
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe({
+        next: () => {
+          this.canReset = true;
+        },
+        error: this.equipmentHandlerService.getDefaultError(),
+      });
   }
 
-  onUploadFile(): void {
-    console.log(`upload ${this.selectedFile?.name}`);
-    if (!this.selectedFile) return;
-    this.onButtonUpload.emit(this.selectedFile);
+  onReset(): void {
+    this.firmwareService
+      .reset()
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe(this.equipmentHandlerService.getDefaultObserver());
   }
 
   onClean(): void {
-    this.onButtonClean.emit();
+    this.firmwareService
+      .clean()
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe({
+        next: () => {
+          this.canReset = false;
+        },
+        error: this.equipmentHandlerService.getDefaultError(),
+      });
   }
 }

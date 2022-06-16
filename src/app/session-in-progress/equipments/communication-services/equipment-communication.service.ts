@@ -33,9 +33,6 @@ export class EquipmentCommunicationService
   }
 
   sendButtonAction(buttonInd: number): Observable<any> {
-    console.log(
-      `${this.apiUrl}/v1/api/equipment/send-command/session/${this.sessionId}?command=/button/${buttonInd}`
-    );
     return this.http.get<any>(
       `${this.apiUrl}/v1/api/equipment/send-command/session/${this.sessionId}?command=/button/${buttonInd}`
     );

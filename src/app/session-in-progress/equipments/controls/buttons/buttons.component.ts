@@ -1,35 +1,47 @@
 import {
   Component,
   ContentChild,
-  EventEmitter,
+  Inject,
   Input,
+  OnDestroy,
   OnInit,
-  Output,
   TemplateRef,
 } from '@angular/core';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { stateButtonEnum } from 'src/app/enums/state-button.enum';
+import { EquipmentHandlerService } from '../equipment-handler.service';
+import { I_BUTTON_INTERACTION_SERVICE } from '../../equipment-service-tokens';
+import { IButtonInteraction } from '../../interfaces/interactions-with-controls/button-interaction.interface';
 
 @Component({
   selector: 'app-buttons',
   templateUrl: './buttons.component.html',
   styleUrls: ['./buttons.component.scss'],
 })
-export class ButtonsComponent implements OnInit {
+export class ButtonsComponent implements OnInit, OnDestroy {
   buttons: [number, stateButtonEnum][] = [];
 
-  @Output() onButtonAction = new EventEmitter<number>();
   @Input() numberOfButtons: number = 0;
+
   @ContentChild('name') name!: TemplateRef<any>;
-  constructor() {}
+  constructor(
+    @Inject(I_BUTTON_INTERACTION_SERVICE)
+    private buttonService: IButtonInteraction,
+    private equipmentHandlerService: EquipmentHandlerService
+  ) {}
+
+  private onDestroy$ = new Subject<boolean>();
+
+  ngOnDestroy() {
+    this.onDestroy$.next(true);
+    this.onDestroy$.complete();
+  }
 
   ngOnInit(): void {
     for (let i = 0; i < this.numberOfButtons; ++i) {
       this.buttons.push([i, stateButtonEnum.mouseup]);
     }
-  }
-
-  sendButtonAction(ind: number): void {
-    this.onButtonAction.emit(ind);
   }
 
   onMouseOutFromButton($event: MouseEvent, index: number) {
@@ -46,5 +58,12 @@ export class ButtonsComponent implements OnInit {
   onButtonUp(index: number) {
     this.buttons[index][1] = stateButtonEnum.mouseup;
     this.sendButtonAction(index);
+  }
+
+  sendButtonAction(buttonInd: number): void {
+    this.buttonService
+      .sendButtonAction(buttonInd)
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe(this.equipmentHandlerService.getDefaultObserver());
   }
 }

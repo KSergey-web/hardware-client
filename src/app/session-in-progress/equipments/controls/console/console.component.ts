@@ -1,13 +1,14 @@
 import {
   Component,
   ElementRef,
-  Input,
   OnDestroy,
   OnInit,
   ViewChild,
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { EquipmentSocketService } from '../../communication-services/equipment-socket-service';
+import { EquipmentHandlerService } from '../equipment-handler.service';
 
 @Component({
   selector: 'app-console',
@@ -17,8 +18,12 @@ import { takeUntil } from 'rxjs/operators';
 export class ConsoleComponent implements OnInit, OnDestroy {
   logs: string[] = [];
 
-  @Input() onLog$?: Subject<string>;
-  @ViewChild('console', { static: false })
+  constructor(
+    private equipmentSocketService: EquipmentSocketService,
+    private equipmentHandlerService: EquipmentHandlerService
+  ) {}
+
+  @ViewChild('console')
   private console: ElementRef | undefined;
 
   private onDestroy$ = new Subject<boolean>();
@@ -29,11 +34,27 @@ export class ConsoleComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    if (!this.onLog$) throw Error('onLog is undefined');
-    this.onLog$.pipe(takeUntil(this.onDestroy$)).subscribe((log) => {
-      this.logs.push(log);
-      this.console!.nativeElement.scrollTop =
-        this.console!.nativeElement.scrollHeight;
-    });
+    this.subOnOutput();
+    this.equipmentHandlerService.onLog$
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe((log: string) => {
+        this.logToConsole(log);
+      });
+  }
+
+  private logToConsole(log: string) {
+    this.logs.push(log);
+    this.console!.nativeElement.scrollTop =
+      this.console!.nativeElement.scrollHeight;
+  }
+
+  subOnOutput() {
+    this.equipmentSocketService.output$
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe(({ stdout }) => {
+        if (stdout) {
+          this.logToConsole(stdout);
+        }
+      });
   }
 }

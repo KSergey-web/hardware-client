@@ -18,8 +18,7 @@
     <button class="btn btn-primary" (click)="tryConnectToEquipment()">Повторить попытку подключения к
       серверу</button>
   </div>
-  <ng-template *ngIf="isConnected()" equipmentHost>
-  </ng-template>
+  <app-equipment *ngIf="isConnected() && session" [session]="session!"></app-equipment>
   <div class="row">
     <section class="col">
       <h2>Информация о времени</h2>

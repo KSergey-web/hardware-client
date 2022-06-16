@@ -1,16 +1,19 @@
 import {
   Component,
   ContentChild,
-  EventEmitter,
+  Inject,
   Input,
   OnDestroy,
   OnInit,
-  Output,
   TemplateRef,
 } from '@angular/core';
 import { FormArray, FormBuilder } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { EquipmentSocketService } from '../../communication-services/equipment-socket-service';
+import { EquipmentHandlerService } from '../equipment-handler.service';
+import { I_SWITCH_INTERACTION_SERVICE } from '../../equipment-service-tokens';
+import { ISwitchInteraction } from '../../interfaces/interactions-with-controls/switch-interaction.interface';
 import { ISwitchesManagement } from './switches-management.interface';
 
 @Component({
@@ -19,20 +22,11 @@ import { ISwitchesManagement } from './switches-management.interface';
   styleUrls: ['./switches.component.scss'],
 })
 export class SwitchesComponent implements OnInit, OnDestroy {
-  @Output() onSwitchAction = new EventEmitter<number>();
   @Input() switchesManagment!: ISwitchesManagement;
   @ContentChild('name') name!: TemplateRef<any>;
 
   get numberOfSwitches(): number {
     return this.switchesManagment.numberOfSwitches;
-  }
-
-  private get switchesState$(): Subject<string> {
-    return this.switchesManagment.switchesState$;
-  }
-
-  private get switchesToDefault$(): Subject<void> {
-    return this.switchesManagment.switchesToDefault$;
   }
 
   form = this.fb.group({
@@ -41,8 +35,13 @@ export class SwitchesComponent implements OnInit, OnDestroy {
   get switches(): FormArray {
     return this.form.controls['switches'] as FormArray;
   }
-
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    @Inject(I_SWITCH_INTERACTION_SERVICE)
+    private switchService: ISwitchInteraction,
+    private equipmentHandlerService: EquipmentHandlerService,
+    private equipmentSocketService: EquipmentSocketService,
+    private fb: FormBuilder
+  ) {}
 
   private onDestroy$ = new Subject<boolean>();
 
@@ -51,23 +50,11 @@ export class SwitchesComponent implements OnInit, OnDestroy {
     this.onDestroy$.complete();
   }
 
-  private subOnSwitchToDefault$() {
-    this.switchesToDefault$.pipe(takeUntil(this.onDestroy$)).subscribe(() =>
-      this.switches.controls.forEach((control) => {
-        control.setValue(false);
-      })
-    );
-  }
-
-  private subOnSwitchesState$() {
-    this.switchesState$
-      .pipe(takeUntil(this.onDestroy$))
-      .subscribe((switches: string) => {
-        for (let i = 0; i < switches.length; ++i) {
-          const control = this.switches.at(this.numberOfSwitches - 1 - i);
-          control.setValue(switches[i] == '1');
-        }
-      });
+  private setStateSwiitches(switches: string) {
+    for (let i = 0; i < switches.length; ++i) {
+      const control = this.switches.at(this.numberOfSwitches - 1 - i);
+      control.setValue(switches[i] == '1');
+    }
   }
 
   createSwitches() {
@@ -76,15 +63,35 @@ export class SwitchesComponent implements OnInit, OnDestroy {
     }
   }
 
+  getStartState() {
+    this.switchService
+      .getStatusSwitches()
+      .subscribe((res) => this.setStateSwiitches(res.switches));
+  }
+
   ngOnInit(): void {
     this.createSwitches();
-    this.subOnSwitchToDefault$();
-    this.subOnSwitchesState$();
+    this.getStartState();
+    this.subOnOutput();
   }
 
   sendCommand(event: Event, ind: number): void {
     const control = this.switches.controls[ind];
     control.setValue(!control.value);
-    this.onSwitchAction.emit(this.numberOfSwitches - 1 - ind);
+    const switchIndex = this.numberOfSwitches - 1 - ind;
+    this.switchService
+      .sendSwitchAction(switchIndex)
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe(this.equipmentHandlerService.getDefaultObserver());
+  }
+
+  subOnOutput() {
+    this.equipmentSocketService.output$
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe(({ switches }) => {
+        if (switches) {
+          this.setStateSwiitches(switches);
+        }
+      });
   }
 }

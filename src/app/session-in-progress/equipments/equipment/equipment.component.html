@@ -1,0 +1,17 @@
+<ng-container *ngIf="equipment;else elseTemplate">
+  <h2 class="text-center">{{equipment.name}}</h2>
+  <div class="row">
+    <app-video class="col" [stream_url]="equipment?.stream_url"></app-video>
+    <app-console class="col"></app-console>
+  </div>
+  <div class="row">
+    <div class="col">
+      <ng-template equipmentHost>
+      </ng-template>
+    </div>
+    <app-file-actions class="col"></app-file-actions>
+  </div>
+</ng-container>
+<ng-template #elseTemplate>
+  <div class="alert">equipment in not define</div>
+</ng-template>

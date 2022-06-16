@@ -1,11 +1,10 @@
-<h2 class="text-center">Altera De1-SoC</h2>
-<app-video [stream_url]="equipment?.stream_url"></app-video>
-<app-switches [switchesManagment]='switchesManagment' (onSwitchAction)="onSwitchAction($event)">
-    <ng-template #name>SW</ng-template>
-</app-switches>
-<app-buttons [numberOfButtons]="4" (onButtonAction)="onButtonAction($event)">
-    <ng-template #name>Key</ng-template>
-</app-buttons>
-<app-console [onLog$]="onLog$"></app-console>
-<app-file-actions (onButtonClean)="onClean()" (onButtonReset)="onReset()" (onButtonUpload)="onUploadFile($event)"
-    [canReset$]="canReset$"></app-file-actions>
+<div class="row">
+  <div class="col">
+    <app-switches [switchesManagment]='switchesManagment'>
+      <ng-template #name>SW</ng-template>
+    </app-switches>
+    <app-buttons [numberOfButtons]="4">
+      <ng-template #name>Key</ng-template>
+    </app-buttons>
+  </div>
+</div>
