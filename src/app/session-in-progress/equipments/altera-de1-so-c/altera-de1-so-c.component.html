@@ -1,10 +1,7 @@
 <div class="row">
-  <div class="col">
-    <app-switches [switchesManagment]='switchesManagment'>
-      <ng-template #name>SW</ng-template>
-    </app-switches>
-    <app-buttons [numberOfButtons]="4">
-      <ng-template #name>Key</ng-template>
-    </app-buttons>
-  </div>
-</div>
+  <app-switches [switchesManagment]='switchesManagment' class="col-12">
+    <ng-template #name>SW</ng-template>
+  </app-switches>
+  <app-buttons [numberOfButtons]="4" class="col-12">
+    <ng-template #name>Key</ng-template>
+  </app-buttons>

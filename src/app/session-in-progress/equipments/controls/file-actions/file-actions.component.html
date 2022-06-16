@@ -1,15 +1,14 @@
 <div class="row px-4 mt-1">
-  <button type="button" class="ml-2 btn btn-danger col" (click)="onClean()">Очистить оборудование</button>
+  <button type="button" class="btn btn-danger col" (click)="onClean()">Очистить оборудование</button>
 </div>
 <div class="row px-4 mt-1">
   <button type="button" class="btn btn-dark col" (click)="fileInput.click()">Прикрепить код программы</button>
-  <p class="col">Выбранный файл: <br />{{selectedFile?.name}}</p>
+  <p class="col">Выбранный файл: <br /> >>{{selectedFile?.name}}</p>
 </div>
 <div class="row px-4 mt-1 justify-content-center">
   <button [disabled]='!selectedFile' type="button" class="btn btn-secondary col" (click)="onUploadFile()">Прошить
     оборудование выбранным файлом</button>
   <button [disabled]='!canReset' type="button" class="ml-2 btn btn-secondary col" (click)="onReset()">Перепрошить
     оборудование уже загруженным файлом</button>
-
 </div>
 <input style="display: none" #fileInput type="file" (change)="onFileSelected($event)" accept=".hex,.sof,.bin">

@@ -1,4 +1,11 @@
 iframe {
-  height: 300px;
-  width: 560px;
+  height: calc(560px * 0.52);
+  width: 100%;
+  min-width: 300px;
+}
+
+@media (max-width: 576px) {
+  iframe {
+    height: calc(300px * 0.52);
+  }
 }

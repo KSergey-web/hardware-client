@@ -1,11 +1,17 @@
 .console {
   overflow: auto;
-  height: 300px;
+  height: calc(560px * 0.52);
   li {
     list-style-type: none; /* Убираем маркеры у списка */
   }
   li:before {
     content: ">>"; /* Добавляем в качестве маркера символ */
+  }
+}
+
+@media (max-width: 576px) {
+  .console {
+    height: calc(300px * 0.52);
   }
 }
 

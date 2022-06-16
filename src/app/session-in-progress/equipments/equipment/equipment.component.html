@@ -1,15 +1,24 @@
 <ng-container *ngIf="equipment;else elseTemplate">
   <h2 class="text-center">{{equipment.name}}</h2>
   <div class="row">
-    <app-video class="col" [stream_url]="equipment?.stream_url"></app-video>
-    <app-console class="col"></app-console>
-  </div>
-  <div class="row">
-    <div class="col">
-      <ng-template equipmentHost>
-      </ng-template>
+    <div class="col-md-6 col-sm-12 pt-2">
+      <div class="row">
+        <app-video class="col" [stream_url]="equipment?.stream_url"></app-video>
+      </div>
+      <div class="row">
+        <ng-template equipmentHost>
+        </ng-template>
+      </div>
     </div>
-    <app-file-actions class="col"></app-file-actions>
+    <div class="line-breaker"></div>
+    <div class="col-md-6 col-sm-12 pt-2">
+      <div class="row">
+        <app-console class="col"></app-console>
+      </div>
+      <div class="row">
+        <app-file-actions class="col"></app-file-actions>
+      </div>
+    </div>
   </div>
 </ng-container>
 <ng-template #elseTemplate>
