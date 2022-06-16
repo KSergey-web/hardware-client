@@ -44,21 +44,22 @@ import { VideoComponent } from './video/video.component';
   ],
   providers: [
     EquipmentHandlerService,
+    EquipmentCommunicationService,
     {
       provide: I_BUTTON_INTERACTION_SERVICE,
-      useClass: EquipmentCommunicationService,
+      useExisting: EquipmentCommunicationService,
     },
     {
       provide: I_SWITCH_INTERACTION_SERVICE,
-      useClass: EquipmentCommunicationService,
+      useExisting: EquipmentCommunicationService,
     },
     {
       provide: I_FIRMWARE_INTERACTION_SERVICE,
-      useClass: EquipmentCommunicationService,
+      useExisting: EquipmentCommunicationService,
     },
     {
       provide: I_RESISTOR_INTERACTION_SERVICE,
-      useClass: EquipmentCommunicationService,
+      useExisting: EquipmentCommunicationService,
     },
   ],
 })

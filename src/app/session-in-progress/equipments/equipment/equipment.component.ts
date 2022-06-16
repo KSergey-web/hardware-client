@@ -4,7 +4,6 @@ import {
   ComponentFactoryResolver,
   Input,
   OnChanges,
-  OnInit,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { IResistorManagement } from '../controls/resistor/resistor-management.interface';
 
 @Component({
