@@ -1,9 +1,7 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { stateSessionEnum } from '../enums/state-session.enum';
 import { ISession } from '../interfaces/session.interface';
 import { SessionService } from '../services/session.service';
 import { SessionInProgressService } from './session-in-progress.service';
@@ -19,26 +17,10 @@ export class SessionInProgressComponent implements OnInit, OnDestroy {
   session?: ISession;
   timer?: Timer;
 
-  stateSession: stateSessionEnum = stateSessionEnum.disconnenected;
+  isConnectedToSession = false;
 
-  tryConnectToEquipment() {
-    this.checkEquipmentServerBySession(this.session!.id);
-  }
-
-  checkEquipmentServerBySession(sessionId: number): void {
-    this.stateSession = stateSessionEnum.tryingToConnect;
-    this.sessionInProgressService
-      .checkEquipmentServerBySession(sessionId)
-      .pipe(takeUntil(this.onDestroy$))
-      .subscribe(
-        (res) => {
-          this.stateSession = stateSessionEnum.connenected;
-        },
-        (err: HttpErrorResponse) => {
-          this.stateSession = stateSessionEnum.disconnenected;
-          alert('Простите, сервер оборудования сейчас не доступен');
-        }
-      );
+  onConnected() {
+    this.isConnectedToSession = true;
   }
 
   constructor(
@@ -83,7 +65,6 @@ export class SessionInProgressComponent implements OnInit, OnDestroy {
         this.session = session;
         this.sessionInProgressService.sessionId = session?.id;
         this.initTimer();
-        this.tryConnectToEquipment();
       });
   }
 
@@ -93,17 +74,5 @@ export class SessionInProgressComponent implements OnInit, OnDestroy {
 
   exitSession(): void {
     this.router.navigate(['my-sessions']);
-  }
-
-  isTryingToConnect(): boolean {
-    return this.stateSession === stateSessionEnum.tryingToConnect;
-  }
-
-  isDisconnected(): boolean {
-    return this.stateSession === stateSessionEnum.disconnenected;
-  }
-
-  isConnected(): boolean {
-    return this.stateSession === stateSessionEnum.connenected;
   }
 }

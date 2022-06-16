@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ISwitchesManagement } from '../controls/switches/switches-management.interface';
+import { ISwitchesManagement } from '../../equipment-elements/switches/switches-management.interface';
 
 @Component({
   selector: 'app-altera-de1-so-c',

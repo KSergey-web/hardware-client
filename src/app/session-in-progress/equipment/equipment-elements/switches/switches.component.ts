@@ -12,7 +12,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { EquipmentSocketService } from '../../communication-services/equipment-socket-service';
 import { EquipmentHandlerService } from '../equipment-handler.service';
-import { I_SWITCH_INTERACTION_SERVICE } from '../../equipment-service-tokens';
+import { I_SWITCH_INTERACTION_SERVICE } from '../equipment-elements-tokens';
 import { ISwitchInteraction } from '../../interfaces/interactions-with-controls/switch-interaction.interface';
 import { ISwitchesManagement } from './switches-management.interface';
 

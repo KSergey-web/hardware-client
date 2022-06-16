@@ -6,15 +6,17 @@ import { environment } from 'src/environments/environment';
 import { AppRoutingModule } from '../app-routing.module';
 import { SharePipesModule } from '../share/share-pipes.module';
 import { API_INTERMEDIARY_URL } from '../urls-tokens';
-import { EquipmentControlsModule } from './equipments/controls/equipment-controls.module';
-import { EquipmentsModule } from './equipments/equipments.module';
+import { EquipmentElementsModule } from './equipment/equipment-elements/equipment-elements.module';
+import { EquipmentsModule } from './equipment/equipments.module';
 import { SessionInProgressComponent } from './session-in-progress.component';
+import { SessionInProgressService } from './session-in-progress.service';
+import { TryConnectToSessionComponent } from './try-connect-to-session/try-connect-to-session.component';
 
 @NgModule({
-  declarations: [SessionInProgressComponent],
+  declarations: [SessionInProgressComponent, TryConnectToSessionComponent],
   imports: [
     EquipmentsModule,
-    EquipmentControlsModule,
+    EquipmentElementsModule,
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
@@ -23,6 +25,7 @@ import { SessionInProgressComponent } from './session-in-progress.component';
     SharePipesModule,
   ],
   providers: [
+    SessionInProgressService,
     {
       provide: API_INTERMEDIARY_URL,
       useValue: environment.intermediaryServerAddres,

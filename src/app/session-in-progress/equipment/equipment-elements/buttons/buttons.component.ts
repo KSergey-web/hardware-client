@@ -11,7 +11,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { stateButtonEnum } from 'src/app/enums/state-button.enum';
 import { EquipmentHandlerService } from '../equipment-handler.service';
-import { I_BUTTON_INTERACTION_SERVICE } from '../../equipment-service-tokens';
+import { I_BUTTON_INTERACTION_SERVICE } from '../equipment-elements-tokens';
 import { IButtonInteraction } from '../../interfaces/interactions-with-controls/button-interaction.interface';
 
 @Component({

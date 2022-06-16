@@ -10,10 +10,10 @@ import {
 import { equipmentTypeEnum } from 'src/app/enums/equipments.enum';
 import { IEquipment } from 'src/app/interfaces/equipment.interface';
 import { ISession } from 'src/app/interfaces/session.interface';
-import { AlteraDe1SoCComponent } from '../altera-de1-so-c/altera-de1-so-c.component';
+import { AlteraDe1SoCComponent } from '../set-of-equipments/altera-de1-so-c/altera-de1-so-c.component';
 import { EquipmentSocketService } from '../communication-services/equipment-socket-service';
-import { STK500Component } from '../stk500/stk500.component';
-import { Stm32Component } from '../stm32/stm32.component';
+import { STK500Component } from '../set-of-equipments/stk500/stk500.component';
+import { Stm32Component } from '../set-of-equipments/stm32/stm32.component';
 import { EquipmentItem } from './equipment-item';
 import { EquipmentDirective } from './equipment.directive';
 

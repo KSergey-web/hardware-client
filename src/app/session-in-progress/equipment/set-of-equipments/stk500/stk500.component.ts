@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IResistorManagement } from '../controls/resistor/resistor-management.interface';
+import { IResistorManagement } from '../../equipment-elements/resistor/resistor-management.interface';
 
 @Component({
   selector: 'app-stk500',

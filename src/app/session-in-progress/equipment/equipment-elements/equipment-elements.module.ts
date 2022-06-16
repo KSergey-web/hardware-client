@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { InjectionToken, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharePipesModule } from 'src/app/share/share-pipes.module';
 import { EquipmentCommunicationService } from '../communication-services/equipment-communication.service';
@@ -9,7 +9,7 @@ import {
   I_FIRMWARE_INTERACTION_SERVICE,
   I_RESISTOR_INTERACTION_SERVICE,
   I_SWITCH_INTERACTION_SERVICE,
-} from '../equipment-service-tokens';
+} from './equipment-elements-tokens';
 import { ButtonsComponent } from './buttons/buttons.component';
 import { ConsoleComponent } from './console/console.component';
 import { EquipmentHandlerService } from './equipment-handler.service';
@@ -63,4 +63,4 @@ import { VideoComponent } from './video/video.component';
     },
   ],
 })
-export class EquipmentControlsModule {}
+export class EquipmentElementsModule {}

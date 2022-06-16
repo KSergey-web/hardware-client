@@ -3,9 +3,7 @@ import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { API_INTERMEDIARY_URL } from '../urls-tokens';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class SessionInProgressService {
   constructor(
     private http: HttpClient,

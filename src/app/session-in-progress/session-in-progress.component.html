@@ -5,20 +5,9 @@
   <p *ngIf="timer">
     До окончания сессии осталось <span><strong>{{timer.time$ | async | timer}}</strong></span>
   </p>
-  <div *ngIf="isTryingToConnect()" class="text-center">
-    <div class="spinner-border" role="status">
-      <span class="sr-only">Loading...</span>
-    </div>
-    <h2 class="text-center font-weight-bold h-25">Попытка установить связь с сервером оборудования...</h2>
-  </div>
-  <div *ngIf="isDisconnected()" class="text-center">
-    <div class="alert alert-danger" role="alert">
-      Сервер с оборудованием не доступен
-    </div>
-    <button class="btn btn-primary" (click)="tryConnectToEquipment()">Повторить попытку подключения к
-      серверу</button>
-  </div>
-  <app-equipment *ngIf="isConnected() && session" [session]="session!"></app-equipment>
+  <app-try-connect-to-session *ngIf="session" [sessionId]="session.id" (onConnected)="onConnected()">
+  </app-try-connect-to-session>
+  <app-equipment *ngIf="isConnectedToSession" [session]="session!"></app-equipment>
   <div class="row">
     <section class="col">
       <h2>Информация о времени</h2>
@@ -27,11 +16,12 @@
         Конец сеанса в: {{session?.end | date:'HH:mm dd:MM:YYYY'}} <br />
       </p>
     </section>
-    <section class="col">
+    <section class="col mt-2">
       <h2>Информация о пользователе:</h2>
       <p>
         {{session?.user?.first_name}}
         {{session?.user?.last_name}}
+        {{session?.user?.patronymic}}
       </p>
     </section>
   </div>

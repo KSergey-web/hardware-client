@@ -4,7 +4,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { EquipmentSocketService } from '../../communication-services/equipment-socket-service';
 import { EquipmentHandlerService } from '../equipment-handler.service';
-import { I_RESISTOR_INTERACTION_SERVICE } from '../../equipment-service-tokens';
+import { I_RESISTOR_INTERACTION_SERVICE } from '../equipment-elements-tokens';
 import { IResistorInteraction } from '../../interfaces/interactions-with-controls/resistor-interaction.interface';
 import { IResistorManagement } from './resistor-management.interface';
 

@@ -2,7 +2,7 @@ import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { EquipmentHandlerService } from '../equipment-handler.service';
-import { I_FIRMWARE_INTERACTION_SERVICE } from '../../equipment-service-tokens';
+import { I_FIRMWARE_INTERACTION_SERVICE } from '../equipment-elements-tokens';
 import { IFirmwareInteraction } from '../../interfaces/interactions-with-controls/firmware-interaction.interface';
 
 @Component({
