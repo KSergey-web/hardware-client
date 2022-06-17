@@ -1,8 +1,11 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { CommonModalDialogBoxBuilder } from '../common-dialog-boxes/common-modal-dialog-box-builder.class';
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -22,7 +25,8 @@ export class SignInComponent implements OnInit, OnDestroy {
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private modalService: NgbModal
   ) {
     this.signInForm = formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
@@ -48,14 +52,26 @@ export class SignInComponent implements OnInit, OnDestroy {
     this.authService
       .login(val)
       .pipe(takeUntil(this.onDestroy$))
-      .subscribe(
-        () => {
-          this.router.navigate(['']);
-        },
-        (err: Error) => {
-          alert(`Incorrect data`);
-          console.log(err);
-        }
-      );
+      .subscribe(() => {
+        this.router.navigate(['']);
+      }, this.errorResponseHandler.bind(this));
+  }
+
+  private errorResponseHandler(err: HttpErrorResponse) {
+    switch (err.status) {
+      case 400:
+        const text =
+          'Неверный логин или пароль. Проверьте правильность введенных данных и повторите попытку';
+        this.createBadModalAlert({ text });
+        break;
+      default:
+        this.createBadModalAlert({});
+        break;
+    }
+  }
+
+  createBadModalAlert({ header = 'Ошибка', text = 'Что-то пошло не так' }) {
+    const bulder = new CommonModalDialogBoxBuilder(this.modalService);
+    bulder.addHeader(header).addText(text).setDangerStyle().openAlertModal();
   }
 }

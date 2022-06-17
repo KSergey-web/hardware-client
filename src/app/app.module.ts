@@ -6,6 +6,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from 'src/environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { CommonDialogBoxesModule } from './common-dialog-boxes/common-dialog-boxes.module';
 import { CustomHeaderComponent } from './custom-header/custom-header.component';
 import { LogoutComponent } from './custom-header/logout/logout.component';
 import { EditSessionComponent } from './edit-session/edit-session.component';
@@ -50,6 +51,7 @@ import { WaitingRoomComponent } from './waiting-room/waiting-room.component';
     ReactiveFormsModule,
     NgbModule,
     HttpClientModule,
+    CommonDialogBoxesModule,
   ],
   providers: [
     httpInterceptorProviders,
