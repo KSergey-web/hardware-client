@@ -1,4 +1,4 @@
-<div class="d-flex justify-content-around flex-wrap">
+<div class="d-flex justify-content-around flex-wrap small-negative-padding">
   <button class="button button-equpment mt-3" *ngFor='let button of buttons; let i = index'
     (mousedown)="onButtonDown(numberOfButtons-1-i)" (mouseup)="onButtonUp(numberOfButtons-1-i)"
     (mouseout)="onMouseOutFromButton($event,numberOfButtons-1-i)">

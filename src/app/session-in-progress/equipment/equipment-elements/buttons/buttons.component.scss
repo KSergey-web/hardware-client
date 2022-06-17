@@ -13,3 +13,12 @@
   box-shadow: 0 5px #666;
   transform: translateY(4px);
 }
+
+.button {
+  user-select: none;
+  margin: 0 5px;
+}
+
+.small-negative-padding {
+  padding: 0 -5px;
+}
