@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IEquipment } from '../interfaces/equipment.interface';
@@ -12,7 +11,6 @@ import { API_URL } from '../urls-tokens';
 export class EquipmentService {
   constructor(
     @Inject(API_URL) private apiUrl: string,
-    private router: Router,
     private http: HttpClient
   ) {}
 

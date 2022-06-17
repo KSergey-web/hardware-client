@@ -1,20 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, of, ReplaySubject, Subject } from 'rxjs';
-import {
-  map,
-  tap,
-  mergeMap,
-  switchMap,
-  catchError,
-  takeUntil,
-} from 'rxjs/operators';
-import { roleUserEnum } from '../enums/role-user.enum';
+import { Observable, ReplaySubject, Subject } from 'rxjs';
+import { map, takeUntil, tap } from 'rxjs/operators';
 import { IUser } from '../interfaces/user.interface';
 import { API_URL } from '../urls-tokens';
-import { StudentService } from './student.service';
-import { TeacherService } from './teacher.service';
 
 @Injectable({
   providedIn: 'root',
@@ -47,9 +37,7 @@ export class AuthService implements OnDestroy {
   constructor(
     private http: HttpClient,
     @Inject(API_URL) private apiUrl: string,
-    private router: Router,
-    private studentService: StudentService,
-    private teacherService: TeacherService
+    private router: Router
   ) {
     if (this.isLoggedIn()) {
       this.setСurrentUser$();

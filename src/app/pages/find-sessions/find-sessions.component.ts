@@ -36,7 +36,7 @@ export class FindSessionsComponent implements OnInit, OnDestroy {
 
   getSessions(): void {
     this.sessionService
-      .getNearestSessions()
+      .getNearestAndStarted()
       .pipe(takeUntil(this.onDestroy$))
       .subscribe((sessions) => {
         this.sessions = sessions;

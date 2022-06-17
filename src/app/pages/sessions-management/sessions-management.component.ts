@@ -7,7 +7,6 @@ import {
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ISession } from '../../interfaces/session.interface';
-import { AuthService } from '../../services/auth.service';
 import { SessionService } from '../../services/session.service';
 import { EditSessionComponent } from './edit-session/edit-session.component';
 import { NewSessionComponent } from './new-session/new-session.component';
@@ -26,7 +25,6 @@ export class SessionsManagementComponent implements OnInit, OnDestroy {
 
   constructor(
     private sessionService: SessionService,
-    private authService: AuthService,
     private modalService: NgbModal
   ) {}
 
@@ -48,18 +46,14 @@ export class SessionsManagementComponent implements OnInit, OnDestroy {
   }
 
   private getSessions() {
-    this.authService.currentUser$
+    this.sessionService
+      .getSessionsByCurrentCreator(this.selectedPage)
       .pipe(takeUntil(this.onDestroy$))
-      .subscribe((user) => {
-        this.sessionService
-          .getSessionsByCreator(user.id, this.selectedPage)
-          .pipe(takeUntil(this.onDestroy$))
-          .subscribe((res) => {
-            this.sessions = res.sessions;
-            this.currentPage = res.pagination.page;
-            this.pageCount = res.pagination.pageCount;
-            this.totalCount = res.pagination.total;
-          });
+      .subscribe((res) => {
+        this.sessions = res.sessions;
+        this.currentPage = res.pagination?.page ?? 1;
+        this.pageCount = res.pagination?.pageCount ?? 1;
+        this.totalCount = res.pagination?.total ?? 0;
       });
   }
 

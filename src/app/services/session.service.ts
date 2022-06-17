@@ -1,10 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
-import { Data, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { queryParamEnum } from '../enums/query-param.enum';
-import { AnswerArraySessionsPopulate1 } from '../interfaces/answer-array-sessions-populate1.interface copy';
 import { DefaultAnswer } from '../interfaces/default-answer.interface';
 import { IEquipment } from '../interfaces/equipment.interface';
 import { PaginationInfo } from '../interfaces/pagination-info.interface';
@@ -23,49 +22,28 @@ export class SessionService {
     private authService: AuthService
   ) {}
 
-  getSessionsByUser(id: number, page: number = 1): Observable<ISession[]> {
-    const filter0 = `filters[$and][0][user][id][$eq]=${id}`;
-    const filter1 = `filters[$and][1][end][$gte]=${new Date().toJSON()}`;
-    const pagination = `pagination[page]=${page}`;
+  getSessionsByCurrentUser(): Observable<ISession[]> {
     return this.http
-      .get<AnswerArraySessionsPopulate1>(
-        `${this.apiUrl}/api/sessions?populate=%2A&sort[0]=begin%3Aasc&` +
-          filter0 +
-          '&' +
-          filter1 +
-          '&' +
-          pagination +
-          '&' +
-          queryParamEnum.paginationSize15
-      )
+      .get<{ sessions: any[] }>(`${this.apiUrl}/api/sessions/my-sessions`)
       .pipe(
         map((res) => {
-          return this.getSessionsFromResponse(res).sessions;
+          return this.strDatesToObjectDatesForSessions(res.sessions);
         })
       );
   }
 
-  getSessionsByCreator(
-    id: number,
+  getSessionsByCurrentCreator(
     page: number = 1
-  ): Observable<{ sessions: ISession[]; pagination: PaginationInfo }> {
-    const filter0 = `filters[$and][0][creator][id][$eq]=${id}`;
-    const filter1 = `filters[$and][1][end][$gte]=${new Date().toJSON()}`;
+  ): Observable<{ sessions: ISession[]; pagination?: PaginationInfo }> {
     const pagination = `pagination[page]=${page}`;
     return this.http
-      .get<AnswerArraySessionsPopulate1>(
-        `${this.apiUrl}/api/sessions?populate=%2A&sort[0]=begin%3Aasc&` +
-          filter0 +
-          '&' +
-          filter1 +
-          '&' +
-          pagination +
-          '&' +
-          queryParamEnum.paginationSize15
+      .get<{ sessions: any[]; pagination?: PaginationInfo }>(
+        `${this.apiUrl}/api/sessions/by-current-creator` + '?' + pagination
       )
       .pipe(
         map((res) => {
-          return this.getSessionsFromResponse(res);
+          res.sessions = this.strDatesToObjectDatesForSessions(res.sessions);
+          return res;
         })
       );
   }
@@ -82,7 +60,6 @@ export class SessionService {
       data: { ...session },
     };
     delete body.data.id;
-    console.log(body);
     return this.http.put<any>(
       `${this.apiUrl}/api/sessions/${session.id}`,
       body
@@ -93,65 +70,34 @@ export class SessionService {
     equipment: IEquipment,
     date: Date
   ): Observable<ISession[]> {
-    const lastDate = new Date(date);
-    lastDate.setHours(23);
-    lastDate.setMinutes(59);
-    lastDate.setSeconds(59);
-    const filter0 = `filters[$or][0][begin][$between][0]=${date.toJSON()}`;
-    const filter1 = `filters[$or][0][begin][$between][1]=${lastDate.toJSON()}`;
-    const filter2 = `filters[$or][1][end][$between][0]=${date.toJSON()}`;
-    const filter3 = `filters[$or][1][end][$between][1]=${lastDate.toJSON()}`;
-    const filter4 = `filters[equipment][id][$eq]=${equipment.id}`;
-    const filter5 = `filters[end][$gte]=${new Date().toJSON()}`;
+    const endDate = new Date(date);
+    endDate.setHours(23);
+    endDate.setMinutes(59);
+    endDate.setSeconds(59);
     return this.http
-      .get<AnswerArraySessionsPopulate1>(
-        `${this.apiUrl}/api/sessions?populate=%2A&sort[0]=begin%3Aasc&` +
-          filter0 +
-          '&' +
-          filter1 +
-          '&' +
-          filter2 +
-          '&' +
-          filter3 +
-          '&' +
-          filter4 +
-          '&' +
-          filter5
+      .get<{ sessions: ISession[] }>(
+        `${this.apiUrl}/api/sessions/equipment/${
+          equipment.id
+        }/begin-date/${date.toJSON()}/end-date/${endDate.toJSON()}`
       )
       .pipe(
         map((res) => {
-          return this.getSessionsFromResponse(res).sessions;
+          return this.strDatesToObjectDatesForSessions(res.sessions);
         })
       );
   }
 
-  private getSessionsFromResponse(res: AnswerArraySessionsPopulate1): {
-    sessions: ISession[];
-    pagination: PaginationInfo;
-  } {
-    const sessions: ISession[] = [];
-    res.data.forEach((item) => {
-      const session: any = {
-        id: item.id,
-        ...item.attributes,
-      };
-      session.user = {
-        id: item.attributes.user.data.id,
-        ...item.attributes.user.data.attributes,
-      };
-      session.creator = {
-        id: item.attributes.creator.data.id,
-        ...item.attributes.creator.data.attributes,
-      };
-      session.equipment = {
-        id: item.attributes.equipment.data.id,
-        ...item.attributes.equipment.data.attributes,
-      };
-      session.begin = new Date(session.begin);
-      session.end = new Date(session.end);
-      sessions.push(session as ISession);
-    });
-    return { sessions, pagination: res.meta.pagination };
+  strDatesToObjectDatesForSession(session: any): ISession {
+    session.begin = new Date(session.begin);
+    session.end = new Date(session.end);
+    return session;
+  }
+
+  strDatesToObjectDatesForSessions(sessions: any[]): ISession[] {
+    sessions = sessions.map((session) =>
+      this.strDatesToObjectDatesForSession(session)
+    );
+    return sessions;
   }
 
   deleteSession(session: ISession): Observable<DefaultAnswer> {
@@ -160,80 +106,29 @@ export class SessionService {
     );
   }
 
-  private getSessionFromDefaultAnswer(data: any): ISession {
-    const session: any = {
-      id: data.id,
-      ...data.attributes,
-    };
-    session.user = {
-      id: data.attributes.user.data.id,
-      ...data.attributes.user.data.attributes,
-    };
-    session.creator = {
-      id: data.attributes.creator.data.id,
-      ...data.attributes.creator.data.attributes,
-    };
-    session.equipment = {
-      id: data.attributes.equipment.data.id,
-      ...data.attributes.equipment.data.attributes,
-    };
-    session.begin = new Date(session.begin);
-    session.end = new Date(session.end);
-    return session;
-  }
-
   getSessionById(id: number): Observable<ISession> {
     return this.http
-      .get<DefaultAnswer>(`${this.apiUrl}/api/sessions/${id}?populate=%2A`)
-      .pipe(map((res) => this.getSessionFromDefaultAnswer(res.data)));
-  }
-
-  getNearestSessions(): Observable<ISession[]> {
-    const now = new Date();
-    const lastDate = new Date(+now + 600000);
-    const filter0 = `filters[$or][0][begin][$between][0]=${now.toJSON()}`;
-    const filter1 = `filters[$or][0][begin][$between][1]=${lastDate.toJSON()}`;
-    const filter2 = `filters[$or][1][end][$gte]=${now.toJSON()}`;
-    const filter3 = `filters[$or][1][begin][$lte]=${now.toJSON()}`;
-    return this.http
-      .get<AnswerArraySessionsPopulate1>(
-        `${this.apiUrl}/api/sessions?populate=%2A&sort[0]=begin%3Aasc&` +
-          filter0 +
+      .get<{ data: any }>(
+        `${this.apiUrl}/api/sessions/${id}?` +
+          queryParamEnum.populate1lvl +
           '&' +
-          filter1 +
-          '&' +
-          filter2 +
-          '&' +
-          filter3
+          queryParamEnum.serialize
       )
       .pipe(
         map((res) => {
-          return this.getSessionsFromResponse(res).sessions;
+          return this.strDatesToObjectDatesForSession(res.data);
         })
       );
   }
 
-  getNearestSessionsByEquipment(equipment: IEquipment): Observable<ISession[]> {
-    const now = new Date();
-    const lastDate = new Date(+now + 600000);
-    const filter0 = `filters[$or][0][begin][$between][0]=${now.toJSON()}`;
-    const filter1 = `filters[$or][0][begin][$between][1]=${lastDate.toJSON()}`;
-    const filter2 = `filters[$or][1][end][$gte]=${now.toJSON()}`;
-    const filter3 = `filters[equipment][id][$eq]=${equipment.id}`;
+  getNearestAndStarted(): Observable<ISession[]> {
     return this.http
-      .get<AnswerArraySessionsPopulate1>(
-        `${this.apiUrl}/api/sessions?populate=%2A&sort[0]=begin%3Aasc&` +
-          filter0 +
-          '&' +
-          filter1 +
-          '&' +
-          filter2 +
-          '&' +
-          filter3
+      .get<{ sessions: any[] }>(
+        `${this.apiUrl}/api/sessions/nearest-and-started`
       )
       .pipe(
         map((res) => {
-          return this.getSessionsFromResponse(res).sessions;
+          return this.strDatesToObjectDatesForSessions(res.sessions);
         })
       );
   }
