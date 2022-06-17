@@ -6,7 +6,7 @@ import {
   UrlTree,
 } from '@angular/router';
 import { Observable } from 'rxjs';
-import { SessionInProgressComponent } from '../session-in-progress/session-in-progress.component';
+import { SessionInProgressComponent } from '../pages/session-in-progress/session-in-progress.component';
 
 @Injectable({
   providedIn: 'root',
