@@ -104,8 +104,8 @@ export class AuthService implements OnDestroy {
   logout() {
     console.log('logout');
     localStorage.removeItem('id_token');
-    this.router.navigate(['signin']);
     this.clearMemory();
+    this.router.navigate(['signin']);
     //localStorage.removeItem("expires_at");
   }
 

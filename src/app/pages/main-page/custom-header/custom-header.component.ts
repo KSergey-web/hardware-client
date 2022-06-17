@@ -1,5 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -18,7 +17,6 @@ export class CustomHeaderComponent implements OnInit, OnDestroy {
 
   constructor(
     private authService: AuthService,
-    private router: Router,
     private modalService: NgbModal
   ) {}
 
@@ -34,17 +32,12 @@ export class CustomHeaderComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    if (this.authService.isLoggedOut()) {
-      this.router.navigate(['']);
-      return;
-    }
     this.authService.currentUser$.pipe(takeUntil(this.onDestroy$)).subscribe(
       (user) => (this.currentUser = user),
       (err: Error) => {
-        alert("Сouldn't get your data");
-        console.error(err);
-        this.authService.logout();
-        this.router.navigate(['signin']);
+        alert(
+          'Не удалось получить данные. Перезагрузите страницу и проверьте подключение к интернету'
+        );
       }
     );
   }

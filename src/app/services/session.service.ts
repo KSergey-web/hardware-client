@@ -32,6 +32,18 @@ export class SessionService {
       );
   }
 
+  canConnect(sessionId: number): Observable<ISession> {
+    return this.http
+      .get<{ session: any[] }>(
+        `${this.apiUrl}/api/sessions/${sessionId}/canConnect`
+      )
+      .pipe(
+        map((res) => {
+          return this.strDatesToObjectDatesForSession(res.session);
+        })
+      );
+  }
+
   getSessionsByCurrentCreator(
     page: number = 1
   ): Observable<{ sessions: ISession[]; pagination?: PaginationInfo }> {
