@@ -22,8 +22,15 @@ export class AuthService implements OnDestroy {
     this.onDestroy$.next(true);
     this.onDestroy$.complete();
     this._currentUser$.complete();
+    this.newCurrentUser();
+  }
+
+  newCurrentUser() {
     this._currentUser$ = new ReplaySubject(1);
     this._currentUser = undefined;
+    this.currentUser$.subscribe((user) => {
+      this._currentUser = user;
+    });
   }
 
   get currentUser$(): Observable<IUser> {
@@ -39,12 +46,10 @@ export class AuthService implements OnDestroy {
     @Inject(API_URL) private apiUrl: string,
     private router: Router
   ) {
+    this.newCurrentUser();
     if (this.isLoggedIn()) {
       this.setСurrentUser$();
     }
-    this.currentUser$.subscribe((user) => {
-      this._currentUser = user;
-    });
   }
 
   get authToken() {
