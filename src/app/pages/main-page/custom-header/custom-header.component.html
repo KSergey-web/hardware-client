@@ -1,19 +1,22 @@
 <header>
-    <div class="header__section">
-        <img src="../../assets/logo_sfu.png" class="logo" alt="логотип">
-        <nav>
-            <ul>
-                <li *ngIf="isTeacher()"><a routerLink="/main-page/manage-sessions" class="header__item" routerLinkActive="active">Управление сессиями</a></li>
-                <li><a routerLink="/main-page/my-sessions" class="header__item" routerLinkActive="active">Мои сессии</a></li>
-                <li *ngIf="isTeacher()"><a routerLink="/main-page/find-sessions" class="header__item" routerLinkActive="active">Подключиться к сессии</a></li>
-            </ul>
-        </nav>
+  <div class="header__section">
+    <img src="../../assets/logo_sfu.png" class="logo" alt="логотип">
+    <nav>
+      <ul>
+        <li *ngIf="isTeacher()"><a routerLink="/main-page/manage-sessions" class="header__item"
+            routerLinkActive="active">Управление сессиями</a></li>
+        <li><a routerLink="/main-page/my-sessions" class="header__item" routerLinkActive="active">Мои сессии</a></li>
+        <li *ngIf="isTeacher()"><a routerLink="/main-page/find-sessions" class="header__item"
+            routerLinkActive="active">Подключиться к сессии</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div *ngIf='currentUser' class="header__section">
+    <div class="header__item">
+      {{currentUser?.first_name}}
+      {{currentUser?.last_name}}
+      {{currentUser?.patronymic}}
     </div>
-    <div *ngIf='currentUser' class="header__section">
-        <div class="header__item">    
-        {{currentUser.first_name}}
-        {{currentUser.last_name}}
-        </div>
-        <button type="button" class="btn" (click)="openLogout()"> <img src="../../assets/logout.png" alt="Выйти"></button>
-    </div>
+    <button type="button" class="btn" (click)="openLogout()"> <img src="../../assets/logout.png" alt="Выйти"></button>
+  </div>
 </header>

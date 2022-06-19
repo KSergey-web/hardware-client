@@ -1,14 +1,9 @@
-import { ThisReceiver } from '@angular/compiler';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { IEquipment } from '../../interfaces/equipment.interface';
 import { ISession } from '../../interfaces/session.interface';
 import { AuthService } from '../../services/auth.service';
-import { EquipmentService } from '../../services/equipment.service';
 import { SessionService } from '../../services/session.service';
 
 @Component({
