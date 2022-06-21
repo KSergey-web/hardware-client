@@ -7,6 +7,7 @@ import { ExitSessionInProgressGuard } from './guards/exit-session-in-progress.gu
 import { SessionInProgressGuard } from './guards/session-in-progress.guard';
 import { FindSessionsComponent } from './pages/find-sessions/find-sessions.component';
 import { MainPageComponent } from './pages/main-page/main-page.component';
+import { ManagingSubgroupsComponent } from './pages/managing-subgroups/managing-subgroups.component';
 import { SessionInProgressComponent } from './pages/session-in-progress/session-in-progress.component';
 import { SessionsManagementComponent } from './pages/sessions-management/sessions-management.component';
 import { SessionsOfCurrentUserComponent } from './pages/sessions-of-current-user/sessions-of-current-user.component';
@@ -27,6 +28,11 @@ const mainPageRoutes: Routes = [
   {
     path: 'manage-sessions',
     component: SessionsManagementComponent,
+    canActivate: [CheckTeacherGuard],
+  },
+  {
+    path: 'managing-subgroups',
+    component: ManagingSubgroupsComponent,
     canActivate: [CheckTeacherGuard],
   },
 ];

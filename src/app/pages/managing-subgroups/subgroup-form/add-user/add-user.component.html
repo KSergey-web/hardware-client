@@ -1,0 +1,28 @@
+<div>
+  <button *ngIf='isAddUserCollapsed' type="button" class="btn btn-outline-primary"
+    (click)="collapse_list_users.toggle()" [attr.aria-expanded]="!isAddUserCollapsed" aria-controls="collapseExample">
+    <span *ngIf='isAddUserCollapsed'>Добавить участника</span>
+  </button>
+</div>
+<div #collapse_list_users="ngbCollapse" [(ngbCollapse)]="isAddUserCollapsed">
+  <div class="card">
+    <div class="card-body">
+      <div class="form-group">
+        <label for="fio">Начните вводить фамилию, имя после чего выберите подходящий вариант</label>
+        <input type="text" autocomplete="off" [formControl]="fio" id="fio">
+      </div>
+      <ul class="list-group col-10">
+        <li class="text-center" *ngIf="users.length === 0">Ничего не найдено</li>
+        <li class="list-group-item list-group-item-action" *ngFor="let user of users" [value]='user'
+          (click)="selectUser(user)" [ngClass]="{active:user.id===selectedUser?.id}">
+          <b>{{getFioByUser(user)}}</b><br><small>{{user.email}}</small>
+        </li>
+      </ul>
+      <div class="pt-2 col text-center">
+        <button [disabled]="!selectedUser" class="ml-1 btn btn-info" (click)="addUser()">Добавить в
+          группу</button>
+        <button class="ml-1 btn btn-secondary" (click)="collapse_list_users.toggle()">Отмена</button>
+      </div>
+    </div>
+  </div>
+</div>

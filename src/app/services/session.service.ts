@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { queryParamEnum } from '../enums/query-param.enum';
@@ -17,7 +16,6 @@ import { AuthService } from './auth.service';
 export class SessionService {
   constructor(
     @Inject(API_URL) private apiUrl: string,
-    private router: Router,
     private http: HttpClient,
     private authService: AuthService
   ) {}

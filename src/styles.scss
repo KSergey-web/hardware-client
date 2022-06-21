@@ -1,35 +1,40 @@
 /* You can add global styles to this file, and also import other style files */
 
 /* Importing Bootstrap SCSS file. */
-@import '~bootstrap/scss/bootstrap';
+@import "~bootstrap/scss/bootstrap";
 
-input.ng-touched.ng-invalid {border:solid red 2px;}
-input.ng-touched.ng-valid {border:solid green 2px;}
-
-body{
-    background: url('./assets/main_background.png') no-repeat;
-    background-size: 100%;
-    background-attachment: fixed;
+input.ng-touched.ng-invalid {
+  border: solid red 2px;
+}
+input.ng-touched.ng-valid {
+  border: solid green 2px;
 }
 
-.container{
-    background-color: white;
+body {
+  background: url("./assets/main_background.png") no-repeat;
+  background-size: 100%;
+  background-attachment: fixed;
 }
 
-.highlight_tr_hover{
-    tr:hover   {
-        background-color:rgb(104, 194, 189); text-decoration:none
-    }
-} 
-
-caption{
-    caption-side: top;
+.container {
+  background-color: white;
 }
 
-h2{
-    font-size: 1.5em;
+.highlight_tr_hover {
+  tr:hover {
+    background-color: rgb(104, 194, 189);
+    text-decoration: none;
+  }
+}
+
+caption {
+  caption-side: top;
+}
+
+h2 {
+  font-size: 1.5em;
 }
 
 .wrapper {
-    overflow: hidden;
+  overflow: hidden;
 }

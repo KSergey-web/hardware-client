@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppRoutingModule } from 'src/app/app-routing.module';
 import { FindSessionsModule } from '../find-sessions/find-sessions.module';
+import { ManagingSubgroupsModule } from '../managing-subgroups/managing-subgroups.module';
 import { SessionInProgressModule } from '../session-in-progress/session-in-progress.module';
 import { SessionsManagementModule } from '../sessions-management/sessions-management.module';
 import { SessionsOfCurrentUserModule } from '../sessions-of-current-user/sessions-of-current-user.module';
@@ -19,6 +20,7 @@ import { MainPageComponent } from './main-page.component';
     SessionInProgressModule,
     NgbModalModule,
     CommonModule,
+    ManagingSubgroupsModule,
   ],
   declarations: [MainPageComponent, CustomHeaderComponent, LogoutComponent],
   providers: [],
