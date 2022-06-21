@@ -11,9 +11,11 @@ input.ng-touched.ng-valid {
 }
 
 body {
-  background: url("./assets/main_background.png") no-repeat;
-  background-size: 100%;
-  background-attachment: fixed;
+  background: url("./assets/main_background.png") no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
 
 .container {

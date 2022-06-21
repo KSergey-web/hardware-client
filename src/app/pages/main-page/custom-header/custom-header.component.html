@@ -1,24 +1,30 @@
-<header>
-  <div class="header__section">
-    <img src="../../assets/logo_sfu.png" class="logo" alt="логотип">
-    <nav>
-      <ul>
-        <li *ngIf="isTeacher()"><a routerLink="/main-page/manage-sessions" class="header__item"
-            routerLinkActive="active">Управление сессиями</a></li>
-        <li><a routerLink="/main-page/my-sessions" class="header__item" routerLinkActive="active">Мои сессии</a></li>
-        <li *ngIf="isTeacher()"><a routerLink="/main-page/find-sessions" class="header__item"
-            routerLinkActive="active">Подключиться к сессии</a></li>
-        <li *ngIf="isTeacher()"><a routerLink="/main-page/managing-subgroups" class="header__item"
-            routerLinkActive="active">Управление подгруппами</a></li>
-      </ul>
-    </nav>
-  </div>
-  <div *ngIf='currentUser' class="header__section">
-    <div class="header__item">
-      {{currentUser?.first_name}}
-      {{currentUser?.last_name}}
-      {{currentUser?.patronymic}}
+<nav class="navbar navbar-dark bg-dark navbar-expand">
+  <a class="navbar-brand" href="#">
+    <img src="../../assets/logo_sfu.png" width="30" height="30" alt="">
+  </a>
+  <div class="collapse navbar-collapse">
+    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+      <li *ngIf="isTeacher()" class="nav-item">
+        <a class="nav-link" routerLink="/main-page/manage-sessions" routerLinkActive="active">Управление сессиями</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/main-page/my-sessions" routerLinkActive="active">Мои сессии</a>
+      </li>
+      <li *ngIf="isTeacher()" class="nav-item">
+        <a class="nav-link" routerLink="/main-page/find-sessions" routerLinkActive="active">Подключиться к сессии</a>
+      </li>
+      <li *ngIf="isTeacher()" class="nav-item">
+        <a class="nav-link" routerLink="/main-page/managing-subgroups" routerLinkActive="active">Управление
+          подгруппами</a>
+      </li>
+    </ul>
+    <div *ngIf='currentUser' class="my-2 my-lg-0">
+      <div class="navbar-text text-white">
+        {{currentUser?.first_name}}
+        {{currentUser?.last_name}}
+        {{currentUser?.patronymic}}
+      </div>
+      <button type="button" class="btn" (click)="openLogout()"> <img src="../../assets/logout.png" alt="Выйти"></button>
     </div>
-    <button type="button" class="btn" (click)="openLogout()"> <img src="../../assets/logout.png" alt="Выйти"></button>
   </div>
-</header>
+</nav>
