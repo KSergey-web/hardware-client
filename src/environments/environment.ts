@@ -2,21 +2,21 @@
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-// export const environment = {
-//   serverAddres: 'http://localhost:1337',
-//   //serverAddres: 'http://10.3.3.20:1337',
-//   //labServerAddres: 'http://10.3.200.20:3000',
-//   intermediaryServerAddres: 'http://localhost:3001',
-//   production: false,
-// };
-
 export const environment = {
-  serverAddres: 'http://10.3.3.20:1337',
+  serverAddres: 'http://localhost:1337',
   //serverAddres: 'http://10.3.3.20:1337',
   //labServerAddres: 'http://10.3.200.20:3000',
-  intermediaryServerAddres: 'http://10.3.3.20:3001',
+  intermediaryServerAddres: 'http://localhost:3001',
   production: false,
 };
+
+// export const environment = {
+//   serverAddres: 'http://10.3.3.20:1337',
+//   //serverAddres: 'http://10.3.3.20:1337',
+//   //labServerAddres: 'http://10.3.200.20:3000',
+//   intermediaryServerAddres: 'http://10.3.3.20:3001',
+//   production: false,
+// };
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.

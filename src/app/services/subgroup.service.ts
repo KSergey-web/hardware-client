@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { queryParamEnum } from '../enums/query-param.enum';
 import { PaginationInfo } from '../interfaces/pagination-info.interface';
 import { ISubgroup } from '../interfaces/subgroup.interface';
@@ -21,18 +20,22 @@ export class SubgroupService {
 
   getSubgroupsByCurrentCreator(
     page: number = 1
-  ): Observable<{ subgrops: ISubgroup[]; pagination: PaginationInfo }> {
+  ): Observable<{ subgroups: ISubgroup[]; pagination: PaginationInfo }> {
     const pagination = `pagination[page]=${page}`;
-    return this.http.get<{ subgrops: ISubgroup[]; pagination: PaginationInfo }>(
-      `${this.apiUrl}/api/subgroups/by-current-creator` + '?' + pagination
-    );
+    return this.http.get<{
+      subgroups: ISubgroup[];
+      pagination: PaginationInfo;
+    }>(`${this.apiUrl}/api/subgroups/by-current-creator` + '?' + pagination);
   }
 
   getSubgroups(
     page: number = 1
-  ): Observable<{ subgrops: ISubgroup[]; pagination: PaginationInfo }> {
+  ): Observable<{ subgroups: ISubgroup[]; pagination: PaginationInfo }> {
     const pagination = `pagination[page]=${page}`;
-    return this.http.get<{ subgrops: ISubgroup[]; pagination: PaginationInfo }>(
+    return this.http.get<{
+      subgroups: ISubgroup[];
+      pagination: PaginationInfo;
+    }>(
       `${this.apiUrl}/api/subgroups` +
         '?' +
         pagination +

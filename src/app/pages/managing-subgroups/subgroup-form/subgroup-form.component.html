@@ -1,5 +1,8 @@
 <div class="container">
-  <h2 class="col">Создание подгруппы</h2>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Создание подгруппы</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
+  </div>
   <form class="col" [formGroup]=subgroupForm novalidate (ngSubmit)="submit()">
     <div class="form-group col-6">
       <label for="name">Название группы</label>
