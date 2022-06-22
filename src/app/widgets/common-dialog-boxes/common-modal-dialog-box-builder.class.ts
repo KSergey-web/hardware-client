@@ -1,12 +1,9 @@
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AlertComponent } from './alert/alert.component';
+import { ConfirmComponent } from './confirm/confirm.component';
+import { StyleType } from './style-dialog.directive';
 
 type SizeType = 'sm' | 'lg' | 'xl';
-type StyleType =
-  | 'alert-success'
-  | 'alert-info'
-  | 'alert-danger'
-  | 'alert-warning';
 
 export class CommonModalDialogBoxBuilder {
   constructor(private modalService: NgbModal) {}
@@ -50,28 +47,39 @@ export class CommonModalDialogBoxBuilder {
   }
 
   setDangerStyle() {
-    this.componenProperties.style = 'alert-danger';
+    this.componenProperties.style = 'danger';
     return this;
   }
 
   setInfoStyle() {
-    this.componenProperties.style = 'alert-info';
+    this.componenProperties.style = 'info';
     return this;
   }
 
   setWarningStyle() {
-    this.componenProperties.style = 'alert-warning';
+    this.componenProperties.style = 'warning';
     return this;
   }
 
   setSuccesStyle() {
-    this.componenProperties.style = 'alert-success';
+    this.componenProperties.style = 'success';
     return this;
   }
 
   openAlertModal(): NgbModalRef {
     const modalRef = this.modalService.open(
       AlertComponent,
+      this.ngbModalOption
+    );
+    (modalRef.componentInstance as AlertComponent).setProps(
+      this.componenProperties
+    );
+    return modalRef;
+  }
+
+  openConfirmModal(): NgbModalRef {
+    const modalRef = this.modalService.open(
+      ConfirmComponent,
       this.ngbModalOption
     );
     (modalRef.componentInstance as AlertComponent).setProps(

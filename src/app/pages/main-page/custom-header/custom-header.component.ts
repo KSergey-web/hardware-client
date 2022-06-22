@@ -2,10 +2,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { CommonModalDialogBoxBuilder } from 'src/app/widgets/common-dialog-boxes/common-modal-dialog-box-builder.class';
 import { roleUserEnum } from '../../../enums/role-user.enum';
 import { IUser } from '../../../interfaces/user.interface';
 import { AuthService } from '../../../services/auth.service';
-import { LogoutComponent } from './logout/logout.component';
 
 @Component({
   selector: 'app-custom-header',
@@ -43,6 +43,17 @@ export class CustomHeaderComponent implements OnInit, OnDestroy {
   }
 
   openLogout(): void {
-    const modalRef = this.modalService.open(LogoutComponent);
+    const bulder = new CommonModalDialogBoxBuilder(this.modalService);
+    const modalRef = bulder
+      .addHeader('Выход')
+      .addText('Вы уверены что хотите выйти?')
+      .addAcceptButtonText('Да')
+      .setDangerStyle()
+      .openConfirmModal();
+    modalRef.closed.pipe(takeUntil(this.onDestroy$)).subscribe((res) => {
+      if (res) {
+        this.authService.logout();
+      }
+    });
   }
 }

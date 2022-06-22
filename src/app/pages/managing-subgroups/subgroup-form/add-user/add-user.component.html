@@ -12,7 +12,12 @@
         <input type="text" autocomplete="off" [formControl]="fio" id="fio">
       </div>
       <ul class="list-group col-10">
-        <li class="text-center" *ngIf="users.length === 0">Ничего не найдено</li>
+        <li class="text-center" *ngIf="users.length === 0 && !isLoading">Ничего не найдено</li>
+        <div *ngIf="isLoading" class="text-center">
+          <div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+        </div>
         <li class="list-group-item list-group-item-action" *ngFor="let user of users" [value]='user'
           (click)="selectUser(user)" [ngClass]="{active:user.id===selectedUser?.id}">
           <b>{{getFioByUser(user)}}</b><br><small>{{user.email}}</small>

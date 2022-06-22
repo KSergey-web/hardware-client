@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   Input,
   OnInit,
@@ -7,12 +8,12 @@ import {
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  selector: 'app-alert',
-  templateUrl: './alert.component.html',
-  styleUrls: ['./alert.component.scss'],
+  selector: 'app-confirm',
+  templateUrl: './confirm.component.html',
+  styleUrls: ['./confirm.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AlertComponent implements OnInit {
+export class ConfirmComponent implements OnInit {
   constructor(private activeModal: NgbActiveModal) {}
 
   ngOnInit(): void {}
@@ -27,16 +28,30 @@ export class AlertComponent implements OnInit {
   acceptButtonText = 'Ок';
 
   @Input()
+  denyButtonText = 'Отмена';
+
+  @Input()
   style = '';
 
-  onClick() {
-    this.activeModal.close();
+  onAcceptClick() {
+    this.activeModal.close(true);
   }
 
-  setProps({ header = '', text = '', acceptButtonText = 'Ok', style = '' }) {
+  onDenyClick() {
+    this.activeModal.close(false);
+  }
+
+  setProps({
+    header = '',
+    text = '',
+    acceptButtonText = 'Ok',
+    denyButtonText = 'Отмена',
+    style = '',
+  }) {
     this.header = header;
     this.text = text;
     this.acceptButtonText = acceptButtonText;
+    this.denyButtonText = denyButtonText;
     this.style = style;
   }
 }

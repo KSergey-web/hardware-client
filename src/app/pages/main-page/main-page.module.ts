@@ -8,7 +8,6 @@ import { SessionInProgressModule } from '../session-in-progress/session-in-progr
 import { SessionsManagementModule } from '../sessions-management/sessions-management.module';
 import { SessionsOfCurrentUserModule } from '../sessions-of-current-user/sessions-of-current-user.module';
 import { CustomHeaderComponent } from './custom-header/custom-header.component';
-import { LogoutComponent } from './custom-header/logout/logout.component';
 import { MainPageComponent } from './main-page.component';
 
 @NgModule({
@@ -22,7 +21,7 @@ import { MainPageComponent } from './main-page.component';
     CommonModule,
     ManagingSubgroupsModule,
   ],
-  declarations: [MainPageComponent, CustomHeaderComponent, LogoutComponent],
+  declarations: [MainPageComponent, CustomHeaderComponent],
   providers: [],
 })
 export class MainPageModule {}

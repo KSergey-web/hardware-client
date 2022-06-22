@@ -3,13 +3,16 @@
     <h2 *ngIf="header" class="modal-title text-center">{{ header }}</h2>
   </div>
   <div class="modal-body">
-    <div class="alert" role="alert">
-      <p class="" *ngIf="text">{{ text }}</p>
+    <div class="alert" [ngClass]="style" role="alert">
+      <p *ngIf="text">{{ text }}</p>
     </div>
   </div>
   <div class="modal-footer text-center">
-    <button class="btn btn-info" *ngIf="acceptButtonText" (click)="onClick()">
+    <button class="btn accept" *ngIf="acceptButtonText" (click)="onAcceptClick()">
       {{ acceptButtonText }}
+    </button>
+    <button class="btn btn-secondary" *ngIf="denyButtonText" (click)="onDenyClick()">
+      {{ denyButtonText }}
     </button>
   </div>
 </div>
