@@ -89,14 +89,10 @@ export class ManagingSubgroupsComponent implements OnInit {
     this.totalCount = res.pagination?.total ?? 0;
   }
 
-  // editSubgroup(session: ISubgroup): void {
-  //   const modalRef = this.modalService.open(EditSubgroupComponent, {
-  //     size: 'lg',
-  //   });
-  //   (modalRef.componentInstance as EditSubgroupComponent).editedSession =
-  //     session;
-  //   this.performResultModal(modalRef);
-  // }
+  filterByCreatorCurrentUser(event: any) {
+    this.filterByCurrentCreator = event.target.checked;
+    this.getSubgroups();
+  }
 
   private performResultModal(modalRef: NgbModalRef): void {
     modalRef.result.then(() => {

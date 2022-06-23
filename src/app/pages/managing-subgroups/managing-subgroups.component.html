@@ -1,4 +1,9 @@
 <button class="btn btn-primary" (click)="createSubgroup()">Создать подгруппу</button>
+<div class="form-check">
+  <input class="form-check-input" id="filterByCurrentCreator" type="checkbox"
+    (change)="filterByCreatorCurrentUser($event)" />
+  <label class="form-check-label" for="filterByCurrentCreator">Отобразить только созданные мной подгруппы</label>
+</div>
 <div>
   <table class="table">
     <caption><b>Список подгрупп</b></caption>
