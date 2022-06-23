@@ -20,7 +20,7 @@
         </div>
         <li class="list-group-item list-group-item-action" *ngFor="let user of users" [value]='user'
           (click)="selectUser(user)" [ngClass]="{active:user.id===selectedUser?.id}">
-          <b>{{getFioByUser(user)}}</b><br><small>{{user.email}}</small>
+          <b>{{user | fio}}</b><br><small>{{user.email}}</small>
         </li>
       </ul>
       <div class="pt-2 col text-center">

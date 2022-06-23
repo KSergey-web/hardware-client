@@ -14,7 +14,7 @@
         <li *ngFor="let user of users; let i = index"
           class="list-group-item d-flex justify-content-between align-items-start">
           <div class="ms-2 me-auto">
-            <div class="fw-bold">{{getFioByUser(user)}}</div>
+            <div class="fw-bold">{{user | fio}}</div>
             {{user.email}}
           </div>
           <button class="btn btn-light" (click)="deleteUser(user)">❌</button>

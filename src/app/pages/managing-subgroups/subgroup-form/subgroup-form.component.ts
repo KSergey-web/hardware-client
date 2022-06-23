@@ -32,10 +32,6 @@ export class SubgroupFormComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {}
 
-  getFioByUser(user: IUser): string {
-    return user.first_name + ' ' + user.last_name + ' ' + user.patronymic;
-  }
-
   private onDestroy$ = new Subject<boolean>();
 
   ngOnDestroy() {

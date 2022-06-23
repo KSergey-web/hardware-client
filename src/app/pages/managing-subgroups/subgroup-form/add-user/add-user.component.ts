@@ -50,10 +50,6 @@ export class AddUserComponent implements OnInit, OnDestroy {
     this.selectedUser = user;
   }
 
-  getFioByUser(user: IUser): string {
-    return user.first_name + ' ' + user.last_name + ' ' + user.patronymic;
-  }
-
   clearTempate() {
     this.users = [];
     this.selectedUser = undefined;
