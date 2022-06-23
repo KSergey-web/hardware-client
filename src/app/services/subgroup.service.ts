@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { queryParamEnum } from '../enums/query-param.enum';
 import { PaginationInfo } from '../interfaces/pagination-info.interface';
 import { ISubgroup } from '../interfaces/subgroup.interface';
@@ -52,5 +53,31 @@ export class SubgroupService {
     };
     body.data.users = newSubgroup.users?.map((user) => user.id);
     return this.http.post<any>(`${this.apiUrl}/api/subgroups`, body);
+  }
+
+  getSubgroupById(id: number): Observable<ISubgroup> {
+    return this.http
+      .get<{ subgroup: ISubgroup }>(
+        `${this.apiUrl}/api/subgroups/${id}?` +
+          queryParamEnum.populate1lvl +
+          '&' +
+          queryParamEnum.serialize
+      )
+      .pipe(
+        map((res) => {
+          return res.subgroup;
+        })
+      );
+  }
+
+  updateSubgroup(subgroup: ISubgroup): Observable<{ data: any }> {
+    const body: any = {
+      data: { ...subgroup },
+    };
+    delete body.data.id;
+    return this.http.put<any>(
+      `${this.apiUrl}/api/subgroups/${subgroup.id}`,
+      body
+    );
   }
 }

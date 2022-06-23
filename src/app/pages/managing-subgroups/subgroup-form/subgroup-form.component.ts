@@ -1,12 +1,16 @@
-import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subject } from 'rxjs';
 import { IUser } from 'src/app/interfaces/user.interface';
-import { SubgroupService } from 'src/app/services/subgroup.service';
 import { INewSubgroup } from '../interfaces/new-subgroup.interface';
-import { CommonModalDialogBoxBuilder } from 'src/app/widgets/common-dialog-boxes/common-modal-dialog-box-builder.class';
+import { ISubgroupFormProperties } from './subgroup-form-properties.inteface';
 
 @Component({
   selector: 'app-subgroup-form',
@@ -16,21 +20,25 @@ import { CommonModalDialogBoxBuilder } from 'src/app/widgets/common-dialog-boxes
 export class SubgroupFormComponent implements OnInit, OnDestroy {
   subgroupForm!: FormGroup;
   users: IUser[] = [];
+  headerText = '';
+  acceptButtonText = 'Ок';
+  creator?: IUser;
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private subgroupService: SubgroupService,
-    private activeModal: NgbActiveModal,
-    private modalService: NgbModal
-  ) {
+  @Input() initValuesForForm!: ISubgroupFormProperties;
+  @Output() onSubmit = new EventEmitter<INewSubgroup>();
+  @Output() onDismiss = new EventEmitter<any>();
+
+  constructor(private formBuilder: FormBuilder) {
     this.initForm();
   }
 
   closeModal() {
-    this.activeModal.dismiss();
+    this.onDismiss.emit(true);
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.setInitValuesToForm();
+  }
 
   private onDestroy$ = new Subject<boolean>();
 
@@ -56,22 +64,12 @@ export class SubgroupFormComponent implements OnInit, OnDestroy {
     };
   }
 
-  submit() {
-    const subgroup = this.getDataFromForm();
-    this.subgroupService.createSubgroup(subgroup).subscribe({
-      next: (res) => this.activeModal.close(res),
-      error: (err: HttpErrorResponse) => {
-        console.log(err);
-        const bulder = new CommonModalDialogBoxBuilder(this.modalService);
-        bulder
-          .addHeader('Ошибка')
-          .addText(
-            `Не удалось создать подгруппу. Статус ${err.status}. ${err.message}`
-          )
-          .setDangerStyle()
-          .openAlertModal();
-      },
-    });
+  setInitValuesToForm() {
+    this.subgroupForm.controls.name.setValue(this.initValuesForForm!.name);
+    this.users = this.initValuesForForm.users ?? [];
+    this.acceptButtonText = this.initValuesForForm.acceptButtonText ?? '';
+    this.headerText = this.initValuesForForm.headerText ?? '';
+    this.creator = this.initValuesForForm.creator;
   }
 
   onAddUser(newUser: IUser) {
@@ -84,5 +82,10 @@ export class SubgroupFormComponent implements OnInit, OnDestroy {
   deleteUser(user: IUser) {
     const ind = this.users.indexOf(user);
     this.users.splice(ind, 1);
+  }
+
+  submit() {
+    const subgroup = this.getDataFromForm();
+    this.onSubmit.emit(subgroup);
   }
 }

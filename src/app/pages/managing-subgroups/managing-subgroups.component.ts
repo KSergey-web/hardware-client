@@ -5,8 +5,9 @@ import { takeUntil } from 'rxjs/operators';
 import { PaginationInfo } from 'src/app/interfaces/pagination-info.interface';
 import { ISubgroup } from 'src/app/interfaces/subgroup.interface';
 import { SubgroupService } from 'src/app/services/subgroup.service';
+import { CreateSubgroupComponent } from './create-subgroup/create-subgroup.component';
+import { EditSubgroupComponent } from './edit-subgroup/edit-subgroup.component';
 import { IPaginatedSubroups } from './interfaces/paginated-subroups.interface';
-import { SubgroupFormComponent } from './subgroup-form/subgroup-form.component';
 
 @Component({
   selector: 'app-managing-subgroups',
@@ -27,9 +28,18 @@ export class ManagingSubgroupsComponent implements OnInit {
   }
 
   createSubgroup() {
-    const modalRef = this.modalService.open(SubgroupFormComponent, {
+    const modalRef = this.modalService.open(CreateSubgroupComponent, {
       size: 'lg',
     });
+    this.performResultModal(modalRef);
+  }
+
+  editSubgroup(subgroup: ISubgroup) {
+    const modalRef = this.modalService.open(EditSubgroupComponent, {
+      size: 'lg',
+    });
+    (modalRef.componentInstance as EditSubgroupComponent).subgroupId =
+      subgroup.id;
     this.performResultModal(modalRef);
   }
 
