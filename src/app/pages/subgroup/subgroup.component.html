@@ -1,0 +1,38 @@
+<div class="container">
+  <div *ngIf="subgroup" class="col">
+    <div class="row">
+      <h2 class="col-12 text-center">Страница группы</h2>
+    </div>
+    <div class="row pt-3">
+      <div class="col-6">
+        <p>
+          Название подгруппы: {{subgroup?.name}} <br />
+          Создатель: {{subgroup?.creator | fio}} <br />
+          Число участников: {{subgroup?.users?.length}} <br />
+        </p>
+        <div>
+          <button class="btn btn-secondary" (click)="editSubgroup()"> Редактировать</button>
+        </div>
+      </div>
+      <div class="col-6">
+        <h6>Состав подгруппы</h6>
+        <div [hidden]="subgroup.users?.length !== 0" class="alert alert-info">
+          Состав подгруппы пуст
+        </div>
+        <ol class="pl-3 pr-3 list-group list-group-numbered overflow-auto">
+          <li *ngFor="let user of subgroup.users; let i = index"
+            class="list-group-item d-flex justify-content-between align-items-start">
+            <div *ngIf="user" class="ms-2 me-auto">
+              <div class="fw-bold">{{user | fio}}</div>
+              {{user.email}}
+            </div>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+  <hr />
+  <div class="row">
+    <app-list-bookings class="col" *ngIf='subgroup' [subgroup]="subgroup"></app-list-bookings>
+  </div>
+</div>

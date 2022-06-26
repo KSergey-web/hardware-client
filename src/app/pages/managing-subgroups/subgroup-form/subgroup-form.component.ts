@@ -20,20 +20,14 @@ import { ISubgroupFormProperties } from './subgroup-form-properties.inteface';
 export class SubgroupFormComponent implements OnInit, OnDestroy {
   subgroupForm!: FormGroup;
   users: IUser[] = [];
-  headerText = '';
   acceptButtonText = 'Ок';
   creator?: IUser;
 
   @Input() initValuesForForm!: ISubgroupFormProperties;
   @Output() onSubmit = new EventEmitter<INewSubgroup>();
-  @Output() onDismiss = new EventEmitter<any>();
 
   constructor(private formBuilder: FormBuilder) {
     this.initForm();
-  }
-
-  closeModal() {
-    this.onDismiss.emit(true);
   }
 
   ngOnInit(): void {
@@ -68,7 +62,6 @@ export class SubgroupFormComponent implements OnInit, OnDestroy {
     this.subgroupForm.controls.name.setValue(this.initValuesForForm!.name);
     this.users = this.initValuesForForm.users ?? [];
     this.acceptButtonText = this.initValuesForForm.acceptButtonText ?? '';
-    this.headerText = this.initValuesForForm.headerText ?? '';
     this.creator = this.initValuesForForm.creator;
   }
 

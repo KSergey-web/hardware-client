@@ -24,9 +24,9 @@
         </li>
       </ul>
       <div class="pt-2 col text-center">
-        <button [disabled]="!selectedUser" class="ml-1 btn btn-info" (click)="addUser()">Добавить в
+        <button type="button" [disabled]="!selectedUser" class="ml-1 btn btn-info" (click)="addUser()">Добавить в
           группу</button>
-        <button class="ml-1 btn btn-secondary" (click)="collapse_list_users.toggle()">Отмена</button>
+        <button type="button" class="ml-1 btn btn-secondary" (click)="collapse_list_users.toggle()">Отмена</button>
       </div>
     </div>
   </div>

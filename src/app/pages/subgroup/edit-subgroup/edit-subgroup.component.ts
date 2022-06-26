@@ -1,28 +1,20 @@
-import {
-  Component,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  SimpleChanges,
-} from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { ISubgroup } from 'src/app/interfaces/subgroup.interface';
 import { SubgroupService } from 'src/app/services/subgroup.service';
-import { ISubgroupFormProperties } from '../subgroup-form/subgroup-form-properties.inteface';
-import { takeUntil } from 'rxjs/operators';
-import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModalDialogBoxBuilder } from 'src/app/widgets/common-dialog-boxes/common-modal-dialog-box-builder.class';
-import { INewSubgroup } from '../interfaces/new-subgroup.interface';
+import { INewSubgroup } from '../../managing-subgroups/interfaces/new-subgroup.interface';
+import { ISubgroupFormProperties } from '../../managing-subgroups/subgroup-form/subgroup-form-properties.inteface';
 @Component({
   selector: 'app-edit-subgroup',
   templateUrl: './edit-subgroup.component.html',
   styleUrls: ['./edit-subgroup.component.scss'],
 })
 export class EditSubgroupComponent implements OnInit, OnDestroy {
-  @Input() subgroupId!: number;
-  subgroup?: ISubgroup;
+  @Input() subgroup?: ISubgroup;
   initValuesForForm?: ISubgroupFormProperties;
 
   constructor(
@@ -31,7 +23,7 @@ export class EditSubgroupComponent implements OnInit, OnDestroy {
     private modalService: NgbModal
   ) {}
   ngOnInit(): void {
-    this.getSubgroup(this.subgroupId);
+    this.InitSubgroupForm();
   }
 
   private onDestroy$ = new Subject<boolean>();
@@ -41,19 +33,8 @@ export class EditSubgroupComponent implements OnInit, OnDestroy {
     this.onDestroy$.complete();
   }
 
-  getSubgroup(subgroupId: number) {
-    this.subgroupService
-      .getSubgroupById(subgroupId)
-      .pipe(takeUntil(this.onDestroy$))
-      .subscribe((subgroup) => {
-        this.subgroup = subgroup;
-        this.InitSubgroupForm();
-      }, this.SomeError.bind(this));
-  }
-
   private InitSubgroupForm() {
     this.initValuesForForm = {};
-    this.initValuesForForm.headerText = 'Редактирование подгруппы';
     this.initValuesForForm.acceptButtonText = 'Сохранить изменения';
     this.initValuesForForm.creator = this.subgroup?.creator;
     this.initValuesForForm.users = this.subgroup?.users;
@@ -75,21 +56,22 @@ export class EditSubgroupComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(subgroup: INewSubgroup) {
-    this.subgroup!.name = subgroup.name;
-    this.subgroup!.users = subgroup.users;
-    this.subgroupService.updateSubgroup(this.subgroup!).subscribe({
-      next: (res) => this.activeModal.close(res),
-      error: (err: HttpErrorResponse) => {
-        console.log(err);
-        const bulder = new CommonModalDialogBoxBuilder(this.modalService);
-        bulder
-          .addHeader('Ошибка')
-          .addText(
-            `Не удалось создать подгруппу. Статус ${err.status}. ${err.message}`
-          )
-          .setDangerStyle()
-          .openAlertModal();
-      },
-    });
+    this.subgroupService
+      .updateSubgroup(subgroup, this.subgroup!.id)
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe({
+        next: () => this.activeModal.close(),
+        error: (err: HttpErrorResponse) => {
+          console.log(err);
+          const bulder = new CommonModalDialogBoxBuilder(this.modalService);
+          bulder
+            .addHeader('Ошибка')
+            .addText(
+              `Не удалось создать подгруппу. Статус ${err.status}. ${err.message}`
+            )
+            .setDangerStyle()
+            .openAlertModal();
+        },
+      });
   }
 }

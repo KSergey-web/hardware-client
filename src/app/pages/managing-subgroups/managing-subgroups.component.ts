@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -6,7 +7,6 @@ import { PaginationInfo } from 'src/app/interfaces/pagination-info.interface';
 import { ISubgroup } from 'src/app/interfaces/subgroup.interface';
 import { SubgroupService } from 'src/app/services/subgroup.service';
 import { CreateSubgroupComponent } from './create-subgroup/create-subgroup.component';
-import { EditSubgroupComponent } from './edit-subgroup/edit-subgroup.component';
 import { IPaginatedSubroups } from './interfaces/paginated-subroups.interface';
 
 @Component({
@@ -17,7 +17,8 @@ import { IPaginatedSubroups } from './interfaces/paginated-subroups.interface';
 export class ManagingSubgroupsComponent implements OnInit {
   constructor(
     private subgroupService: SubgroupService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private router: Router
   ) {}
 
   private onDestroy$ = new Subject<boolean>();
@@ -27,19 +28,14 @@ export class ManagingSubgroupsComponent implements OnInit {
     this.onDestroy$.complete();
   }
 
+  toSubgroup(subgroup: ISubgroup) {
+    this.router.navigate([`main-page/subgroup/${subgroup.id}`]);
+  }
+
   createSubgroup() {
     const modalRef = this.modalService.open(CreateSubgroupComponent, {
       size: 'lg',
     });
-    this.performResultModal(modalRef);
-  }
-
-  editSubgroup(subgroup: ISubgroup) {
-    const modalRef = this.modalService.open(EditSubgroupComponent, {
-      size: 'lg',
-    });
-    (modalRef.componentInstance as EditSubgroupComponent).subgroupId =
-      subgroup.id;
     this.performResultModal(modalRef);
   }
 

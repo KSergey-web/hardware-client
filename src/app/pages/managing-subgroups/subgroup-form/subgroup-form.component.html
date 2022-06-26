@@ -1,40 +1,34 @@
-<div class="container">
-  <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">{{headerText}}</h4>
-    <button type="button" class="close btn-close" aria-label="Close" (click)="closeModal()">
-      <span aria-hidden="true">&times;</span>
+<form class="col" [formGroup]=subgroupForm novalidate (ngSubmit)="submit()">
+  <div *ngIf="creator" class="form-group col-6">
+    <label for="creator">Создатель подгруппы</label>
+    <p id="creator">{{creator | fio}}</p>
+  </div>
+  <div class="form-group col-6">
+    <label for="name">Название группы</label>
+    <input class="form-control" id="name" name='name' formControlName="name" />
+  </div>
+  <div class="col-6">
+    <h6>Состав подгруппы:</h6>
+    <ol class="pl-3 pr-3 list-group list-group-numbered">
+      <li *ngFor="let user of users; let i = index"
+        class="list-group-item d-flex justify-content-between align-items-start">
+        <div *ngIf="user" class="ms-2 me-auto">
+          <div class="fw-bold">{{user | fio}}</div>
+          {{user.email}}
+        </div>
+        <button class="btn btn-light" (click)="deleteUser(user)">❌</button>
+      </li>
+    </ol>
+    <div [hidden]="users.length != 0" class="alert alert-warning">
+      Состав подгруппы пуст
+    </div>
+  </div>
+  <div class="row mt-3">
+    <app-add-user (onAddUser)="onAddUser($event)"></app-add-user>
+  </div>
+  <div class="text-center mt-2">
+    <button class="btn btn-primary" type='submit' [disabled]="isNewSessionInvalid()">
+      {{acceptButtonText}}
     </button>
   </div>
-  <form class="col" [formGroup]=subgroupForm novalidate (ngSubmit)="submit()">
-    <div *ngIf="creator" class="form-group col-6">
-      <label for="creator">Создатель подгруппы</label>
-      <p id="creator">{{creator | fio}}</p>
-    </div>
-    <div class="form-group col-6">
-      <label for="name">Название группы</label>
-      <input class="form-control" id="name" name='name' formControlName="name" />
-    </div>
-    <div>
-      <label for="">Состав подгруппы:</label>
-      <ol class="pl-3 pr-3 list-group list-group-numbered">
-        <li *ngFor="let user of users; let i = index"
-          class="list-group-item d-flex justify-content-between align-items-start">
-          <div *ngIf="user" class="ms-2 me-auto">
-            <div class="fw-bold">{{user | fio}}</div>
-            {{user.email}}
-          </div>
-          <button class="btn btn-light" (click)="deleteUser(user)">❌</button>
-        </li>
-      </ol>
-      <div [hidden]="users.length != 0" class="alert alert-warning">
-        Состав подгруппы пуст
-      </div>
-    </div>
-    <app-add-user (onAddUser)="onAddUser($event)"></app-add-user>
-    <div class="text-center mt-2 row">
-      <button class="btn btn-primary col" type='submit' [disabled]="isNewSessionInvalid()">
-        {{acceptButtonText}}
-      </button>
-    </div>
-  </form>
-</div>
+</form>

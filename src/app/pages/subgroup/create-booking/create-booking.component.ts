@@ -1,27 +1,29 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { SubgroupService } from 'src/app/services/subgroup.service';
+import { ISubgroup } from 'src/app/interfaces/subgroup.interface';
+import { BookingService } from 'src/app/services/booking.service';
 import { CommonModalDialogBoxBuilder } from 'src/app/widgets/common-dialog-boxes/common-modal-dialog-box-builder.class';
-import { INewSubgroup } from '../interfaces/new-subgroup.interface';
-import { ISubgroupFormProperties } from '../subgroup-form/subgroup-form-properties.inteface';
+import { INewBooking } from '../booking-form/booking.interface';
+import { IBookingFormProperties } from '../booking-form/subgroup-form-properties.inteface';
 
 @Component({
-  selector: 'app-create-subgroup',
-  templateUrl: './create-subgroup.component.html',
-  styleUrls: ['./create-subgroup.component.scss'],
+  selector: 'app-create-booking',
+  templateUrl: './create-booking.component.html',
+  styleUrls: ['./create-booking.component.scss'],
 })
-export class CreateSubgroupComponent implements OnDestroy {
-  initValuesForForm?: ISubgroupFormProperties;
+export class CreateBookingComponent implements OnDestroy {
+  initValuesForForm?: IBookingFormProperties;
+  @Input() subgroup!: ISubgroup;
 
   constructor(
-    private subgroupService: SubgroupService,
+    private bookingService: BookingService,
     private activeModal: NgbActiveModal,
     private modalService: NgbModal
   ) {
-    this.InitSubgroupForm();
+    this.InitBookingForm();
   }
 
   private onDestroy$ = new Subject<boolean>();
@@ -35,7 +37,7 @@ export class CreateSubgroupComponent implements OnDestroy {
     this.activeModal.dismiss();
   }
 
-  private InitSubgroupForm() {
+  private InitBookingForm() {
     this.initValuesForForm = {};
     this.initValuesForForm.acceptButtonText = 'Создать';
   }
@@ -50,19 +52,20 @@ export class CreateSubgroupComponent implements OnDestroy {
       .openAlertModal();
   }
 
-  onSubmit(subgroup: INewSubgroup) {
-    this.subgroupService
-      .createSubgroup(subgroup)
+  onSubmit(booking: INewBooking) {
+    booking.subgroup = this.subgroup.id;
+    this.bookingService
+      .createBooking(booking)
       .pipe(takeUntil(this.onDestroy$))
       .subscribe({
         next: (res) => this.activeModal.close(res),
         error: (err: HttpErrorResponse) => {
-          console.log(err);
+          console.error(err);
           const bulder = new CommonModalDialogBoxBuilder(this.modalService);
           bulder
             .addHeader('Ошибка')
             .addText(
-              `Не удалось создать подгруппу. Статус ${err.status}. ${err.message}`
+              `Не удалось создать бронь. Статус ${err.status}. ${err.message}`
             )
             .setDangerStyle()
             .openAlertModal();

@@ -12,6 +12,7 @@
         <th scope="col">#</th>
         <th scope="col">Название</th>
         <th scope="col">Создатель</th>
+        <th></th>
       </tr>
     </thead>
     <tbody class="highlight_tr_hover">
@@ -19,7 +20,7 @@
         <th scope="row">{{i+1}}</th>
         <td> {{subgroup.name}}</td>
         <td> {{subgroup.creator | fio}}</td>
-        <td> <button class="btn btn-secondary" (click)="editSubgroup(subgroup)"> Редактировать</button></td>
+        <td colspan="1"> <button class="btn btn-secondary" (click)="toSubgroup(subgroup)">Управление</button></td>
       </tr>
     </tbody>
   </table>

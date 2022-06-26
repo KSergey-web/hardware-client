@@ -43,7 +43,10 @@ export class SubgroupService {
         '&' +
         queryParamEnum.serialize +
         '&' +
-        queryParamEnum.populate1lvl
+        queryParamEnum.populate1lvl +
+        '&' +
+        queryParamEnum.additional_name_for_data +
+        'subgroups'
     );
   }
 
@@ -61,7 +64,10 @@ export class SubgroupService {
         `${this.apiUrl}/api/subgroups/${id}?` +
           queryParamEnum.populate1lvl +
           '&' +
-          queryParamEnum.serialize
+          queryParamEnum.serialize +
+          '&' +
+          queryParamEnum.additional_name_for_data +
+          'subgroup'
       )
       .pipe(
         map((res) => {
@@ -70,13 +76,17 @@ export class SubgroupService {
       );
   }
 
-  updateSubgroup(subgroup: ISubgroup): Observable<{ data: any }> {
+  updateSubgroup(
+    subgroup: INewSubgroup,
+    subgroupId: number
+  ): Observable<{ data: ISubgroup }> {
     const body: any = {
-      data: { ...subgroup },
+      data: subgroup,
     };
-    delete body.data.id;
     return this.http.put<any>(
-      `${this.apiUrl}/api/subgroups/${subgroup.id}`,
+      `${this.apiUrl}/api/subgroups/${subgroupId}` +
+        '?' +
+        queryParamEnum.serialize,
       body
     );
   }

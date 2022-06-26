@@ -1,0 +1,33 @@
+<div class="row pt-3">
+  <button class="btn btn-primary" (click)="createBooking()">Создать бронь</button>
+</div>
+<div class="table-responsive">
+  <table class="table">
+    <caption><b>Созданные брони</b></caption>
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Оборудование</th>
+        <th scope="col">с</th>
+        <th scope="col">до</th>
+        <th scope="col">Длительность сеанса (мин)</th>
+        <th scope="col">Сумма сеансов в день (мин)</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody class="highlight_tr_hover">
+      <tr *ngIf="bookings.length === 0" class="alert alert-info">
+        <td colspan="6" class="text-center"> Нет актуальных броней</td>
+      </tr>
+      <tr *ngFor='let booking of bookings; let i = index'>
+        <th scope="row">{{i+1}}</th>
+        <td> {{booking.equipment?.name}}</td>
+        <td> {{booking.begin | date:'dd.MM.YYYY HH:mm'}}</td>
+        <td> {{booking.end | date:'dd.MM.YYYY HH:mm'}}</td>
+        <td> {{booking.session_duration}}</td>
+        <td> {{booking.max_session_duration_per_day}}</td>
+        <td colspan="1"> <button class="btn btn-secondary" (click)="editBooking(booking)"> Редактировать</button></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

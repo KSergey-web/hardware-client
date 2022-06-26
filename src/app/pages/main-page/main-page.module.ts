@@ -7,6 +7,7 @@ import { ManagingSubgroupsModule } from '../managing-subgroups/managing-subgroup
 import { SessionInProgressModule } from '../session-in-progress/session-in-progress.module';
 import { SessionsManagementModule } from '../sessions-management/sessions-management.module';
 import { SessionsOfCurrentUserModule } from '../sessions-of-current-user/sessions-of-current-user.module';
+import { SubgroupModule } from '../subgroup/subgroup.module';
 import { CustomHeaderComponent } from './custom-header/custom-header.component';
 import { MainPageComponent } from './main-page.component';
 
@@ -20,6 +21,7 @@ import { MainPageComponent } from './main-page.component';
     NgbModalModule,
     CommonModule,
     ManagingSubgroupsModule,
+    SubgroupModule,
   ],
   declarations: [MainPageComponent, CustomHeaderComponent],
   providers: [],

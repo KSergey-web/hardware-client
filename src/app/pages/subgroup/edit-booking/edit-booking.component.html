@@ -1,11 +1,11 @@
 <div class="container">
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Создание подгруппы</h4>
+    <h4 class="modal-title" id="modal-basic-title">Редактирование брони</h4>
     <button type="button" class="close btn-close" aria-label="Close" (click)="onDissmis()">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
-  <app-subgroup-form *ngIf="initValuesForForm" [initValuesForForm]="initValuesForForm" (onDismiss)="onDissmis()"
+  <app-booking-form *ngIf="initValuesForForm" [initValuesForForm]="initValuesForForm" (onDismiss)="onDissmis()"
     (onSubmit)="onSubmit($event)">
-  </app-subgroup-form>
+  </app-booking-form>
 </div>

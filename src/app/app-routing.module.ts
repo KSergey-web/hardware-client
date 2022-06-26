@@ -12,6 +12,8 @@ import { SessionInProgressComponent } from './pages/session-in-progress/session-
 import { SessionsManagementComponent } from './pages/sessions-management/sessions-management.component';
 import { SessionsOfCurrentUserComponent } from './pages/sessions-of-current-user/sessions-of-current-user.component';
 import { SignInComponent } from './pages/sign-in/sign-in.component';
+import { SubgroupComponent } from './pages/subgroup/subgroup.component';
+import { SubgroupResolver } from './pages/subgroup/subgroup.resolver';
 import { WaitingRoomComponent } from './pages/waiting-room/waiting-room.component';
 
 // определение дочерних маршрутов
@@ -34,6 +36,12 @@ const mainPageRoutes: Routes = [
     path: 'managing-subgroups',
     component: ManagingSubgroupsComponent,
     canActivate: [CheckTeacherGuard],
+  },
+  {
+    path: 'subgroup/:id',
+    component: SubgroupComponent,
+    canActivate: [CheckTeacherGuard],
+    resolve: { subgroup: SubgroupResolver },
   },
 ];
 
