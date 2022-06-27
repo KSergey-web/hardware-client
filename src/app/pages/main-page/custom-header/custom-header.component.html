@@ -1,8 +1,12 @@
-<nav class="navbar navbar-dark bg-dark navbar-expand">
+<nav responsive class="navbar navbar-dark bg-dark navbar-expand-lg">
   <a class="navbar-brand" href="#">
     <img src="../../assets/logo_sfu.png" width="30" height="30" alt="">
   </a>
-  <div class="collapse navbar-collapse">
+  <button id='navbar-toggler' class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMenu"
+    aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarMenu">
     <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
       <li *ngIf="isTeacher()" class="nav-item">
         <a class="nav-link" routerLink="/main-page/manage-sessions" routerLinkActive="active">Управление сессиями</a>
@@ -24,7 +28,10 @@
         {{currentUser?.last_name}}
         {{currentUser?.patronymic}}
       </div>
-      <button type="button" class="btn" (click)="openLogout()"> <img src="../../assets/logout.png" alt="Выйти"></button>
+      <div class="navbar-text ">
+        <button type="button" class="btn" (click)="openLogout()"> <img src="../../assets/logout.png"
+            alt="Выйти"></button>
+      </div>
     </div>
   </div>
 </nav>

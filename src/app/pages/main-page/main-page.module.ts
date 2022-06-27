@@ -9,6 +9,7 @@ import { SessionsManagementModule } from '../sessions-management/sessions-manage
 import { SessionsOfCurrentUserModule } from '../sessions-of-current-user/sessions-of-current-user.module';
 import { SubgroupModule } from '../subgroup/subgroup.module';
 import { CustomHeaderComponent } from './custom-header/custom-header.component';
+import { ResponsiveHeaderDirective } from './custom-header/responsive-header.directive';
 import { MainPageComponent } from './main-page.component';
 
 @NgModule({
@@ -23,7 +24,11 @@ import { MainPageComponent } from './main-page.component';
     ManagingSubgroupsModule,
     SubgroupModule,
   ],
-  declarations: [MainPageComponent, CustomHeaderComponent],
+  declarations: [
+    MainPageComponent,
+    CustomHeaderComponent,
+    ResponsiveHeaderDirective,
+  ],
   providers: [],
 })
 export class MainPageModule {}
