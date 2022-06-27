@@ -15,6 +15,7 @@ import { SubgroupComponent } from './subgroup.component';
 import { CreateBookingComponent } from './create-booking/create-booking.component';
 import { EditBookingComponent } from './edit-booking/edit-booking.component';
 import { SubgroupResolver } from './subgroup.resolver';
+import { AuthenticatedUserViewDirective } from './authenticated-user-view.directive';
 
 @NgModule({
   imports: [
@@ -35,6 +36,7 @@ import { SubgroupResolver } from './subgroup.resolver';
     ListBookingsComponent,
     CreateBookingComponent,
     EditBookingComponent,
+    AuthenticatedUserViewDirective,
   ],
   providers: [SubgroupResolver],
 })

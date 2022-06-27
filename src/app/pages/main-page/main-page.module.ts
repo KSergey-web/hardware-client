@@ -8,6 +8,7 @@ import { SessionInProgressModule } from '../session-in-progress/session-in-progr
 import { SessionsManagementModule } from '../sessions-management/sessions-management.module';
 import { SessionsOfCurrentUserModule } from '../sessions-of-current-user/sessions-of-current-user.module';
 import { SubgroupModule } from '../subgroup/subgroup.module';
+import { SubgroupsCurrentUserModule } from '../subgroups-current-user/subgroups-current-user.module';
 import { CustomHeaderComponent } from './custom-header/custom-header.component';
 import { ResponsiveHeaderDirective } from './custom-header/responsive-header.directive';
 import { MainPageComponent } from './main-page.component';
@@ -23,6 +24,7 @@ import { MainPageComponent } from './main-page.component';
     CommonModule,
     ManagingSubgroupsModule,
     SubgroupModule,
+    SubgroupsCurrentUserModule,
   ],
   declarations: [
     MainPageComponent,

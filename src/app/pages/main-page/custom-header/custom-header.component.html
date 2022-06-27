@@ -21,6 +21,9 @@
         <a class="nav-link" routerLink="/main-page/managing-subgroups" routerLinkActive="active">Управление
           подгруппами</a>
       </li>
+      <li *ngIf="!isTeacher()" class="nav-item">
+        <a class="nav-link" routerLink="/main-page/my-subgroups" routerLinkActive="active">Мои подгруппы</a>
+      </li>
     </ul>
     <div *ngIf='currentUser' class="my-2 my-lg-0">
       <div class="navbar-text text-white">

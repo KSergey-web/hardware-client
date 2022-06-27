@@ -14,6 +14,7 @@ import { SessionsOfCurrentUserComponent } from './pages/sessions-of-current-user
 import { SignInComponent } from './pages/sign-in/sign-in.component';
 import { SubgroupComponent } from './pages/subgroup/subgroup.component';
 import { SubgroupResolver } from './pages/subgroup/subgroup.resolver';
+import { SubgroupsCurrentUserComponent } from './pages/subgroups-current-user/subgroups-current-user.component';
 import { WaitingRoomComponent } from './pages/waiting-room/waiting-room.component';
 
 // определение дочерних маршрутов
@@ -38,9 +39,12 @@ const mainPageRoutes: Routes = [
     canActivate: [CheckTeacherGuard],
   },
   {
+    path: 'my-subgroups',
+    component: SubgroupsCurrentUserComponent,
+  },
+  {
     path: 'subgroup/:id',
     component: SubgroupComponent,
-    canActivate: [CheckTeacherGuard],
     resolve: { subgroup: SubgroupResolver },
   },
 ];

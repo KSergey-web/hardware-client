@@ -1,5 +1,5 @@
 <div class="row pt-3">
-  <button class="btn btn-primary" (click)="createBooking()">Создать бронь</button>
+  <button data-access-only="teacher" class="btn btn-primary" (click)="createBooking()">Создать бронь</button>
 </div>
 <div class="table-responsive">
   <table class="table">
@@ -26,7 +26,10 @@
         <td> {{booking.end | date:'dd.MM.YYYY HH:mm'}}</td>
         <td> {{booking.session_duration}}</td>
         <td> {{booking.max_session_duration_per_day}}</td>
-        <td colspan="1"> <button class="btn btn-secondary" (click)="editBooking(booking)"> Редактировать</button></td>
+        <td colspan="1"> <button class="btn btn-secondary" data-access-only="teacher" (click)="editBooking(booking)">
+            Редактировать</button></td>
+        <td colspan="1"> <button class="btn btn-secondary" data-access-only="teacher" (click)="editBooking(booking)">
+            Редактировать</button></td>
       </tr>
     </tbody>
   </table>

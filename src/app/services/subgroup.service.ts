@@ -76,6 +76,18 @@ export class SubgroupService {
       );
   }
 
+  getSubgroupsByCurrentUser(): Observable<ISubgroup[]> {
+    return this.http
+      .get<{ subgroups: ISubgroup[] }>(
+        `${this.apiUrl}/api/subgroups/by-current-user`
+      )
+      .pipe(
+        map((res) => {
+          return res.subgroups;
+        })
+      );
+  }
+
   updateSubgroup(
     subgroup: INewSubgroup,
     subgroupId: number
