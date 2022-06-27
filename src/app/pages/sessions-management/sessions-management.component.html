@@ -1,5 +1,5 @@
 <button class="btn btn-primary" (click)="createNewSession()">Создать новую сессию</button>
-<div>
+<div class="table-responsive">
   <table class="table">
     <caption><b>Назначенные вами сессии</b></caption>
     <thead>
@@ -20,12 +20,14 @@
         <td> {{session.user?.first_name}} {{session.user?.last_name}}
           {{session.user?.patronymic}}</td>
         <td> {{session.equipment?.name}}</td>
-        <td> <button class="btn btn-secondary" (click)="deleteSession($event, session)">Удалить</button></td>
+        <td colspan="1"> <button class="btn btn-secondary" (click)="deleteSession($event, session)">Удалить</button>
+        </td>
       </tr>
     </tbody>
   </table>
-  <div class="text-center">
-    <ngb-pagination class="d-inline-block" [pageSize]="15" [(page)]="selectedPage" (pageChange)="onChangePage()"
-      [maxSize]="5" [rotate]="true" [boundaryLinks]="true"></ngb-pagination>
-  </div>
+
+</div>
+<div class="text-center">
+  <ngb-pagination class="d-inline-block" [pageSize]="15" [(page)]="selectedPage" (pageChange)="onChangePage()"
+    [maxSize]="5" [rotate]="true" [boundaryLinks]="true"></ngb-pagination>
 </div>
