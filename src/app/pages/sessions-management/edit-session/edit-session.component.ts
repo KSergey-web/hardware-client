@@ -3,8 +3,9 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import * as _ from 'lodash';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { INewSession, ISession } from 'src/app/interfaces/session.interface';
+import { ISession } from 'src/app/interfaces/session.interface';
 import { SessionService } from 'src/app/services/session.service';
+import { INewSession } from '../../subgroup/create-session-by-booking/new-session.interface';
 
 @Component({
   selector: 'app-edit-session',
@@ -29,10 +30,8 @@ export class EditSessionComponent implements OnInit, OnDestroy {
   }
 
   saveSession(session: INewSession): void {
-    session.id = this.editedSession.id;
-
     this.sessionService
-      .updateSession(session)
+      .updateSession(session, this.editedSession.id)
       .pipe(takeUntil(this.onDestroy$))
       .subscribe(
         (res) => {

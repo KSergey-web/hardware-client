@@ -7,6 +7,7 @@ import { BookingService } from 'src/app/services/booking.service';
 import { takeUntil } from 'rxjs/operators';
 import { EditBookingComponent } from '../edit-booking/edit-booking.component';
 import { CreateBookingComponent } from '../create-booking/create-booking.component';
+import { CreateSessionByBookingComponent } from '../create-session-by-booking/create-session-by-booking.component';
 
 @Component({
   selector: 'app-list-bookings',
@@ -50,6 +51,15 @@ export class ListBookingsComponent implements OnDestroy, OnInit {
     this.performResultModal(modalRef);
   }
 
+  createSessionByBooking(booking: IBooking) {
+    const modalRef = this.modalService.open(CreateSessionByBookingComponent, {
+      size: 'lg',
+    });
+    (modalRef.componentInstance as CreateSessionByBookingComponent).booking =
+      booking;
+    this.performResultModal(modalRef);
+  }
+
   private performResultModal(modalRef: NgbModalRef): void {
     modalRef.result.then(() => {
       this.getBookings();
@@ -61,7 +71,6 @@ export class ListBookingsComponent implements OnDestroy, OnInit {
       .getBookingsOfSubgoup(this.subgroup)
       .pipe(takeUntil(this.onDestroy$))
       .subscribe((bookings) => {
-        console.log('bb');
         this.bookings = bookings;
       });
   }

@@ -6,7 +6,8 @@ import { queryParamEnum } from '../enums/query-param.enum';
 import { DefaultAnswer } from '../interfaces/default-answer.interface';
 import { IEquipment } from '../interfaces/equipment.interface';
 import { PaginationInfo } from '../interfaces/pagination-info.interface';
-import { INewSession, ISession } from '../interfaces/session.interface';
+import { ISession } from '../interfaces/session.interface';
+import { INewSession } from '../pages/subgroup/create-session-by-booking/new-session.interface';
 import { API_URL } from '../urls-tokens';
 import { AuthService } from './auth.service';
 
@@ -65,15 +66,25 @@ export class SessionService {
     return this.http.post<any>(`${this.apiUrl}/api/sessions`, body);
   }
 
-  updateSession(session: INewSession): Observable<{ data: any }> {
+  signupForSession(newSession: INewSession): Observable<{ data: any }> {
+    const body = {
+      data: { ...newSession },
+    };
+    return this.http.post<any>(
+      `${this.apiUrl}/api/sessions/signup-for-session`,
+      body
+    );
+  }
+
+  updateSession(
+    session: INewSession,
+    sessionId: number
+  ): Observable<{ data: any }> {
     const body: any = {
       data: { ...session },
     };
     delete body.data.id;
-    return this.http.put<any>(
-      `${this.apiUrl}/api/sessions/${session.id}`,
-      body
-    );
+    return this.http.put<any>(`${this.apiUrl}/api/sessions/${sessionId}`, body);
   }
 
   getSessionsInDateByEquipment(

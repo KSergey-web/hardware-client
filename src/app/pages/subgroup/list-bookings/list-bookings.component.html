@@ -28,9 +28,11 @@
         <td> {{booking.max_session_duration_per_day}}</td>
         <td colspan="1"> <button class="btn btn-secondary" data-access-only="teacher" (click)="editBooking(booking)">
             Редактировать</button></td>
-        <td colspan="1"> <button class="btn btn-secondary" data-access-only="teacher" (click)="editBooking(booking)">
-            Редактировать</button></td>
+        <td colspan="1"> <button class="btn btn-secondary" (click)="createSessionByBooking(booking)">
+            Записаться на сессию</button></td>
       </tr>
     </tbody>
   </table>
 </div>
+<pre>{{subgroup | json}}</pre>
+<pre>{{bookings | json}}</pre>

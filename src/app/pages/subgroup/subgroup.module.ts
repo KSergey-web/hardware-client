@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   NgbDatepickerModule,
   NgbModalModule,
+  NgbTimepickerModule,
 } from '@ng-bootstrap/ng-bootstrap';
 import { SharePipesModule } from 'src/app/share-pipes/share-pipes.module';
 import { ManagingSubgroupsModule } from '../managing-subgroups/managing-subgroups.module';
@@ -16,6 +17,9 @@ import { CreateBookingComponent } from './create-booking/create-booking.componen
 import { EditBookingComponent } from './edit-booking/edit-booking.component';
 import { SubgroupResolver } from './subgroup.resolver';
 import { AuthenticatedUserViewDirective } from './authenticated-user-view.directive';
+import { SessionFormByBookingComponent } from './session-form-by-booking/session-form-by-booking.component';
+import { CreateSessionByBookingComponent } from './create-session-by-booking/create-session-by-booking.component';
+import { SessionsInDateComponent } from './session-form-by-booking/sessions-in-date/sessions-in-date.component';
 
 @NgModule({
   imports: [
@@ -26,6 +30,7 @@ import { AuthenticatedUserViewDirective } from './authenticated-user-view.direct
     NgbModalModule,
     SharePipesModule,
     NgbDatepickerModule,
+    NgbTimepickerModule,
   ],
   exports: [],
   declarations: [
@@ -37,6 +42,9 @@ import { AuthenticatedUserViewDirective } from './authenticated-user-view.direct
     CreateBookingComponent,
     EditBookingComponent,
     AuthenticatedUserViewDirective,
+    SessionFormByBookingComponent,
+    CreateSessionByBookingComponent,
+    SessionsInDateComponent,
   ],
   providers: [SubgroupResolver],
 })

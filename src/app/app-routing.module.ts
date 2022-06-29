@@ -70,7 +70,7 @@ const routes: Routes = [
   {
     path: 'waiting-room/:id',
     component: WaitingRoomComponent,
-    canActivate: [CheckAuthGuard, SessionInProgressGuard],
+    canActivate: [CheckAuthGuard],
   },
   { path: 'signin', component: SignInComponent },
   { path: '**', redirectTo: '/main-page/my-sessions' },

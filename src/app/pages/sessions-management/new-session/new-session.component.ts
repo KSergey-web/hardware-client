@@ -2,8 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { INewSession } from '../../../interfaces/session.interface';
 import { SessionService } from '../../../services/session.service';
+import { INewSession } from '../../subgroup/create-session-by-booking/new-session.interface';
 
 @Component({
   selector: 'app-new-session',

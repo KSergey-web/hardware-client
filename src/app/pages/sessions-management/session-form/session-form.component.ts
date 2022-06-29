@@ -11,13 +11,14 @@ import { Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { IEquipment } from 'src/app/interfaces/equipment.interface';
 import { IGroup } from 'src/app/interfaces/group.interface';
-import { INewSession, ISession } from 'src/app/interfaces/session.interface';
+import { ISession } from 'src/app/interfaces/session.interface';
 import { IStudent } from 'src/app/interfaces/student.interface';
 import { AuthService } from 'src/app/services/auth.service';
 import { EquipmentService } from 'src/app/services/equipment.service';
 import { GroupService } from 'src/app/services/group.service';
 import { SessionService } from 'src/app/services/session.service';
 import { StudentService } from 'src/app/services/student.service';
+import { INewSession } from '../../subgroup/create-session-by-booking/new-session.interface';
 
 @Component({
   selector: 'app-session-form',

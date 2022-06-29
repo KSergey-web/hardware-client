@@ -62,7 +62,9 @@ export class SubgroupService {
     return this.http
       .get<{ subgroup: ISubgroup }>(
         `${this.apiUrl}/api/subgroups/${id}?` +
-          queryParamEnum.populate1lvl +
+          'populate[0]=users' +
+          '&' +
+          'populate[1]=creator' +
           '&' +
           queryParamEnum.serialize +
           '&' +

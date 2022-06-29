@@ -1,0 +1,35 @@
+<form *ngIf="initValuesForForm" class="col" [formGroup]=sessionForm novalidate (ngSubmit)="submit()">
+  <div *ngIf="initValuesForForm.equipment" class="form-group col-6">
+    <label for="equipment">Оборудование</label>
+    <select disabled class="form-control" id="equipment" name='equipment'>
+      <option selected>
+        {{initValuesForForm.equipment.name}}
+      </option>
+    </select>
+  </div>
+  <ngb-datepicker *ngIf="maxDateNgb" (dateSelect)="onSelectDate($event)" [startDate]="todayNgb" [minDate]="todayNgb"
+    [maxDate]='maxDateNgb' outsideDays="hidden">
+  </ngb-datepicker>
+  <div class="form-group">
+    <label for="time">Время начала сеанса</label>
+    <ngb-timepicker id="time" name="time" formControlName="time"></ngb-timepicker>
+  </div>
+  <p>Конец сеанса в <b>{{session_end | date:'HH:mm'}}</b></p>
+  <div class="form-group col-6">
+    <label for="session_duration">Длительность сессии</label>
+    <input disabled type="number" class="form-control" id="session_duration" name='session_duration'
+      [value]="initValuesForForm.session_duration" />
+  </div>
+  <div class="form-group col-6">
+    <label for="max_session_duration_per_day">Максимальная длительность сессий в день</label>
+    <input disabled type="number" class="form-control" id="max_session_duration_per_day"
+      name='max_session_duration_per_day' [value]="initValuesForForm.max_session_duration_per_day" />
+  </div>
+  <div class="text-center mt-2">
+    <button class="btn btn-primary" type='submit' [disabled]="!getBeginAndEndFromForm()">
+      {{acceptButtonText}}
+    </button>
+  </div>
+</form>
+<app-sessions-in-date *ngIf="initValuesForForm" [selectedDate]="selectedDate" [equipment]="initValuesForForm.equipment">
+</app-sessions-in-date>
