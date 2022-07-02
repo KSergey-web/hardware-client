@@ -30,6 +30,7 @@ export class SessionFormByBookingComponent implements OnInit, OnDestroy {
   selectedDate?: Date;
   session_duration?: number;
   session_end?: Date;
+  session_begin?: Date;
 
   setMaxDate(booking_end: Date) {
     this.maxDateNgb = new NgbDate(
@@ -72,10 +73,12 @@ export class SessionFormByBookingComponent implements OnInit, OnDestroy {
     this.sessionForm.controls.time.valueChanges.subscribe((time) => {
       if (!this.selectedDate) return;
       const { hour: h, minute: m } = time;
-      const begin = new Date(this.selectedDate);
-      begin.setHours(h);
-      begin.setMinutes(m);
-      this.session_end = new Date(+begin + this.session_duration! * 1000 * 60);
+      this.session_begin = new Date(this.selectedDate);
+      this.session_begin.setHours(h);
+      this.session_begin.setMinutes(m);
+      this.session_end = new Date(
+        +this.session_begin + this.session_duration! * 1000 * 60
+      );
     });
   }
 
@@ -86,7 +89,7 @@ export class SessionFormByBookingComponent implements OnInit, OnDestroy {
 
   getBeginAndEndFromForm(): { begin: Date; end: Date } | null {
     if (!this.selectedDate || !this.session_end) return null;
-    return { begin: new Date(this.selectedDate), end: this.session_end };
+    return { begin: this.session_begin!, end: this.session_end };
   }
 
   calculateEnd() {
