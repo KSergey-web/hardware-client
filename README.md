@@ -1,3 +1,29 @@
+<h1>Angular SPA</h1>
+
+The client application of the remote access service to the equipment. Basic functionality of UI:
+
+- connecting to sessions and working with the appropriate microcontroller;
+- organization of users into groups for booking equipment and logging with ratings;
+- booking sessions by users;
+
+![alt text](https://github.com/KSergey-web/hardware-sfu-online/blob/master/scheme.png)
+
+Demonstration session with the STK-500 board
+![alt text](hardware_session.png)
+
+![alt text](https://github.com/KSergey-web/hardware-sfu-online/blob/master/scheme.png)
+
+<h2>Relative links</h2>
+
+- laboratory stand server (https://github.com/KSergey-web/lab-server);
+- intermediary server (https://github.com/KSergey-web/server-intermediary-sfu);
+- main server based on CMS Straps (https://github.com/KSergey-web/hardware-sfu-online);
+- Angular SPA app (https://github.com/KSergey-web/hardware-client);
+
+Third-party software:
+
+- video stream server (https://github.com/aler9/rtsp-simple-server);
+
 # HardwareClient
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.13.
