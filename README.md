@@ -6,12 +6,11 @@ The client application of the remote access service to the equipment. Basic func
 - organization of users into groups for booking equipment and logging with ratings;
 - booking sessions by users;
 
+General scheme of the web application
 ![alt text](https://github.com/KSergey-web/hardware-sfu-online/blob/master/scheme.png)
 
 Demonstration session with the STK-500 board
 ![alt text](hardware_session.png)
-
-![alt text](https://github.com/KSergey-web/hardware-sfu-online/blob/master/scheme.png)
 
 <h2>Relative links</h2>
 
