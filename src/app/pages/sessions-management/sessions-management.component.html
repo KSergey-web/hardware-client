@@ -20,7 +20,8 @@
         <td> {{session.user?.first_name}} {{session.user?.last_name}}
           {{session.user?.patronymic}}</td>
         <td> {{session.equipment?.name}}</td>
-        <td colspan="1"> <button class="btn btn-secondary" (click)="deleteSession($event, session)">Удалить</button>
+        <td colspan="1" class="text-right"> <button class="btn btn-secondary"
+            (click)="deleteSession($event, session)">Удалить</button>
         </td>
       </tr>
     </tbody>

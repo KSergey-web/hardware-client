@@ -40,7 +40,6 @@ export class SubgroupComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ subgroup }) => {
       this.subgroup = subgroup;
-      this.subgroup.users?.push(...this.subgroup.users);
     });
   }
 
