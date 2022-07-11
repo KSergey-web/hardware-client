@@ -14,7 +14,7 @@ import { ISubgroupFormProperties } from '../../managing-subgroups/subgroup-form/
   styleUrls: ['./edit-subgroup.component.scss'],
 })
 export class EditSubgroupComponent implements OnInit, OnDestroy {
-  @Input() subgroup?: ISubgroup;
+  @Input() subgroup!: ISubgroup;
   initValuesForForm?: ISubgroupFormProperties;
 
   constructor(
@@ -34,11 +34,9 @@ export class EditSubgroupComponent implements OnInit, OnDestroy {
   }
 
   private InitSubgroupForm() {
-    this.initValuesForForm = {};
+    this.initValuesForForm = { ...this.subgroup };
     this.initValuesForForm.acceptButtonText = 'Сохранить изменения';
-    this.initValuesForForm.creator = this.subgroup?.creator;
-    this.initValuesForForm.users = this.subgroup?.users;
-    this.initValuesForForm.name = this.subgroup?.name;
+    this.initValuesForForm.users = [...this.subgroup.users!];
   }
 
   onDissmis() {
