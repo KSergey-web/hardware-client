@@ -1,3 +1,9 @@
 .users-block {
   height: 300px;
 }
+
+.manage-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}

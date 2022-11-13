@@ -20,6 +20,7 @@ import { SessionFormByBookingComponent } from './session-form-by-booking/session
 import { SessionsInDateComponent } from './session-form-by-booking/sessions-in-date/sessions-in-date.component';
 import { SubgroupComponent } from './subgroup.component';
 import { SubgroupResolver } from './subgroup.resolver';
+import { AddUsersComponent } from './add-users/add-users.component';
 
 @NgModule({
   imports: [
@@ -45,6 +46,7 @@ import { SubgroupResolver } from './subgroup.resolver';
     SessionFormByBookingComponent,
     CreateSessionByBookingComponent,
     SessionsInDateComponent,
+    AddUsersComponent,
   ],
   providers: [SubgroupResolver],
 })

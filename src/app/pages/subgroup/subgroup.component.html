@@ -6,12 +6,14 @@
     <div class="row pt-3">
       <div class="col-6">
         <p>
-          Название подгруппы: {{subgroup?.name}} <br />
-          Создатель: {{subgroup?.creator | fio}} <br />
-          Число участников: {{subgroup?.users?.length}} <br />
+          Название подгруппы: {{subgroup.name}} <br />
+          Создатель: {{subgroup.creator | fio}} <br />
+          Число участников: {{subgroup.users?.length}} <br />
         </p>
-        <div>
+        <div class="manage-buttons">
           <button data-access-only="teacher" class="btn btn-secondary" (click)="editSubgroup()"> Редактировать</button>
+          <button data-access-only="teacher" class="btn btn-secondary" (click)="addUsersByGroupName()">Добавление
+            пользователей по группе</button>
         </div>
       </div>
       <div class="col-6 users-block">

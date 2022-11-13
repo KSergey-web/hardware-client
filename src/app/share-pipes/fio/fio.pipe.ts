@@ -5,8 +5,11 @@ import { IUser } from 'src/app/interfaces/user.interface';
   name: 'fio',
 })
 export class FioPipe implements PipeTransform {
-  transform(user?: IUser | null, args?: any): string {
+  transform(
+    user?: Pick<IUser, 'first_name' | 'last_name' | 'patronymic'> | null,
+    args?: any
+  ): string {
     if (!user) return `user ${user}`;
-    return user.first_name + ' ' + user.last_name + ' ' + user.patronymic;
+    return user.first_name + ' ' + user.last_name + ' ' + user?.patronymic;
   }
 }

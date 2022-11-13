@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ISubgroup } from 'src/app/interfaces/subgroup.interface';
 import { SubgroupService } from 'src/app/services/subgroup.service';
+import { AddUsersComponent } from './add-users/add-users.component';
 import { EditSubgroupComponent } from './edit-subgroup/edit-subgroup.component';
 @Component({
   selector: 'app-subgroup',
@@ -25,6 +26,16 @@ export class SubgroupComponent implements OnInit, OnDestroy {
     (modalRef.componentInstance as EditSubgroupComponent).subgroup =
       this.subgroup;
     modalRef.closed
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe(() => this.getSubgroup());
+  }
+
+  addUsersByGroupName() {
+    const modalRef = this.modalService.open(AddUsersComponent, {
+      size: 'xl',
+    });
+    (modalRef.componentInstance as AddUsersComponent).subgroup = this.subgroup;
+    modalRef.hidden
       .pipe(takeUntil(this.onDestroy$))
       .subscribe(() => this.getSubgroup());
   }

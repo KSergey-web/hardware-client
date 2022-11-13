@@ -65,7 +65,6 @@ export class CreateSessionByBookingComponent implements OnInit, OnDestroy {
       ...sessionDates,
       booking: this.booking.id,
     };
-    console.log(newSession);
     this.sessionService
       .signupForSession(newSession)
       .pipe(takeUntil(this.onDestroy$))
