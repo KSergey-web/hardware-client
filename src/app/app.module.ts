@@ -8,7 +8,7 @@ import { httpInterceptorProviders } from './http-interceptors.ts';
 import { MainPageModule } from './pages/main-page/main-page.module';
 import { SignInModule } from './pages/sign-in/sign-in.module';
 import { WaitingRoomModule } from './pages/waiting-room/waiting-room.module';
-import { API_URL } from './urls-tokens';
+import { API_AUTH_URL, API_URL } from './urls-tokens';
 import { CommonDialogBoxesModule } from './widgets/common-dialog-boxes/common-dialog-boxes.module';
 
 @NgModule({
@@ -27,6 +27,10 @@ import { CommonDialogBoxesModule } from './widgets/common-dialog-boxes/common-di
     {
       provide: API_URL,
       useValue: environment.serverAddres,
+    },
+    {
+      provide: API_AUTH_URL,
+      useValue: environment.authServerAddres,
     },
   ],
   bootstrap: [AppComponent],

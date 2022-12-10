@@ -29,7 +29,7 @@ export class SignInComponent implements OnInit, OnDestroy {
     private modalService: NgbModal
   ) {
     this.signInForm = formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required]],
       password: [
         '',
         [

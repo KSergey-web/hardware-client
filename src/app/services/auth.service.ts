@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { map, takeUntil, tap } from 'rxjs/operators';
 import { IUser } from '../interfaces/user.interface';
-import { API_URL } from '../urls-tokens';
+import { API_AUTH_URL, API_URL } from '../urls-tokens';
 
 @Injectable({
   providedIn: 'root',
@@ -44,6 +44,7 @@ export class AuthService implements OnDestroy {
   constructor(
     private http: HttpClient,
     @Inject(API_URL) private apiUrl: string,
+    @Inject(API_AUTH_URL) private apiAuthUrl: string,
     private router: Router
   ) {
     this.newCurrentUser();
@@ -62,10 +63,13 @@ export class AuthService implements OnDestroy {
 
   login({ email: identifier, password }: any): Observable<any> {
     return this.http
-      .post<{ user: IUser; jwt: string }>(`${this.apiUrl}/api/auth/local`, {
-        identifier,
-        password,
-      })
+      .post<{ user: IUser; jwt: string }>(
+        `${this.apiAuthUrl}/v1/api/auth/login`,
+        {
+          identifier,
+          password,
+        }
+      )
       .pipe(
         tap((res) => {
           this.setSession(res);
