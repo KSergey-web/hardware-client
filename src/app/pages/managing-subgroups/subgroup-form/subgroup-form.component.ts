@@ -43,11 +43,18 @@ export class SubgroupFormComponent implements OnInit, OnDestroy {
 
   private initForm(): void {
     this.subgroupForm = this.formBuilder.group({
-      name: ['', [Validators.minLength(2), Validators.maxLength(40)]],
+      name: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(40),
+        ],
+      ],
     });
   }
 
-  isNewSessionInvalid(): boolean {
+  isFormInvalid(): boolean {
     return this.subgroupForm.invalid;
   }
 

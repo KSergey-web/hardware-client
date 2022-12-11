@@ -43,6 +43,21 @@ export class SessionService {
       );
   }
 
+  getRemainingSessionsInDate(
+    date: string,
+    booking: number
+  ): Observable<{ count: number }> {
+    return this.http.get<{ count: number }>(
+      `${this.apiUrl}/api/sessions/remainig-sessions`,
+      {
+        params: {
+          bookingId: booking,
+          date: date,
+        },
+      }
+    );
+  }
+
   getSessionsByCurrentCreator(
     page: number = 1
   ): Observable<{ sessions: ISession[]; pagination?: PaginationInfo }> {

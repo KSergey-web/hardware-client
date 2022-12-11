@@ -8,5 +8,5 @@ export interface IBooking {
   begin: Date;
   end: Date;
   session_duration: number;
-  max_session_duration_per_day: number;
+  max_sessions_count_per_day: number;
 }

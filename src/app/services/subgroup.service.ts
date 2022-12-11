@@ -54,6 +54,7 @@ export class SubgroupService {
     const body: any = {
       data: { ...newSubgroup, creator: this.authService.currentUser!.id },
     };
+
     body.data.users = newSubgroup.users?.map((user) => user.id);
     return this.http.post<any>(`${this.apiUrl}/api/subgroups`, body);
   }

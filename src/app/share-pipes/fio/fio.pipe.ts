@@ -10,6 +10,7 @@ export class FioPipe implements PipeTransform {
     args?: any
   ): string {
     if (!user) return `user ${user}`;
-    return user.first_name + ' ' + user.last_name + ' ' + user?.patronymic;
+    const patronymic = user.patronymic ?? '';
+    return [user.first_name, user.last_name, user.patronymic].join(' ');
   }
 }

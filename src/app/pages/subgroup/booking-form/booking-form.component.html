@@ -1,9 +1,9 @@
-<form class="col" [formGroup]=bookingForm novalidate (ngSubmit)="submit()">
+<form class="col" [formGroup]="bookingForm" novalidate (ngSubmit)="submit()">
   <app-range-date-picker [(begin)]="begin" [(end)]="end"></app-range-date-picker>
   <div class="form-group col-6">
     <label for="equipment">Оборудование</label>
     <select class="form-control" id="equipment" name='equipment' formControlName="equipment">
-      <option *ngFor="let equipment of equipments; let i = index" [value]='i'>
+      <option *ngFor="let equipment of equipments" [value]='equipment.id'>
         {{equipment.name}}
       </option>
     </select>
@@ -14,9 +14,9 @@
       formControlName="session_duration" />
   </div>
   <div class="form-group col-6">
-    <label for="max_session_duration_per_day">Максимальная длительность сессий в день</label>
-    <input type="number" class="form-control" id="max_session_duration_per_day" name='max_session_duration_per_day'
-      formControlName="max_session_duration_per_day" />
+    <label for="max_sessions_count_per_day">Максимальное количество сессий в день</label>
+    <input type="number" class="form-control" id="max_sessions_count_per_day" name='max_sessions_count_per_day'
+      formControlName="max_sessions_count_per_day" />
   </div>
   <div class="text-center mt-2">
     <button class="btn btn-primary" type='submit' [disabled]="isBookingInvalid()">

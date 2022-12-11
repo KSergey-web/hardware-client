@@ -31,27 +31,18 @@ export class BookingFormComponent implements OnInit, OnDestroy {
   private getEquipments(): void {
     this.equipmentService
       .getEquipments()
-      .pipe(
-        tap(() => {
-          const equipmentId = this.initValuesForForm.equipmentId;
-          if (equipmentId) {
-            this.setEquipmentToFormById(equipmentId);
-          }
-        }),
-        takeUntil(this.onDestroy$)
-      )
+      .pipe(takeUntil(this.onDestroy$))
       .subscribe((equipments: IEquipment[]) => {
         this.equipments = equipments;
-        this.bookingForm.controls.equipment.setValue(0);
       });
   }
 
-  private setEquipmentToFormById(equipmentId: number): void {
-    const indEquip = this.equipments.findIndex(
-      (equipment) => equipment.id == equipmentId
-    );
-    this.bookingForm.controls.equipment.setValue(indEquip);
-  }
+  // private setEquipmentToFormById(equipmentId: number): void {
+  //   const indEquip = this.equipments.findIndex(
+  //     (equipment) => equipment.id == equipmentId
+  //   );
+  //   this.bookingForm.controls.equipment.setValue(indEquip);
+  // }
 
   private onDestroy$ = new Subject<boolean>();
 
@@ -82,12 +73,15 @@ export class BookingFormComponent implements OnInit, OnDestroy {
 
   private initForm(): void {
     this.bookingForm = this.formBuilder.group({
-      session_duration: [30, [Validators.min(30), Validators.max(240)]],
-      max_session_duration_per_day: [
+      session_duration: [
         30,
-        [Validators.min(30), Validators.max(600)],
+        [Validators.required, Validators.min(30), Validators.max(240)],
       ],
-      equipment: [0],
+      max_sessions_count_per_day: [
+        1,
+        [Validators.required, Validators.min(1), Validators.max(30)],
+      ],
+      equipment: [null, Validators.required],
     });
   }
 
@@ -96,25 +90,28 @@ export class BookingFormComponent implements OnInit, OnDestroy {
   }
 
   getDataFromForm(): INewBooking {
-    const indEq: number = this.bookingForm.controls.equipment.value;
     return {
       begin: this.begin,
       end: this.end,
       subgroup: this.subgroupId,
-      equipment: this.equipments[indEq].id,
+      equipment: this.bookingForm.controls.equipment.value,
       session_duration: this.bookingForm.controls.session_duration.value,
-      max_session_duration_per_day:
-        this.bookingForm.controls.max_session_duration_per_day.value,
+      max_sessions_count_per_day:
+        this.bookingForm.controls.max_sessions_count_per_day.value,
     };
   }
 
   setInitValuesToForm() {
-    this.bookingForm.controls.max_session_duration_per_day.setValue(
-      this.initValuesForForm!.max_session_duration_per_day
+    this.bookingForm.controls.max_sessions_count_per_day.setValue(
+      this.initValuesForForm!.max_sessions_count_per_day
     );
     this.bookingForm.controls.session_duration.setValue(
       this.initValuesForForm!.session_duration
     );
+    if (this.initValuesForForm.equipmentId)
+      this.bookingForm.controls.equipment.setValue(
+        this.initValuesForForm.equipmentId
+      );
     this.acceptButtonText = this.initValuesForForm.acceptButtonText ?? '';
     this.begin = this.initValuesForForm.begin;
     this.end = this.initValuesForForm.end;

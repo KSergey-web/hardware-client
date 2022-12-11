@@ -46,8 +46,8 @@ export class EditBookingComponent implements OnInit, OnDestroy {
     this.initValuesForForm.begin = this.booking.begin;
     this.initValuesForForm.end = this.booking.end;
     this.initValuesForForm.equipmentId = this.booking.equipment?.id;
-    this.initValuesForForm.max_session_duration_per_day =
-      this.booking.max_session_duration_per_day;
+    this.initValuesForForm.max_sessions_count_per_day =
+      this.booking.max_sessions_count_per_day;
     this.initValuesForForm.session_duration = this.booking.session_duration;
   }
 

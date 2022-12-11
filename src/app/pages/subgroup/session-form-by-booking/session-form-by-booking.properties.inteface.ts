@@ -7,4 +7,5 @@ export interface ISessionFormByBookingProperties {
   booking_end?: Date;
   session_duration?: number;
   max_session_duration_per_day?: number;
+  bookingId: number;
 }

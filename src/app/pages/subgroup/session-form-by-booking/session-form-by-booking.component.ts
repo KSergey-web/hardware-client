@@ -13,7 +13,9 @@ import {
   NgbDate,
   NgbDateStruct,
 } from '@ng-bootstrap/ng-bootstrap';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { take } from 'rxjs/operators';
+import { SessionService } from 'src/app/services/session.service';
 import { ISessionDates } from './session-dates.interface';
 import { ISessionFormByBookingProperties } from './session-form-by-booking.properties.inteface';
 
@@ -31,6 +33,8 @@ export class SessionFormByBookingComponent implements OnInit, OnDestroy {
   session_duration?: number;
   session_end?: Date;
   session_begin?: Date;
+
+  private bookingId!: number;
 
   setMaxDate(booking_end: Date) {
     this.maxDateNgb = new NgbDate(
@@ -53,7 +57,8 @@ export class SessionFormByBookingComponent implements OnInit, OnDestroy {
   constructor(
     private formBuilder: FormBuilder,
     private calendar: NgbCalendar,
-    private cb: ChangeDetectorRef
+    private cb: ChangeDetectorRef,
+    private sessionService: SessionService
   ) {
     this.initForm();
   }
@@ -65,40 +70,55 @@ export class SessionFormByBookingComponent implements OnInit, OnDestroy {
 
   private initForm(): void {
     this.sessionForm = this.formBuilder.group({
-      time: [{ minute: 0, hour: 0 }],
+      time: [],
     });
   }
 
   subOnChangesTime() {
     this.sessionForm.controls.time.valueChanges.subscribe((time) => {
-      if (!this.selectedDate) return;
-      const { hour: h, minute: m } = time;
-      this.session_begin = new Date(this.selectedDate);
-      this.session_begin.setHours(h);
-      this.session_begin.setMinutes(m);
-      this.session_end = new Date(
-        +this.session_begin + this.session_duration! * 1000 * 60
-      );
+      this.updateSessionDates();
     });
+  }
+
+  updateSessionDates() {
+    const time = this.sessionForm.controls.time.value;
+    if (!this.selectedDate || !time) return;
+    const { hour: h, minute: m } = time;
+    this.session_begin = new Date(this.selectedDate);
+    this.session_begin.setHours(h);
+    this.session_begin.setMinutes(m);
+    this.session_end = new Date(
+      +this.session_begin + this.session_duration! * 1000 * 60
+    );
   }
 
   onSelectDate($date: NgbDateStruct) {
     this.selectedDate = new Date($date.year, $date.month - 1, $date.day);
+    this.updateSessionDates();
+    this.getRemainingSessionsCountInDay();
     this.cb.detectChanges();
   }
 
-  getBeginAndEndFromForm(): { begin: Date; end: Date } | null {
-    if (!this.selectedDate || !this.session_end) return null;
-    return { begin: this.session_begin!, end: this.session_end };
+  remainingCount$ = new BehaviorSubject<number>(0);
+
+  getRemainingSessionsCountInDay() {
+    this.sessionService
+      .getRemainingSessionsInDate(this.selectedDate!.toJSON(), this.bookingId)
+      .pipe(take(1))
+      .subscribe(({ count }) => {
+        this.remainingCount$.next(count);
+      });
   }
 
-  calculateEnd() {
-    const time = this.sessionForm.controls.time.value;
+  getBeginAndEndFromForm(): { begin: Date } | null {
+    if (!this.selectedDate || !this.session_end) return null;
+    return { begin: this.session_begin! };
   }
 
   setInitValuesToForm() {
     this.acceptButtonText = this.initValuesForForm.acceptButtonText ?? '';
     this.session_duration = this.initValuesForForm.session_duration;
+    this.bookingId = this.initValuesForForm.bookingId;
     this.setMaxDate(this.initValuesForForm.booking_end!);
   }
 

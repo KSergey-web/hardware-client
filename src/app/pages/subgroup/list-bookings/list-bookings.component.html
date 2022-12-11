@@ -11,7 +11,7 @@
         <th scope="col">с</th>
         <th scope="col">до</th>
         <th scope="col">Длительность сеанса (мин)</th>
-        <th scope="col">Сумма сеансов в день (мин)</th>
+        <th scope="col">Количество сеансов в день</th>
         <th></th>
       </tr>
     </thead>
@@ -25,7 +25,7 @@
         <td> {{booking.begin | date:'dd.MM.YYYY HH:mm'}}</td>
         <td> {{booking.end | date:'dd.MM.YYYY HH:mm'}}</td>
         <td> {{booking.session_duration}}</td>
-        <td> {{booking.max_session_duration_per_day}}</td>
+        <td> {{booking.max_sessions_count_per_day}}</td>
         <td colspan="1"> <button class="btn btn-secondary" data-access-only="teacher" (click)="editBooking(booking)">
             Редактировать</button></td>
         <td colspan="1"> <button class="btn btn-secondary" data-access-only="authenticated"

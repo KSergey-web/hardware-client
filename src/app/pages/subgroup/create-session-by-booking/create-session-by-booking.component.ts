@@ -40,14 +40,16 @@ export class CreateSessionByBookingComponent implements OnInit, OnDestroy {
   }
 
   private InitSessionForm() {
-    this.initValuesForForm = {};
+    this.initValuesForForm = {
+      bookingId: this.booking.id,
+    };
     this.initValuesForForm.acceptButtonText = 'Создать';
     this.initValuesForForm.equipment = this.booking.equipment;
     this.initValuesForForm.booking_begin = this.booking.begin;
     this.initValuesForForm.booking_end = this.booking.end;
     this.initValuesForForm.session_duration = this.booking.session_duration;
     this.initValuesForForm.max_session_duration_per_day =
-      this.booking.max_session_duration_per_day;
+      this.booking.max_sessions_count_per_day;
   }
 
   SomeError(err: HttpErrorResponse) {
