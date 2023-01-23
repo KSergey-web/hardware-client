@@ -19,7 +19,6 @@ export class EquipmentHandlerService {
 
   getDefaultError() {
     return (err: Error) => {
-      alert(err.message);
       console.error(err);
       this.logToConsole(JSON.stringify(err));
     };
