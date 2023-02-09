@@ -4,10 +4,12 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IBooking } from 'src/app/interfaces/booking.interface';
+import { DateFormatter } from 'src/app/services/date-formatter.service';
 import { SessionService } from 'src/app/services/session.service';
 import { CommonModalDialogBoxBuilder } from 'src/app/widgets/common-dialog-boxes/common-modal-dialog-box-builder.class';
 import { ISessionDates } from '../session-form-by-booking/session-dates.interface';
 import { ISessionFormByBookingProperties } from '../session-form-by-booking/session-form-by-booking.properties.inteface';
+import { BusyErrorDto } from './busy.dto-error';
 import { INewSession } from './new-session.interface';
 
 @Component({
@@ -22,7 +24,8 @@ export class CreateSessionByBookingComponent implements OnInit, OnDestroy {
   constructor(
     private sessionService: SessionService,
     private activeModal: NgbActiveModal,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private dateFormatter: DateFormatter
   ) {}
   ngOnInit(): void {
     this.InitSessionForm();
@@ -74,15 +77,38 @@ export class CreateSessionByBookingComponent implements OnInit, OnDestroy {
         next: (res) => this.activeModal.close(res),
         error: (err: HttpErrorResponse) => {
           console.error(err);
-          const bulder = new CommonModalDialogBoxBuilder(this.modalService);
-          bulder
-            .addHeader('Ошибка')
-            .addText(
-              `Не удалось создать бронь. Статус ${err.status}. ${err.message}`
-            )
-            .setDangerStyle()
-            .openAlertModal();
+          if (err.status === 400) {
+            this.createBusyErrorAlert(err as any);
+            return;
+          }
+          this.showDefaultError(err);
         },
       });
+  }
+
+  showDefaultError(err: HttpErrorResponse) {
+    const bulder = new CommonModalDialogBoxBuilder(this.modalService);
+    bulder
+      .addHeader('Ошибка')
+      .addText(`Не удалось создать бронь.`)
+      .setDangerStyle()
+      .openAlertModal();
+  }
+
+  createBusyErrorAlert(busyError: BusyErrorDto) {
+    const { begin: sessionBegin, end: sessionEnd } =
+      busyError.error.error.details.busy;
+    const bulder = new CommonModalDialogBoxBuilder(this.modalService);
+    bulder
+      .addHeader('Не удалось создать бронь')
+      .addText(
+        `Уже существует сессия, которая начинается в ${this.dateFormatter.getFormattedDateTime(
+          sessionBegin
+        )} и заканчивается в ${this.dateFormatter.getFormattedDateTime(
+          sessionEnd
+        )}`
+      )
+      .setDangerStyle()
+      .openAlertModal();
   }
 }
