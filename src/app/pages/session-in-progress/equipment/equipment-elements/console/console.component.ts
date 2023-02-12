@@ -44,8 +44,10 @@ export class ConsoleComponent implements OnInit, OnDestroy {
 
   private logToConsole(log: string) {
     this.logs.push(log);
-    this.console!.nativeElement.scrollTop =
-      this.console!.nativeElement.scrollHeight;
+    setTimeout(() => {
+      this.console!.nativeElement.scrollTop =
+        this.console!.nativeElement.scrollHeight;
+    });
   }
 
   subOnOutput() {
