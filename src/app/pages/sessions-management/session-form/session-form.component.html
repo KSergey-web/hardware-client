@@ -1,28 +1,34 @@
 <div class="container">
-    <form [formGroup]=sessionForm novalidate (ngSubmit)="submit()">
+    <form [formGroup]="sessionForm" novalidate (ngSubmit)="submit()">
         <div class="form-group">
             <label for="equipment">Оборудование</label>
-            <select class="form-control" id="equipment" name='equipment' formControlName="equipment">
+            <select class="form-select" id="equipment" name='equipment'  [formControl]="sessionForm.controls.equipment" >
                 <option *ngFor="let equipment of equipments; let i = index" [value]='i'>
                     {{equipment.name}}
                 </option>
             </select>
         </div>
         <form [formGroup]="radioGroupForm">
-            <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" formControlName="mode">
-                <label ngbButtonLabel class="btn-primary mr-1">
-                    <input ngbButton type="radio" value="student"> Записать студента
+            <div class="btn-group btn-group-toggle" name="radioBasic" >
+              <div class="form-check-inline">
+                <input  id="student"  class="btn-check" type="radio" value="student" [formControl]="radioGroupForm.controls.mode">
+                <label class="btn btn-primary" for="student">
+                     Записать студента
                 </label>
-                <label ngbButtonLabel class="btn-primary">
-                    <input ngbButton type="radio" value="myself"> Записать себя
+              </div>
+              <div class=" form-check-inline">
+                <input  class="btn-check" type="radio"  id="myself" value="myself" [formControl]="radioGroupForm.controls.mode">
+                <label class="btn btn-primary" for="myself">
+                    Записать себя
                 </label>
+              </div>
             </div>
         </form>
         <hr>
-        <div *ngIf="radioGroupForm.value['mode']=='student'">
+        <div *ngIf="radioGroupForm.value.mode=='student'">
             <div class="form-group">
                 <label for="group">Группа</label>
-                <select class="form-control" id="group" name='group' formControlName="group">
+                <select class="form-select" id="group" name='group' [formControl]="sessionForm.controls.group">
                     <option [value]="-1" disabled selected>
                         Выберите группу
                     </option>
@@ -33,7 +39,7 @@
             </div>
             <div class="form-group">
                 <label for="student">Студент</label>
-                <select class="form-control"  id="student" name="student" formControlName="student">
+                <select class="form-select"  id="student" name="student" [formControl]="sessionForm.controls.student" >
                     <option [value]="-1" disabled selected>
                         Выберите студента
                     </option>

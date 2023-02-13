@@ -11,6 +11,7 @@ import { Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { IEquipment } from 'src/app/interfaces/equipment.interface';
 import { IGroup } from 'src/app/interfaces/group.interface';
+import { IForm } from 'src/app/interfaces/IForm';
 import { ISession } from 'src/app/interfaces/session.interface';
 import { IStudent } from 'src/app/interfaces/student.interface';
 import { AuthService } from 'src/app/services/auth.service';
@@ -26,8 +27,12 @@ import { INewSession } from '../../subgroup/create-session-by-booking/new-sessio
   styleUrls: ['./session-form.component.scss'],
 })
 export class SessionFormComponent implements OnInit, OnDestroy {
-  sessionForm!: FormGroup;
-  radioGroupForm!: FormGroup;
+  sessionForm!: FormGroup<
+    IForm<{ equipment: number; group: number; student: number }>
+  >;
+  radioGroupForm = this.formBuilder.group({
+    mode: ['myself'],
+  });
   equipments: IEquipment[] = [];
   groups: IGroup[] = [];
   students: IStudent[] = [];
@@ -87,13 +92,10 @@ export class SessionFormComponent implements OnInit, OnDestroy {
   }
 
   private initForm(): void {
-    this.sessionForm = this.formBuilder.group({
+    this.sessionForm = this.formBuilder.nonNullable.group({
       equipment: [0],
       group: [-1, [Validators.min(0)]],
       student: [-1, [Validators.min(0)]],
-    });
-    this.radioGroupForm = this.formBuilder.group({
-      mode: ['myself'],
     });
     this.createSubOnChangeGroup();
     this.initEquipmentChanged$();

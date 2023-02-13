@@ -1,4 +1,4 @@
-<nav responsive class="navbar navbar-dark bg-dark navbar-expand-lg">
+<nav responsive class="navbar navbar-dark bg-dark navbar-expand-lg py-3">
   <a class="navbar-brand" href="#">
     <img src="../../assets/logo_sfu.png" width="30" height="30" alt="">
   </a>
@@ -6,7 +6,7 @@
     aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <div class="collapse navbar-collapse" id="navbarMenu">
+  <div class="collapse navbar-collapse justify-content-between" id="navbarMenu">
     <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
       <li *ngIf="isTeacher()" class="nav-item">
         <a class="nav-link" routerLink="/main-page/manage-sessions" routerLinkActive="active">Управление сессиями</a>
@@ -25,14 +25,14 @@
         <a class="nav-link" routerLink="/main-page/my-subgroups" routerLinkActive="active">Мои подгруппы</a>
       </li>
     </ul>
-    <div *ngIf='currentUser' class="my-2 my-lg-0">
+    <div class="d-flex align-items-center" *ngIf='currentUser'>
       <div class="navbar-text text-white">
         {{currentUser?.first_name}}
         {{currentUser?.last_name}}
         {{currentUser?.patronymic}}
       </div>
-      <div class="navbar-text ">
-        <button type="button" class="btn" (click)="openLogout()"> <img src="../../assets/logout.png"
+      <div>
+        <button type="button" class="btn" (click)="openLogout()"> <img  width="30" height="30"  src="/assets/logout-svgrepo-com.svg"
             alt="Выйти"></button>
       </div>
     </div>

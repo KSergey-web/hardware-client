@@ -1,7 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
 /* Importing Bootstrap SCSS file. */
-@import "~bootstrap/scss/bootstrap";
+@import 'bootstrap/scss/bootstrap';
 
 input.ng-touched.ng-invalid {
   border: solid red 2px;
@@ -16,6 +16,7 @@ body {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
+  --sfu-primary-color: #e73e11;
 }
 
 .container {
@@ -39,4 +40,13 @@ h2 {
 
 .wrapper {
   overflow: hidden;
+}
+
+.form-group {
+  padding-bottom: 16px;
+}
+
+.container {
+  padding-top: 16px;
+  padding-bottom: 16px;
 }

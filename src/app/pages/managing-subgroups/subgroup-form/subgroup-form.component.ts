@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
+import { IForm } from 'src/app/interfaces/IForm';
 import { IUser } from 'src/app/interfaces/user.interface';
 import { INewSubgroup } from '../interfaces/new-subgroup.interface';
 import { ISubgroupFormProperties } from './subgroup-form-properties.inteface';
@@ -18,7 +19,7 @@ import { ISubgroupFormProperties } from './subgroup-form-properties.inteface';
   styleUrls: ['./subgroup-form.component.scss'],
 })
 export class SubgroupFormComponent implements OnInit, OnDestroy {
-  subgroupForm!: FormGroup;
+  subgroupForm!: FormGroup<IForm<{ name: string }>>;
   users: IUser[] = [];
   acceptButtonText = 'Ок';
   creator?: IUser;
@@ -42,7 +43,7 @@ export class SubgroupFormComponent implements OnInit, OnDestroy {
   }
 
   private initForm(): void {
-    this.subgroupForm = this.formBuilder.group({
+    this.subgroupForm = this.formBuilder.nonNullable.group({
       name: [
         '',
         [
@@ -66,7 +67,9 @@ export class SubgroupFormComponent implements OnInit, OnDestroy {
   }
 
   setInitValuesToForm() {
-    this.subgroupForm.controls.name.setValue(this.initValuesForForm!.name);
+    this.subgroupForm.controls.name.setValue(
+      this.initValuesForForm!.name ?? ''
+    );
     this.users = this.initValuesForForm.users ?? [];
     this.acceptButtonText = this.initValuesForForm.acceptButtonText ?? '';
     this.creator = this.initValuesForForm.creator;

@@ -6,7 +6,7 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 import { IEquipment } from 'src/app/interfaces/equipment.interface';
@@ -22,7 +22,7 @@ import { IBookingFormProperties } from './subgroup-form-properties.inteface';
 export class BookingFormComponent implements OnInit, OnDestroy {
   @Input() subgroupId!: number;
 
-  bookingForm!: FormGroup;
+  bookingForm!: UntypedFormGroup;
   acceptButtonText = 'Ок';
   begin?: Date;
   end?: Date;
@@ -56,7 +56,7 @@ export class BookingFormComponent implements OnInit, OnDestroy {
   @Output() onDismiss = new EventEmitter<any>();
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private equipmentService: EquipmentService
   ) {
     this.initForm();

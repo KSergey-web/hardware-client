@@ -7,7 +7,7 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import {
   NgbCalendar,
   NgbDate,
@@ -25,7 +25,7 @@ import { ISessionFormByBookingProperties } from './session-form-by-booking.prope
   styleUrls: ['./session-form-by-booking.component.scss'],
 })
 export class SessionFormByBookingComponent implements OnInit, OnDestroy {
-  sessionForm!: FormGroup;
+  sessionForm!: UntypedFormGroup;
   acceptButtonText = 'Ок';
   maxDateNgb?: NgbDate;
   todayNgb = this.calendar.getToday();
@@ -55,7 +55,7 @@ export class SessionFormByBookingComponent implements OnInit, OnDestroy {
   @Output() onSubmit = new EventEmitter<ISessionDates>();
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private calendar: NgbCalendar,
     private cb: ChangeDetectorRef,
     private sessionService: SessionService

@@ -6,7 +6,7 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { NgbCalendar, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -20,7 +20,7 @@ import { SessionService } from 'src/app/services/session.service';
   styleUrls: ['./session-date-form.component.scss'],
 })
 export class SessionDateFormComponent implements OnInit, OnDestroy {
-  sessionDateForm!: FormGroup;
+  sessionDateForm!: UntypedFormGroup;
   selectedDate?: Date;
   sessions: ISession[] = [];
   selectedEquipment?: IEquipment;
@@ -34,7 +34,7 @@ export class SessionDateFormComponent implements OnInit, OnDestroy {
   @Output() onSelectedDates = new EventEmitter<{ begin: Date; end: Date }>();
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private sessionService: SessionService,
     private ngbCalendar: NgbCalendar
   ) {

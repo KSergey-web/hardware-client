@@ -3,9 +3,9 @@ import { FormControl } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { EquipmentSocketService } from '../../communication-services/equipment-socket-service';
-import { EquipmentHandlerService } from '../equipment-handler.service';
-import { I_RESISTOR_INTERACTION_SERVICE } from '../equipment-elements-tokens';
 import { IResistorInteraction } from '../../interfaces/interactions-with-controls/resistor-interaction.interface';
+import { I_RESISTOR_INTERACTION_SERVICE } from '../equipment-elements-tokens';
+import { EquipmentHandlerService } from '../equipment-handler.service';
 import { IResistorManagement } from './resistor-management.interface';
 
 @Component({
@@ -34,7 +34,7 @@ export class ResistorComponent implements OnInit, OnDestroy {
 
   @Input() resistorManagment!: IResistorManagement;
 
-  resistorControl = new FormControl();
+  resistorControl = new FormControl<number>(0, { nonNullable: true });
 
   private onDestroy$ = new Subject<boolean>();
 

@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
-  NgbButtonsModule,
   NgbCollapseModule,
   NgbDatepickerModule,
   NgbPaginationModule,
@@ -19,7 +18,6 @@ import { SessionsManagementComponent } from './sessions-management.component';
   imports: [
     NgbTimepickerModule,
     NgbDatepickerModule,
-    NgbButtonsModule,
     FormsModule,
     ReactiveFormsModule,
     NgbPaginationModule,

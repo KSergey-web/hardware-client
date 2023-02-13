@@ -7,13 +7,13 @@ import {
   OnInit,
   TemplateRef,
 } from '@angular/core';
-import { FormArray, FormBuilder } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { EquipmentSocketService } from '../../communication-services/equipment-socket-service';
-import { EquipmentHandlerService } from '../equipment-handler.service';
-import { I_SWITCH_INTERACTION_SERVICE } from '../equipment-elements-tokens';
 import { ISwitchInteraction } from '../../interfaces/interactions-with-controls/switch-interaction.interface';
+import { I_SWITCH_INTERACTION_SERVICE } from '../equipment-elements-tokens';
+import { EquipmentHandlerService } from '../equipment-handler.service';
 import { ISwitchesManagement } from './switches-management.interface';
 
 @Component({
@@ -30,10 +30,10 @@ export class SwitchesComponent implements OnInit, OnDestroy {
   }
 
   form = this.fb.group({
-    switches: this.fb.array([]),
+    switches: this.fb.array<FormControl<boolean>>([]),
   });
-  get switches(): FormArray {
-    return this.form.controls['switches'] as FormArray;
+  get switches(): FormArray<FormControl<boolean>> {
+    return this.form.controls.switches;
   }
   constructor(
     @Inject(I_SWITCH_INTERACTION_SERVICE)
@@ -59,7 +59,7 @@ export class SwitchesComponent implements OnInit, OnDestroy {
 
   createSwitches() {
     for (let i = 0; i < this.numberOfSwitches; ++i) {
-      this.switches.push(this.fb.control(false));
+      this.switches.push(this.fb.nonNullable.control(false));
     }
   }
 

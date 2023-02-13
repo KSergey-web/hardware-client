@@ -34,6 +34,7 @@ export class AddUserComponent implements OnInit, OnDestroy {
   isAddUserCollapsed = true;
 
   fio = new FormControl('', {
+    nonNullable: true,
     validators: [Validators.maxLength(40), Validators.minLength(1)],
   });
 

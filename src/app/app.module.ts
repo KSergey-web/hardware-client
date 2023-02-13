@@ -10,6 +10,7 @@ import { SignInModule } from './pages/sign-in/sign-in.module';
 import { WaitingRoomModule } from './pages/waiting-room/waiting-room.module';
 import { API_AUTH_URL, API_URL } from './urls-tokens';
 import { CommonDialogBoxesModule } from './widgets/common-dialog-boxes/common-dialog-boxes.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [AppComponent],
@@ -21,6 +22,7 @@ import { CommonDialogBoxesModule } from './widgets/common-dialog-boxes/common-di
     AppRoutingModule,
     HttpClientModule,
     CommonDialogBoxesModule,
+    NgbModule,
   ],
   providers: [
     httpInterceptorProviders,

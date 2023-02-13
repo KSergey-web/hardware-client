@@ -6,7 +6,7 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { of, Subject } from 'rxjs';
 import {
@@ -55,7 +55,7 @@ export class AddUsersComponent implements OnInit, OnDestroy {
 
   @Output() onAddUser = new EventEmitter<IUser>();
 
-  groupName = new FormControl('', {
+  groupName = new UntypedFormControl('', {
     validators: [Validators.maxLength(40), Validators.minLength(1)],
   });
 

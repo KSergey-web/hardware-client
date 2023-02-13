@@ -4,9 +4,9 @@
       [max]="resistorManagment.maxValue" [value]="resistorManagment.minValue" name="range"
       [formControl]="resistorControl" />
   </div>
-  <div class="row px-4">
-    <p class="col-xs-1">min</p>
-    <p class="col text-center">Значение: {{resistorControl.value}}</p>
-    <p class="col-xs-1">max</p>
+  <div class="d-flex justify-content-between">
+    <p>min</p>
+    <p>Значение: {{resistorControl.value}}</p>
+    <p>max</p>
   </div>
 </ng-container>
