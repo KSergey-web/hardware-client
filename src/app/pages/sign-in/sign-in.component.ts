@@ -43,7 +43,7 @@ export class SignInComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.authService.isLoggedIn()) {
-      this.router.navigate(['']);
+      this.router.navigate(['/main-page']);
     }
   }
 
@@ -53,7 +53,7 @@ export class SignInComponent implements OnInit, OnDestroy {
       .login(val)
       .pipe(takeUntil(this.onDestroy$))
       .subscribe(() => {
-        this.router.navigate(['']);
+        this.router.navigate(['/main-page']);
       }, this.errorResponseHandler.bind(this));
   }
 

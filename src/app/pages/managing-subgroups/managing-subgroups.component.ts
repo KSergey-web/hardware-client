@@ -29,7 +29,7 @@ export class ManagingSubgroupsComponent implements OnInit {
   }
 
   toSubgroup(subgroup: ISubgroup) {
-    this.router.navigate([`main-page/subgroup/${subgroup.id}`]);
+    this.router.navigate([`/main-page/subgroup/${subgroup.id}`]);
   }
 
   createSubgroup() {

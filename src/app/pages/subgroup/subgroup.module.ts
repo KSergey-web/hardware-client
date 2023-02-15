@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule, Routes } from '@angular/router';
 import {
   NgbDatepickerModule,
   NgbModalModule,
@@ -8,6 +9,7 @@ import {
 } from '@ng-bootstrap/ng-bootstrap';
 import { SharePipesModule } from 'src/app/share-pipes/share-pipes.module';
 import { ManagingSubgroupsModule } from '../managing-subgroups/managing-subgroups.module';
+import { AddUsersComponent } from './add-users/add-users.component';
 import { BookingFormComponent } from './booking-form/booking-form.component';
 import { RangeDatePickerComponent } from './booking-form/range-date-picker/range-date-picker.component';
 import { CreateBookingComponent } from './create-booking/create-booking.component';
@@ -20,7 +22,14 @@ import { SessionFormByBookingComponent } from './session-form-by-booking/session
 import { SessionsInDateComponent } from './session-form-by-booking/sessions-in-date/sessions-in-date.component';
 import { SubgroupComponent } from './subgroup.component';
 import { SubgroupResolver } from './subgroup.resolver';
-import { AddUsersComponent } from './add-users/add-users.component';
+
+const routes: Routes = [
+  {
+    path: ':id',
+    component: SubgroupComponent,
+    resolve: { subgroup: SubgroupResolver },
+  },
+];
 
 @NgModule({
   imports: [
@@ -32,8 +41,9 @@ import { AddUsersComponent } from './add-users/add-users.component';
     SharePipesModule,
     NgbDatepickerModule,
     NgbTimepickerModule,
+    RouterModule.forChild(routes),
   ],
-  exports: [],
+  exports: [SubgroupComponent],
   declarations: [
     SubgroupComponent,
     EditSubgroupComponent,
@@ -48,6 +58,5 @@ import { AddUsersComponent } from './add-users/add-users.component';
     SessionsInDateComponent,
     AddUsersComponent,
   ],
-  providers: [SubgroupResolver],
 })
 export class SubgroupModule {}

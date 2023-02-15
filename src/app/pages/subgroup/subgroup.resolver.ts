@@ -15,7 +15,7 @@ import { CommonModalDialogBoxBuilder } from 'src/app/widgets/common-dialog-boxes
 import { AuthService } from 'src/app/services/auth.service';
 import { roleUserEnum } from 'src/app/enums/role-user.enum';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class SubgroupResolver implements Resolve<ISubgroup> {
   constructor(
     private subgroupService: SubgroupService,

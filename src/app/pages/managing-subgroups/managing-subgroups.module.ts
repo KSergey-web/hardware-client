@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule, Routes } from '@angular/router';
 import {
   NgbCollapseModule,
   NgbDatepickerModule,
@@ -12,6 +13,13 @@ import { CreateSubgroupComponent } from './create-subgroup/create-subgroup.compo
 import { ManagingSubgroupsComponent } from './managing-subgroups.component';
 import { AddUserComponent } from './subgroup-form/add-user/add-user.component';
 import { SubgroupFormComponent } from './subgroup-form/subgroup-form.component';
+
+const routes: Routes = [
+  {
+    path: '',
+    component: ManagingSubgroupsComponent,
+  },
+];
 
 @NgModule({
   declarations: [
@@ -29,7 +37,8 @@ import { SubgroupFormComponent } from './subgroup-form/subgroup-form.component';
     NgbCollapseModule,
     SharePipesModule,
     NgbDatepickerModule,
+    RouterModule.forChild(routes),
   ],
-  exports: [SubgroupFormComponent],
+  exports: [SubgroupFormComponent, ManagingSubgroupsComponent],
 })
 export class ManagingSubgroupsModule {}

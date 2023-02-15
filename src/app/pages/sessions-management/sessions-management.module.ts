@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule, Routes } from '@angular/router';
 import {
   NgbCollapseModule,
   NgbDatepickerModule,
@@ -14,6 +15,14 @@ import { SessionDateFormComponent } from './session-form/session-date-form/sessi
 import { SessionFormComponent } from './session-form/session-form.component';
 import { SessionsManagementComponent } from './sessions-management.component';
 
+const routes: Routes = [
+  {
+    path: '',
+    component: SessionsManagementComponent,
+  },
+];
+
+
 @NgModule({
   imports: [
     NgbTimepickerModule,
@@ -24,6 +33,7 @@ import { SessionsManagementComponent } from './sessions-management.component';
     SharePipesModule,
     CommonModule,
     NgbCollapseModule,
+    RouterModule.forChild(routes),
   ],
   declarations: [
     SessionsManagementComponent,
@@ -32,6 +42,7 @@ import { SessionsManagementComponent } from './sessions-management.component';
     EditSessionComponent,
     SessionDateFormComponent,
   ],
+  exports: [SessionsManagementComponent],
   providers: [],
 })
 export class SessionsManagementModule {}

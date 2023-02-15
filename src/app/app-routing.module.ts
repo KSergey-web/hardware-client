@@ -3,49 +3,53 @@ import { RouterModule, Routes } from '@angular/router';
 import { CheckAuthChildGuard } from './guards/check-auth-child.guard';
 import { CheckAuthGuard } from './guards/check-auth.guard';
 import { CheckTeacherGuard } from './guards/check-teacher.guard';
-import { ExitSessionInProgressGuard } from './guards/exit-session-in-progress.guard';
-import { SessionInProgressGuard } from './guards/session-in-progress.guard';
-import { FindSessionsComponent } from './pages/find-sessions/find-sessions.component';
 import { MainPageComponent } from './pages/main-page/main-page.component';
-import { ManagingSubgroupsComponent } from './pages/managing-subgroups/managing-subgroups.component';
-import { SessionInProgressComponent } from './pages/session-in-progress/session-in-progress.component';
-import { SessionsManagementComponent } from './pages/sessions-management/sessions-management.component';
-import { SessionsOfCurrentUserComponent } from './pages/sessions-of-current-user/sessions-of-current-user.component';
-import { SignInComponent } from './pages/sign-in/sign-in.component';
-import { SubgroupComponent } from './pages/subgroup/subgroup.component';
-import { SubgroupResolver } from './pages/subgroup/subgroup.resolver';
-import { SubgroupsCurrentUserComponent } from './pages/subgroups-current-user/subgroups-current-user.component';
-import { WaitingRoomComponent } from './pages/waiting-room/waiting-room.component';
 
 // определение дочерних маршрутов
 const mainPageRoutes: Routes = [
   {
     path: 'my-sessions',
-    component: SessionsOfCurrentUserComponent,
+    loadChildren: () =>
+      import(
+        './pages/sessions-of-current-user/sessions-of-current-user.module'
+      ).then((m) => m.SessionsOfCurrentUserModule),
   },
   {
     path: 'find-sessions',
-    component: FindSessionsComponent,
-    canActivate: [CheckTeacherGuard],
+    loadChildren: () =>
+      import('./pages/find-sessions/find-sessions.module').then(
+        (m) => m.FindSessionsModule
+      ),
+    canMatch: [CheckTeacherGuard],
   },
   {
     path: 'manage-sessions',
-    component: SessionsManagementComponent,
-    canActivate: [CheckTeacherGuard],
+    loadChildren: () =>
+      import('./pages/sessions-management/sessions-management.module').then(
+        (m) => m.SessionsManagementModule
+      ),
+    canMatch: [CheckTeacherGuard],
   },
   {
     path: 'managing-subgroups',
-    component: ManagingSubgroupsComponent,
-    canActivate: [CheckTeacherGuard],
+    loadChildren: () =>
+      import('./pages/managing-subgroups/managing-subgroups.module').then(
+        (m) => m.ManagingSubgroupsModule
+      ),
+    canMatch: [CheckTeacherGuard],
   },
+
   {
     path: 'my-subgroups',
-    component: SubgroupsCurrentUserComponent,
+    loadChildren: () =>
+      import(
+        './pages/subgroups-current-user/subgroups-current-user.module'
+      ).then((m) => m.SubgroupsCurrentUserModule),
   },
   {
-    path: 'subgroup/:id',
-    component: SubgroupComponent,
-    resolve: { subgroup: SubgroupResolver },
+    path: 'subgroup',
+    loadChildren: () =>
+      import('./pages/subgroup/subgroup.module').then((m) => m.SubgroupModule),
   },
 ];
 
@@ -61,18 +65,28 @@ const routes: Routes = [
     children: mainPageRoutes,
     canActivateChild: [CheckAuthChildGuard],
   },
+
   {
     path: 'session/:id',
-    component: SessionInProgressComponent,
-    canActivate: [CheckAuthGuard, SessionInProgressGuard],
-    canDeactivate: [ExitSessionInProgressGuard],
+    loadChildren: () =>
+      import('./pages/session-in-progress/session-in-progress.module').then(
+        (m) => m.SessionInProgressModule
+      ),
+    canMatch: [CheckAuthGuard],
   },
   {
     path: 'waiting-room/:id',
-    component: WaitingRoomComponent,
-    canActivate: [CheckAuthGuard],
+    loadChildren: () =>
+      import('./pages/waiting-room/waiting-room.module').then(
+        (m) => m.WaitingRoomModule
+      ),
+    canMatch: [CheckAuthGuard],
   },
-  { path: 'signin', component: SignInComponent },
+  {
+    path: 'signin',
+    loadChildren: () =>
+      import('./pages/sign-in/sign-in.module').then((m) => m.SignInModule),
+  },
   { path: '**', redirectTo: '/main-page/my-sessions' },
 ];
 
