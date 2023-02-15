@@ -27,9 +27,9 @@
     </ul>
     <div class="d-flex align-items-center" *ngIf='currentUser'>
       <div class="navbar-text text-white">
-        {{currentUser?.first_name}}
-        {{currentUser?.last_name}}
-        {{currentUser?.patronymic}}
+        {{currentUser.first_name}}
+        {{currentUser.last_name}}
+        {{currentUser.patronymic}}
       </div>
       <div>
         <button type="button" class="btn" (click)="openLogout()"> <img  width="30" height="30"  src="/assets/logout-svgrepo-com.svg"
