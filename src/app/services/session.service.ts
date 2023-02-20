@@ -7,8 +7,9 @@ import { DefaultAnswer } from '../interfaces/default-answer.interface';
 import { IEquipment } from '../interfaces/equipment.interface';
 import { PaginationInfo } from '../interfaces/pagination-info.interface';
 import { ISession } from '../interfaces/session.interface';
+import { ILdapUser } from '../pages/subgroup/add-users/ldap-user.interface';
 import { INewSession } from '../pages/subgroup/create-session-by-booking/new-session.interface';
-import { API_URL } from '../urls-tokens';
+import { API_INTERMEDIARY_URL, API_URL } from '../urls-tokens';
 import { AuthService } from './auth.service';
 
 @Injectable({
@@ -17,6 +18,7 @@ import { AuthService } from './auth.service';
 export class SessionService {
   constructor(
     @Inject(API_URL) private apiUrl: string,
+    @Inject(API_INTERMEDIARY_URL) private API_INTERMEDIARY_URL: string,
     private http: HttpClient,
     private authService: AuthService
   ) {}
@@ -79,6 +81,27 @@ export class SessionService {
       data: { ...newSession, creator: this.authService.currentUser!.id },
     };
     return this.http.post<any>(`${this.apiUrl}/api/sessions`, body);
+  }
+
+  createSessionForUserFromLdap(
+    session: Omit<INewSession, 'user'> & { user: ILdapUser }
+  ): Observable<{ data: any }> {
+    const body = { ...session, creator: this.authService.currentUser!.id };
+    return this.http.post<any>(
+      this.API_INTERMEDIARY_URL + '/v1/api/session',
+      body
+    );
+  }
+
+  updateSessionForUserFromLdap(
+    session: Omit<INewSession, 'user'> & { user: ILdapUser },
+    sessionId: number
+  ): Observable<{ data: any }> {
+    const body = session;
+    return this.http.put<any>(
+      this.API_INTERMEDIARY_URL + `/v1/api/session/${sessionId}`,
+      body
+    );
   }
 
   signupForSession(newSession: INewSession): Observable<{ data: any }> {

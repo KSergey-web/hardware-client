@@ -5,9 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { ExitSessionInProgressGuard } from 'src/app/guards/exit-session-in-progress.guard';
 import { SessionInProgressGuard } from 'src/app/guards/session-in-progress.guard';
-import { environment } from 'src/environments/environment';
 import { SharePipesModule } from '../../share-pipes/share-pipes.module';
-import { API_INTERMEDIARY_URL } from '../../urls-tokens';
 import { EquipmentElementsModule } from './equipment/equipment-elements/equipment-elements.module';
 import { EquipmentsModule } from './equipment/equipments.module';
 import { SessionInProgressComponent } from './session-in-progress.component';
@@ -35,13 +33,7 @@ const routes: Routes = [
     SharePipesModule,
     RouterModule.forChild(routes),
   ],
-  providers: [
-    SessionInProgressService,
-    {
-      provide: API_INTERMEDIARY_URL,
-      useValue: environment.intermediaryServerAddres,
-    },
-  ],
+  providers: [SessionInProgressService],
   exports: [SessionInProgressComponent],
 })
 export class SessionInProgressModule {}

@@ -34,6 +34,7 @@ const routes: Routes = [
     CommonModule,
     NgbCollapseModule,
     RouterModule.forChild(routes),
+    SharePipesModule,
   ],
   declarations: [
     SessionsManagementComponent,

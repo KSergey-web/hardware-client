@@ -100,7 +100,7 @@ export class CreateSessionByBookingComponent implements OnInit, OnDestroy {
       busyError.error.error.details.busy;
     const bulder = new CommonModalDialogBoxBuilder(this.modalService);
     bulder
-      .addHeader('Не удалось создать бронь')
+      .addHeader('Не удалось создать сессию')
       .addText(
         `Уже существует сессия, которая начинается в ${this.dateFormatter.getFormattedDateTime(
           sessionBegin

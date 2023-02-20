@@ -1,79 +1,140 @@
 <div class="container">
-    <form [formGroup]="sessionForm" novalidate (ngSubmit)="submit()">
-        <div class="form-group">
-            <label for="equipment">Оборудование</label>
-            <select class="form-select" id="equipment" name='equipment'  [formControl]="sessionForm.controls.equipment" >
-                <option *ngFor="let equipment of equipments; let i = index" [value]='i'>
-                    {{equipment.name}}
-                </option>
-            </select>
+  <form [formGroup]="sessionForm" novalidate (ngSubmit)="submit()">
+    <div class="form-control">
+      <label  class="form-label" for="equipment">Оборудование</label>
+      <select
+        class="form-select"
+        id="equipment"
+        name="equipment"
+        [formControl]="sessionForm.controls.equipment"
+      >
+        <option *ngFor="let equipment of equipments; let i = index" [value]="i">
+          {{ equipment.name }}
+        </option>
+      </select>
+    </div>
+    <form [formGroup]="radioGroupForm">
+      <div class="btn-group btn-group-toggle mt-2" name="radioBasic">
+        <div class="form-check-inline">
+          <input
+            id="student"
+            class="btn-check"
+            type="radio"
+            value="student"
+            [formControl]="radioGroupForm.controls.mode"
+          />
+          <label class="btn btn-primary" for="student">
+            Записать студента
+          </label>
         </div>
-        <form [formGroup]="radioGroupForm">
-            <div class="btn-group btn-group-toggle" name="radioBasic" >
-              <div class="form-check-inline">
-                <input  id="student"  class="btn-check" type="radio" value="student" [formControl]="radioGroupForm.controls.mode">
-                <label class="btn btn-primary" for="student">
-                     Записать студента
-                </label>
-              </div>
-              <div class=" form-check-inline">
-                <input  class="btn-check" type="radio"  id="myself" value="myself" [formControl]="radioGroupForm.controls.mode">
-                <label class="btn btn-primary" for="myself">
-                    Записать себя
-                </label>
-              </div>
-            </div>
-        </form>
-        <hr>
-        <div *ngIf="radioGroupForm.value.mode=='student'">
-            <div class="form-group">
-                <label for="group">Группа</label>
-                <select class="form-select" id="group" name='group' [formControl]="sessionForm.controls.group">
-                    <option [value]="-1" disabled selected>
-                        Выберите группу
-                    </option>
-                    <option *ngFor="let group of groups; let i = index" [value]='i'>
-                        {{group.name}}
-                    </option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="student">Студент</label>
-                <select class="form-select"  id="student" name="student" [formControl]="sessionForm.controls.student" >
-                    <option [value]="-1" disabled selected>
-                        Выберите студента
-                    </option>
-                    <option *ngFor="let student of students; let i = index" [value]='i'>
-                        {{student.first_name}}
-                    </option>
-                </select>
-            </div>
+        <div class="form-check-inline">
+          <input
+            class="btn-check"
+            type="radio"
+            id="myself"
+            value="myself"
+            [formControl]="radioGroupForm.controls.mode"
+          />
+          <label class="btn btn-primary" for="myself"> Записать себя </label>
         </div>
-        <div *ngIf='selectedBegin'>
-            Начало сеанса: {{selectedBegin | date:'d.MM.YYYY HH:mm'}}
-            <hr>
-            Конец сеанса: {{selectedEnd | date:'d.MM.YYYY HH:mm'}}
-        </div>
-        <div *ngIf='!selectedBegin' class="alert alert-danger" role="alert">
-            Время начала и длительность сеанса не выбраны
-        </div>
-        <div class='mt-2'>
-            <button type="button" class="btn btn-outline-primary" (click)="collapse_date.toggle()"
-                [attr.aria-expanded]="!isDateCollapsed" aria-controls="collapseExample">
-                <span *ngIf='isDateCollapsed'>Выбрать дату и время</span>
-                <span *ngIf='!isDateCollapsed'>Скрыть выбор даты и времени</span>
-            </button>
-        </div>
-        <div #collapse_date="ngbCollapse" [(ngbCollapse)]="isDateCollapsed">
-            <div class="card">
-                <div class="card-body">
-                    <app-session-date-form [equipmentChanged$]='equipmentChanged$'
-                        (onSelectedDates)="onSelectedDates($event)" [editedSession]="editedSession"></app-session-date-form>
-                </div>
-            </div>
-        </div>
-        <div class="text-center mt-2">
-            <button class="btn btn-primary" type='submit' [disabled]="isNewSessionInvalid()"><ng-content></ng-content></button>
-        </div>
+      </div>
     </form>
+    <hr />
+    <div>
+      <ng-container *ngIf="sessionForm.controls.student.value as student">
+        <b
+          *ngIf="
+            this.editedSession?.user && this.editedSession?.user === student
+          "
+          >Выбранный студент: {{ student | fio }}
+          {{ student.email ?? "" }}</b
+        >
+      </ng-container>
+    </div>
+    <div *ngIf="radioGroupForm.value.mode == 'student'">
+      <div class="form-group">
+        <label for="fio"  class="form-label"
+          >Введите полное название группы на английском языке</label
+        ><br />
+        <input
+          type="text"
+          autocomplete="off"
+          [formControl]="groupNameControl"
+          id="fio"
+        />
+      </div>
+      <ng-container *ngIf="foundedStudents$ | async as foundedStudents">
+        <div *ngIf="isLoading; else studentsLoadedTmp" class="text-center">
+          <div class="spinner-border" role="status">
+            <span class="sr-only"></span>
+          </div>
+        </div>
+        <ng-template #studentsLoadedTmp>
+          <div class="text-center" *ngIf="foundedStudents.length === 0">
+            <ng-template #nothingFound>
+              <span> Ничего не найдено</span>
+            </ng-template>
+          </div>
+
+          <div *ngIf="foundedStudents.length" class="form-control">
+            <label for="student"  class="form-label">Студент</label>
+            <select
+              class="form-select"
+              id="student"
+              name="student"
+              [formControl]="sessionForm.controls.student"
+            >
+              <option [ngValue]="undefined" disabled>Выберите студента</option>
+              <option
+                *ngFor="let student of foundedStudents; let i = index"
+                [ngValue]="student"
+              >
+                {{ student | fio }} {{ student.email ?? "" }}
+              </option>
+            </select>
+          </div>
+        </ng-template>
+      </ng-container>
+    </div>
+    <div *ngIf="selectedBegin">
+      Начало сеанса: {{ selectedBegin | date : "d.MM.YYYY HH:mm" }}
+      <hr />
+      Конец сеанса: {{ selectedEnd | date : "d.MM.YYYY HH:mm" }}
+    </div>
+    <div *ngIf="!selectedBegin" class="alert alert-danger" role="alert">
+      Время начала и длительность сеанса не выбраны
+    </div>
+    <div class="mt-2">
+      <button
+        type="button"
+        class="btn btn-outline-primary"
+        (click)="collapse_date.toggle()"
+        [attr.aria-expanded]="!isDateCollapsed"
+        aria-controls="collapseExample"
+      >
+        <span *ngIf="isDateCollapsed">Выбрать дату и время</span>
+        <span *ngIf="!isDateCollapsed">Скрыть выбор даты и времени</span>
+      </button>
+    </div>
+    <div #collapse_date="ngbCollapse" [(ngbCollapse)]="isDateCollapsed">
+      <div class="card">
+        <div class="card-body">
+          <app-session-date-form
+            [equipmentChanged$]="equipmentChanged$"
+            (onSelectedDates)="onSelectedDates($event)"
+            [editedSession]="editedSession"
+          ></app-session-date-form>
+        </div>
+      </div>
+    </div>
+    <div class="text-center mt-2">
+      <button
+        class="btn btn-primary"
+        type="submit"
+        [disabled]="isNewSessionInvalid()"
+      >
+        <ng-content></ng-content>
+      </button>
+    </div>
+  </form>
 </div>

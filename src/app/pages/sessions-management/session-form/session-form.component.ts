@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import {
   Component,
   EventEmitter,
@@ -6,9 +7,23 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Observable, Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
+import { Observable, of, Subject } from 'rxjs';
+import {
+  catchError,
+  debounceTime,
+  filter,
+  finalize,
+  map,
+  shareReplay,
+  switchMap,
+  takeUntil,
+} from 'rxjs/operators';
 import { IEquipment } from 'src/app/interfaces/equipment.interface';
 import { IGroup } from 'src/app/interfaces/group.interface';
 import { IForm } from 'src/app/interfaces/IForm';
@@ -16,19 +31,19 @@ import { ISession } from 'src/app/interfaces/session.interface';
 import { IStudent } from 'src/app/interfaces/student.interface';
 import { AuthService } from 'src/app/services/auth.service';
 import { EquipmentService } from 'src/app/services/equipment.service';
-import { GroupService } from 'src/app/services/group.service';
-import { SessionService } from 'src/app/services/session.service';
-import { StudentService } from 'src/app/services/student.service';
+import { LdapGroupStoreService } from '../../subgroup/add-users/ldap-group-store.service';
+import { ILdapUser } from '../../subgroup/add-users/ldap-user.interface';
 import { INewSession } from '../../subgroup/create-session-by-booking/new-session.interface';
 
 @Component({
   selector: 'app-session-form',
   templateUrl: './session-form.component.html',
   styleUrls: ['./session-form.component.scss'],
+  providers: [LdapGroupStoreService],
 })
 export class SessionFormComponent implements OnInit, OnDestroy {
   sessionForm!: FormGroup<
-    IForm<{ equipment: number; group: number; student: number }>
+    IForm<{ equipment: number; student: ILdapUser | undefined }>
   >;
   radioGroupForm = this.formBuilder.group({
     mode: ['myself'],
@@ -47,15 +62,17 @@ export class SessionFormComponent implements OnInit, OnDestroy {
 
   @Output() onCreateSession = new EventEmitter<INewSession>();
 
+  @Output() onCreateSessionForUserFromLdap = new EventEmitter<
+    Omit<INewSession, 'user'> & { user: ILdapUser }
+  >();
+
   @Input() editedSession: ISession | null = null;
 
   constructor(
     private formBuilder: FormBuilder,
-    private sessionService: SessionService,
     private authService: AuthService,
-    private studentService: StudentService,
-    private groupService: GroupService,
-    private equipmentService: EquipmentService
+    private equipmentService: EquipmentService,
+    private ldapGroupStoreService: LdapGroupStoreService
   ) {
     this.initForm();
   }
@@ -74,56 +91,79 @@ export class SessionFormComponent implements OnInit, OnDestroy {
       );
   }
 
-  private createSubOnChangeGroup(): void {
-    this.sessionForm.controls.group.valueChanges
-      .pipe(takeUntil(this.onDestroy$))
-      .subscribe((id: number) => {
-        if (id == -1) return;
-        this.groupService
-          .getStudentsFromGroup(this.groups[id])
-          .pipe(takeUntil(this.onDestroy$))
-          .subscribe((students) => (this.students = students));
-      });
-  }
-
   private resetSelectedBeginAndEnd(): void {
     this.selectedBegin = null;
     this.selectedEnd = null;
   }
 
   private initForm(): void {
-    this.sessionForm = this.formBuilder.nonNullable.group({
-      equipment: [0],
-      group: [-1, [Validators.min(0)]],
-      student: [-1, [Validators.min(0)]],
+    this.sessionForm = new FormGroup<
+      IForm<{
+        equipment: number;
+        student: ILdapUser | undefined;
+      }>
+    >({
+      equipment: new FormControl(0, {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+
+      student: new FormControl(undefined, {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
     });
-    this.createSubOnChangeGroup();
     this.initEquipmentChanged$();
   }
 
-  getSelectedUserId(): number {
-    let userId: number;
-    if (this.radioGroupForm.value['mode'] == 'student') {
-      const ind: number = this.sessionForm.controls.student.value;
-      userId = this.students[ind].id;
-    } else {
-      userId = this.authService.currentUser!.id;
-    }
-    return userId;
-  }
-
-  getDataFromForm(): INewSession {
+  getDataFromFormForStudent(): Omit<INewSession, 'user'> & { user: ILdapUser } {
     const indEq: number = this.sessionForm.controls.equipment.value;
     return {
       begin: this.selectedBegin!,
       end: this.selectedEnd!,
-      user: this.getSelectedUserId(),
+      user: this.sessionForm.controls.student.value!,
       equipment: this.equipments[indEq].id,
     };
   }
 
+  getDataFromFormForMySelf(): INewSession {
+    const indEq: number = this.sessionForm.controls.equipment.value;
+    return {
+      begin: this.selectedBegin!,
+      end: this.selectedEnd!,
+      user: this.authService.currentUser!.id,
+      equipment: this.equipments[indEq].id,
+    };
+  }
+
+  isLoading = false;
+
+  groupNameControl = new FormControl('', { nonNullable: true });
+
+  foundedStudents$ = this.groupNameControl.valueChanges.pipe(
+    filter((name) => !!name.trim()),
+    debounceTime(1000),
+    switchMap((groupName) => {
+      this.isLoading = true;
+      return this.ldapGroupStoreService.getUsersByGroup(groupName).pipe(
+        catchError((err: HttpErrorResponse) => {
+          return of([] as []);
+        }),
+        finalize(() => {
+          this.isLoading = false;
+          this.sessionForm.controls.student.reset();
+        })
+      );
+    }),
+    shareReplay(1)
+  );
+
   submit() {
-    this.onCreateSession.emit(this.getDataFromForm());
+    if (this.radioGroupForm.value['mode'] == 'student') {
+      this.onCreateSessionForUserFromLdap.emit(
+        this.getDataFromFormForStudent()
+      );
+    } else this.onCreateSession.emit(this.getDataFromFormForMySelf());
   }
 
   isSubscribedOnEquipmentChanges = false;
@@ -144,36 +184,8 @@ export class SessionFormComponent implements OnInit, OnDestroy {
       this.equipmentChanged$.subscribe(
         this.resetSelectedBeginAndEnd.bind(this)
       );
-      this.getGroups();
       this.getEquipments();
     }
-  }
-
-  private setGroupToFormById(groupId: number): void {
-    this.groupService
-      .getGroups()
-      .pipe(takeUntil(this.onDestroy$))
-      .subscribe((groups) => {
-        this.groups = groups;
-        const indGroup = this.groups.findIndex((group) => group.id == groupId);
-        this.sessionForm.controls.group.setValue(indGroup);
-      });
-  }
-
-  private setStudentFromGroupToFormById(
-    studentId: number,
-    group: IGroup
-  ): void {
-    this.groupService
-      .getStudentsFromGroup(group!)
-      .pipe(takeUntil(this.onDestroy$))
-      .subscribe((students) => {
-        this.students = students;
-        const indStudent = this.students.findIndex(
-          (student) => student.id == studentId
-        );
-        this.sessionForm.controls.student.setValue(indStudent);
-      });
   }
 
   private setEquipmentToFormById(equipmentId: number): void {
@@ -186,31 +198,12 @@ export class SessionFormComponent implements OnInit, OnDestroy {
           (equipment) => equipment.id == equipmentId
         );
         this.sessionForm.controls.equipment.setValue(indEquip);
-        console.warn('7');
-        console.warn(this.isSubscribedOnEquipmentChanges);
         this.subscribeOnEquipmentChanges();
       });
   }
 
   initFormByMyself() {
     this.radioGroupForm.controls.mode.setValue('myself');
-    this.getGroups();
-    return;
-  }
-
-  initFormByStudent() {
-    this.radioGroupForm.controls.mode.setValue('student');
-    this.studentService
-      .getInfoAboutStudentByUserId(this.editedSession!.user!.id)
-      .pipe(takeUntil(this.onDestroy$))
-      .subscribe((student) => {
-        if (!student) {
-          console.error('Student not found');
-          return;
-        }
-        this.setGroupToFormById(student.group!.id);
-        this.setStudentFromGroupToFormById(student.id, student.group!);
-      });
   }
 
   private setEditedSessionToFrom(): void {
@@ -225,6 +218,11 @@ export class SessionFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  private initFormByStudent() {
+    this.radioGroupForm.controls.mode.setValue('student');
+    this.sessionForm.controls.student.setValue(this.editedSession?.user);
+  }
+
   private getEquipments(): void {
     this.equipmentService
       .getEquipments()
@@ -232,15 +230,6 @@ export class SessionFormComponent implements OnInit, OnDestroy {
       .subscribe((equipments: IEquipment[]) => {
         this.equipments = equipments;
         this.sessionForm.controls.equipment.setValue(0);
-      });
-  }
-
-  private getGroups(): void {
-    this.groupService
-      .getGroups()
-      .pipe(takeUntil(this.onDestroy$))
-      .subscribe((groups: IGroup[]) => {
-        this.groups = groups;
       });
   }
 

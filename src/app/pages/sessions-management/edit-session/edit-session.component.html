@@ -1,2 +1,2 @@
 <h2 class="text-center">Редактирование сессии</h2>
-<app-session-form (onCreateSession)="saveSession($event)" [editedSession]="editedSessionCopy">Сохранить изменения</app-session-form>
+<app-session-form (onCreateSession)="saveSession($event)" [editedSession]="editedSessionCopy" (onCreateSessionForUserFromLdap)="saveSessionForUserFromLdap($event)">Сохранить изменения</app-session-form>
