@@ -1,9 +1,9 @@
 import { Inject, Injectable, OnDestroy } from '@angular/core';
+import { Observable, Subject, take } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
 import { AuthService } from 'src/app/services/auth.service';
-import { SessionInProgressService } from '../../session-in-progress.service';
-import { Subject } from 'rxjs';
 import { API_INTERMEDIARY_URL } from 'src/app/urls-tokens';
+import { SessionInProgressService } from '../../session-in-progress.service';
 
 @Injectable()
 export class EquipmentSocketService implements OnDestroy {
@@ -45,5 +45,13 @@ export class EquipmentSocketService implements OnDestroy {
         sessionId: this.sessionInProgressService.sessionId,
       },
     });
+  }
+
+  sendCommand(command: string): Observable<any> {
+    return new Observable((subscriber) => {
+      this.socket.emit('send-command', { command }, (res: any) => {
+        subscriber.next(res);
+      });
+    }).pipe(take(1));
   }
 }

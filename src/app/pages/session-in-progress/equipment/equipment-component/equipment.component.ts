@@ -16,12 +16,40 @@ import { Stm32Component } from '../set-of-equipments/stm32/stm32.component';
 import { EquipmentItem } from './equipment-item';
 import { EquipmentDirective } from './equipment.directive';
 import { equipmentTypeEnum } from 'src/app/enums/equipments.enum';
+import { EquipmentCommunicationService } from '../communication-services/equipment-communication.service';
+import {
+  I_BUTTON_INTERACTION_SERVICE,
+  I_FIRMWARE_INTERACTION_SERVICE,
+  I_RESISTOR_INTERACTION_SERVICE,
+  I_SWITCH_INTERACTION_SERVICE,
+} from '../equipment-elements/equipment-elements-tokens';
+import { EquipmentCommunicationWithSocketService } from '../communication-services/equipment-communication-with-socket.service copy';
 
 @Component({
   selector: 'app-equipment',
   templateUrl: './equipment.component.html',
   styleUrls: ['./equipment.component.scss'],
-  providers: [EquipmentSocketService],
+  providers: [
+    EquipmentSocketService,
+    EquipmentCommunicationService,
+    EquipmentCommunicationWithSocketService,
+    {
+      provide: I_BUTTON_INTERACTION_SERVICE,
+      useExisting: EquipmentCommunicationService,
+    },
+    {
+      provide: I_SWITCH_INTERACTION_SERVICE,
+      useExisting: EquipmentCommunicationService,
+    },
+    {
+      provide: I_FIRMWARE_INTERACTION_SERVICE,
+      useExisting: EquipmentCommunicationService,
+    },
+    {
+      provide: I_RESISTOR_INTERACTION_SERVICE,
+      useExisting: EquipmentCommunicationService,
+    },
+  ],
 })
 export class EquipmentComponent implements AfterViewInit, OnChanges {
   equipment!: IEquipment;
@@ -47,14 +75,9 @@ export class EquipmentComponent implements AfterViewInit, OnChanges {
       this.selectEquipmentComponent(equipment);
     const viewContainerRef = this.equipmentHost.viewContainerRef;
     viewContainerRef.clear();
-    const componentFactory =
-      this.componentFactoryResolver.resolveComponentFactory(
-        equipmentItem.component
-      );
-    const componentRef =
-      viewContainerRef.createComponent<{ equipment: IEquipment }>(
-        componentFactory
-      );
+    const componentRef = viewContainerRef.createComponent<{
+      equipment: IEquipment;
+    }>(equipmentItem.component);
     componentRef.instance.equipment = equipmentItem.equipment;
   }
 

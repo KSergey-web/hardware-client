@@ -17,9 +17,9 @@ export class EquipmentCommunicationService
     IResistorInteraction
 {
   constructor(
-    private http: HttpClient,
-    @Inject(API_INTERMEDIARY_URL) private apiUrl: string,
-    private sessionInProgressService: SessionInProgressService
+    protected http: HttpClient,
+    @Inject(API_INTERMEDIARY_URL) protected apiUrl: string,
+    protected sessionInProgressService: SessionInProgressService
   ) {}
 
   private get sessionId(): number | undefined {
