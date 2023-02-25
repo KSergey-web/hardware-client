@@ -1,6 +1,6 @@
 <ng-container *ngIf="visible">
   <iframe class="d-block" *ngIf="stream_url; else alert" [src]="stream_url | safe:'resourceUrl'" seamless autoplay
-    scrolling="no">
+    scrolling="no" allowfullscreen>
     Ваш браузер не поддерживает плавающие фреймы!
   </iframe>
   <ng-template #alert>
