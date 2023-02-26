@@ -7,8 +7,8 @@ import {
   OnInit,
   TemplateRef,
 } from '@angular/core';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { fromEvent, Subject } from 'rxjs';
+import { filter, map, takeUntil } from 'rxjs/operators';
 import { stateButtonEnum } from 'src/app/pages/session-in-progress/equipment/equipment-elements/buttons/state-button.enum';
 import { EquipmentHandlerService } from '../equipment-handler.service';
 import { I_BUTTON_INTERACTION_SERVICE } from '../equipment-elements-tokens';
@@ -20,7 +20,7 @@ import { IButtonInteraction } from '../../interfaces/interactions-with-controls/
   styleUrls: ['./buttons.component.scss'],
 })
 export class ButtonsComponent implements OnInit, OnDestroy {
-  buttons: [number, stateButtonEnum][] = [];
+  buttons: stateButtonEnum[] = [];
 
   @Input() numberOfButtons: number = 0;
 
@@ -29,7 +29,33 @@ export class ButtonsComponent implements OnInit, OnDestroy {
     @Inject(I_BUTTON_INTERACTION_SERVICE)
     private buttonService: IButtonInteraction,
     private equipmentHandlerService: EquipmentHandlerService
-  ) {}
+  ) {
+    this.subOnKeyboard();
+  }
+
+  subOnKeyboard() {
+    fromEvent(window, 'keydown')
+      .pipe(
+        map((event) => (event as KeyboardEvent).key),
+        filter((key) => !!key.match(/\d/)),
+        map((key) => +key),
+        filter((key) => key < this.buttons.length),
+        filter((key) => !this.isButtonActive(+key))
+      )
+      .subscribe((key) => {
+        this.onButtonDown(+key);
+      });
+    fromEvent(window, 'keyup')
+      .pipe(
+        map((event) => (event as KeyboardEvent).key),
+        filter((key) => !!key.match(/\d/)),
+        map((key) => +key),
+        filter((key) => key < this.buttons.length)
+      )
+      .subscribe((key) => {
+        this.onButtonUp(+key);
+      });
+  }
 
   private onDestroy$ = new Subject<boolean>();
 
@@ -40,24 +66,28 @@ export class ButtonsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     for (let i = 0; i < this.numberOfButtons; ++i) {
-      this.buttons.push([i, stateButtonEnum.mouseup]);
+      this.buttons.push(stateButtonEnum.mouseup);
     }
   }
 
   onMouseOutFromButton($event: MouseEvent, index: number) {
-    if (this.buttons[index][1] === stateButtonEnum.mousedown) {
+    if (this.buttons[index] === stateButtonEnum.mousedown) {
       $event.target?.dispatchEvent(new Event('mouseup'));
     }
   }
 
   onButtonDown(index: number) {
-    this.buttons[index][1] = stateButtonEnum.mousedown;
+    this.buttons[index] = stateButtonEnum.mousedown;
     this.sendButtonAction(index);
   }
 
   onButtonUp(index: number) {
-    this.buttons[index][1] = stateButtonEnum.mouseup;
+    this.buttons[index] = stateButtonEnum.mouseup;
     this.sendButtonAction(index);
+  }
+
+  isButtonActive(index: number): boolean {
+    return this.buttons[index] == stateButtonEnum.mousedown;
   }
 
   sendButtonAction(buttonInd: number): void {

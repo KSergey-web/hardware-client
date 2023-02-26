@@ -1,7 +1,13 @@
 <div class="d-flex justify-content-around flex-wrap small-negative-padding">
-  <button class="button button-equpment mt-3" *ngFor='let button of buttons; let i = index'
-    (mousedown)="onButtonDown(numberOfButtons-1-i)" (mouseup)="onButtonUp(numberOfButtons-1-i)"
-    (mouseout)="onMouseOutFromButton($event,numberOfButtons-1-i)">
-    <ng-container *ngTemplateOutlet="name"></ng-container>{{numberOfButtons-1-i}}
+  <button
+    class="button button-equpment mt-3"
+    *ngFor="let button of buttons; let i = index"
+    (mousedown)="onButtonDown(numberOfButtons - 1 - i)"
+    (mouseup)="onButtonUp(numberOfButtons - 1 - i)"
+    (mouseout)="onMouseOutFromButton($event, numberOfButtons - 1 - i)"
+    [ngClass]="{'button-active': isButtonActive(numberOfButtons - 1 - i)}"
+  >
+    <ng-container *ngTemplateOutlet="name"></ng-container
+    >{{ numberOfButtons - 1 - i }}
   </button>
 </div>
