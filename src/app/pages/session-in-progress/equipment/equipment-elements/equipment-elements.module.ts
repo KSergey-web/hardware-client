@@ -3,13 +3,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharePipesModule } from 'src/app/share-pipes/share-pipes.module';
-import { EquipmentCommunicationService } from '../communication-services/equipment-communication.service';
-import {
-  I_BUTTON_INTERACTION_SERVICE,
-  I_FIRMWARE_INTERACTION_SERVICE,
-  I_RESISTOR_INTERACTION_SERVICE,
-  I_SWITCH_INTERACTION_SERVICE,
-} from './equipment-elements-tokens';
 import { ButtonsComponent } from './buttons/buttons.component';
 import { ConsoleComponent } from './console/console.component';
 import { EquipmentHandlerService } from './equipment-handler.service';
