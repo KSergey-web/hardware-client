@@ -50,7 +50,12 @@ export class EquipmentSocketService implements OnDestroy {
   sendCommand(command: string): Observable<any> {
     return new Observable((subscriber) => {
       this.socket.emit('send-command', { command }, (res: any) => {
+        if (res.status && res.status >= 400) {
+          console.log(res);
+          subscriber.error(res);
+        }
         subscriber.next(res);
+
       });
     }).pipe(take(1));
   }
