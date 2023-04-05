@@ -1,9 +1,10 @@
-import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { EquipmentHandlerService } from '../equipment-handler.service';
-import { I_FIRMWARE_INTERACTION_SERVICE } from '../equipment-elements-tokens';
 import { IFirmwareInteraction } from '../../interfaces/interactions-with-controls/firmware-interaction.interface';
+import { I_FIRMWARE_INTERACTION_SERVICE } from '../equipment-elements-tokens';
+import { EquipmentHandlerService } from '../equipment-handler.service';
 
 @Component({
   selector: 'app-file-actions',
@@ -17,7 +18,14 @@ export class FileActionsComponent implements OnDestroy {
     private equipmentHandlerService: EquipmentHandlerService
   ) {}
 
-  selectedFile: File | null = null;
+  fileControl = new FormControl<File | null>(null);
+
+  lastLoadedFile: { name: string } | null = null;
+
+  get selectedFile(): File | null {
+    if (this.fileControl.value) debugger;
+    return this.fileControl.value;
+  }
 
   canReset = false;
 
@@ -28,11 +36,6 @@ export class FileActionsComponent implements OnDestroy {
     this.onDestroy$.complete();
   }
 
-  onFileSelected(event: any) {
-    this.selectedFile = <File>event.target.files[0];
-    console.log(this.selectedFile.name);
-  }
-
   onUploadFile(): void {
     if (!this.selectedFile) return;
     this.firmwareService
@@ -41,6 +44,8 @@ export class FileActionsComponent implements OnDestroy {
       .subscribe({
         next: () => {
           this.canReset = true;
+          this.lastLoadedFile = { name: this.selectedFile!.name };
+          this.fileControl.reset();
         },
         error: this.equipmentHandlerService.getDefaultError(),
       });
@@ -60,6 +65,7 @@ export class FileActionsComponent implements OnDestroy {
       .subscribe({
         next: () => {
           this.canReset = false;
+          this.lastLoadedFile = null;
         },
         error: this.equipmentHandlerService.getDefaultError(),
       });

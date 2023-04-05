@@ -10,7 +10,7 @@
     </button>
     <p class="col">
       Выбранный файл: <br />
-      >>{{ selectedFile?.name }}
+      >><span> {{ selectedFile?.name }}</span>
     </p>
   </div>
   <div class="row d-flex justify-content-center gap-1">
@@ -22,6 +22,8 @@
     >
       Прошить оборудование выбранным файлом
     </button>
+  </div>
+  <div class="row mt-1">
     <button
       [disabled]="!canReset"
       type="button"
@@ -30,12 +32,16 @@
     >
       Перепрошить оборудование уже загруженным файлом
     </button>
+    <p class="col">
+      Последний уже загруженный файл: <br />
+      >>{{ lastLoadedFile?.name }}
+    </p>
   </div>
 </div>
 <input
   style="display: none"
   #fileInput
   type="file"
-  (change)="onFileSelected($event)"
+  [formControl]="fileControl"
   accept=".hex,.sof,.bin"
 />

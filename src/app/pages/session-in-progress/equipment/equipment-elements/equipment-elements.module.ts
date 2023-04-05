@@ -10,6 +10,7 @@ import { FileActionsComponent } from './file-actions/file-actions.component';
 import { ResistorComponent } from './resistor/resistor.component';
 import { SwitchesComponent } from './switches/switches.component';
 import { VideoComponent } from './video/video.component';
+import { FileValueAccessorDirective } from './file-actions/file-value-accessor.directive';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { VideoComponent } from './video/video.component';
     ReactiveFormsModule,
     HttpClientModule,
     SharePipesModule,
+    FileValueAccessorDirective,
   ],
   exports: [
     ConsoleComponent,
@@ -35,9 +37,6 @@ import { VideoComponent } from './video/video.component';
     ResistorComponent,
     VideoComponent,
   ],
-  providers: [
-    EquipmentHandlerService,
-
-  ],
+  providers: [EquipmentHandlerService],
 })
 export class EquipmentElementsModule {}
