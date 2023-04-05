@@ -20,9 +20,9 @@ export class VideoComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    fromEvent(window, 'focus')
-      .pipe(takeUntil(this.onDestroy$))
-      .subscribe(this.reset.bind(this));
+    // fromEvent(window, 'focus')
+    //   .pipe(takeUntil(this.onDestroy$))
+    //   .subscribe(this.reset.bind(this));
   }
 
   visible = true;
