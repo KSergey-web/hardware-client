@@ -1,5 +1,4 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription, fromEvent } from 'rxjs';
 import { ITimer } from './timer.interface';
 
 export class Timer implements ITimer {
@@ -14,6 +13,7 @@ export class Timer implements ITimer {
   hours: number = 0;
   minutes: number = 0;
   seconds: number = 0;
+  private _endDate?: Date;
 
   get time(): ITimer {
     return {
@@ -31,6 +31,7 @@ export class Timer implements ITimer {
 
   startTimer() {
     this.stopTimer();
+    this.subOnFocus();
     this.isFinished = false;
     this._timerId = setInterval(() => {
       this.updateTimesProperties();
@@ -46,6 +47,7 @@ export class Timer implements ITimer {
 
   stopTimer() {
     clearInterval(this._timerId);
+    this.focusSub.unsubscribe();
   }
 
   private updateTimesProperties() {
@@ -65,7 +67,20 @@ export class Timer implements ITimer {
     if (date < now) {
       throw new Error('Date less than now');
     }
+    this._endDate = date;
     this._remainingTime = Math.floor((+date - +now) / 1000);
     this.updateTimesProperties();
+  }
+
+  private focusSub = new Subscription();
+
+  private subOnFocus() {
+    this.focusSub.unsubscribe();
+    if (!this._endDate) return;
+    this.focusSub = fromEvent(window, 'visibilitychange').subscribe(() => {
+      const now = new Date();
+      this._remainingTime = Math.floor((+this._endDate! - +now) / 1000);
+      this.updateTimesProperties();
+    });
   }
 }
