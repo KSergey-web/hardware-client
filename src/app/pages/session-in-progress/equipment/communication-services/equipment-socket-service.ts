@@ -48,14 +48,17 @@ export class EquipmentSocketService implements OnDestroy {
   }
 
   sendCommand(command: string): Observable<any> {
+    const startTimeStamp = new Date();
     return new Observable((subscriber) => {
       this.socket.emit('send-command', { command }, (res: any) => {
+        console.log(
+          `${new Date().getTime() - startTimeStamp.getTime()}` + ' ms'
+        );
         if (res.status && res.status >= 400) {
           console.log(res);
           subscriber.error(res);
         }
         subscriber.next(res);
-
       });
     }).pipe(take(1));
   }
