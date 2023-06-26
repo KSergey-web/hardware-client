@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { ISwitchesManagement } from '../../equipment-elements/switches/switches-management.interface';
+import { EquipmentCommunicationWithSocketService } from '../../communication-services/equipment-communication-with-socket.service copy';
 import {
   I_BUTTON_INTERACTION_SERVICE,
-  I_RESISTOR_INTERACTION_SERVICE,
+  I_SWITCH_INTERACTION_SERVICE,
 } from '../../equipment-elements/equipment-elements-tokens';
-import { EquipmentCommunicationWithSocketService } from '../../communication-services/equipment-communication-with-socket.service copy';
+import { ISwitchesManagement } from '../../equipment-elements/switches/switches-management.interface';
 
 @Component({
   selector: 'app-altera-de1-so-c',
@@ -16,7 +16,7 @@ import { EquipmentCommunicationWithSocketService } from '../../communication-ser
       useExisting: EquipmentCommunicationWithSocketService,
     },
     {
-      provide: I_RESISTOR_INTERACTION_SERVICE,
+      provide: I_SWITCH_INTERACTION_SERVICE,
       useExisting: EquipmentCommunicationWithSocketService,
     },
   ],
