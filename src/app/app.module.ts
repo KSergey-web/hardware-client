@@ -1,5 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { environment } from 'src/environments/environment';
 import { AppRoutingModule } from './app-routing.module';
@@ -11,6 +11,10 @@ import { WaitingRoomModule } from './pages/waiting-room/waiting-room.module';
 import { API_AUTH_URL, API_INTERMEDIARY_URL, API_URL } from './urls-tokens';
 import { CommonDialogBoxesModule } from './widgets/common-dialog-boxes/common-dialog-boxes.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { registerLocaleData } from '@angular/common';
+import localeRu from '@angular/common/locales/ru';
+
+registerLocaleData(localeRu);
 
 @NgModule({
   declarations: [AppComponent],
@@ -37,6 +41,10 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     {
       provide: API_INTERMEDIARY_URL,
       useValue: environment.intermediaryServerAddres,
+    },
+    {
+      provide: LOCALE_ID,
+      useValue: 'ru',
     },
   ],
   bootstrap: [AppComponent],
