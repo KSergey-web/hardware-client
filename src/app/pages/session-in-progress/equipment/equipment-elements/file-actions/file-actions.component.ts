@@ -1,7 +1,7 @@
 import { Component, Inject, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { finalize, takeUntil } from 'rxjs/operators';
 import { IFirmwareInteraction } from '../../interfaces/interactions-with-controls/firmware-interaction.interface';
 import { I_FIRMWARE_INTERACTION_SERVICE } from '../equipment-elements-tokens';
 import { EquipmentHandlerService } from '../equipment-handler.service';
@@ -18,12 +18,13 @@ export class FileActionsComponent implements OnDestroy {
     private equipmentHandlerService: EquipmentHandlerService
   ) {}
 
+  isLoading$ = new BehaviorSubject(false);
+
   fileControl = new FormControl<File | null>(null);
 
   lastLoadedFile: { name: string } | null = null;
 
   get selectedFile(): File | null {
-    if (this.fileControl.value) debugger;
     return this.fileControl.value;
   }
 
@@ -38,9 +39,11 @@ export class FileActionsComponent implements OnDestroy {
 
   onUploadFile(): void {
     if (!this.selectedFile) return;
+    this.isLoading$.next(true);
     this.firmwareService
       .uploadFile(this.selectedFile)
       .pipe(takeUntil(this.onDestroy$))
+      .pipe(finalize(() => this.isLoading$.next(false)))
       .subscribe({
         next: () => {
           this.canReset = true;
@@ -52,16 +55,21 @@ export class FileActionsComponent implements OnDestroy {
   }
 
   onReset(): void {
+    this.isLoading$.next(true);
     this.firmwareService
       .reset()
       .pipe(takeUntil(this.onDestroy$))
+      .pipe(finalize(() => this.isLoading$.next(false)))
       .subscribe(this.equipmentHandlerService.getDefaultObserver());
   }
 
   onClean(): void {
+    this.isLoading$.next(true);
     this.firmwareService
       .clean()
       .pipe(takeUntil(this.onDestroy$))
+
+      .pipe(finalize(() => this.isLoading$.next(false)))
       .subscribe({
         next: () => {
           this.canReset = false;
